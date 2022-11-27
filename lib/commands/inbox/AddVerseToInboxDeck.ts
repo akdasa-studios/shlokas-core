@@ -1,10 +1,10 @@
 import { Result } from '@akdasa-studios/framework/core'
 import { ICommand } from '@akdasa-studios/framework/commands'
 
-import { VerseId } from '@lib/models/verse';
+import { VerseId } from '@lib/models/verse'
 import { InboxCard, InboxCardBuilder, InboxCardType } from '@lib/models/cards'
 
-import { InboxContext } from './InboxContext';
+import { InboxContext } from './InboxContext'
 
 
 export class AddVerseToInboxDeck implements ICommand<InboxContext, Result<InboxCard[], string>> {
@@ -39,7 +39,7 @@ export class AddVerseToInboxDeck implements ICommand<InboxContext, Result<InboxC
 
   private get getCard(): InboxCardBuilder {
     return new InboxCardBuilder()
-        .ofVerse(this._verseId)
-        .addedAt(new Date())
+      .ofVerse(this._verseId)
+      .addedAt(new Date())
   }
 }
