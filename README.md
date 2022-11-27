@@ -1,2 +1,1 @@
-# shlokas-core
-Core library for Shlokas app
+# Shlokas Core

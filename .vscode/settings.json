@@ -1,0 +1,34 @@
+{
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "files.exclude": {
+    "**/.git": true,
+    "node_modules/": true,
+    "coverage/": true,
+    "reports/": true,
+    ".stryker-tmp": true
+  },
+  /* -------------------------------------------------------------------------- */
+  /*                                   linter                                   */
+  /* -------------------------------------------------------------------------- */
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": [
+    "javascript",
+    "typescript"
+  ],
+  /* -------------------------------------------------------------------------- */
+  /*                                    tests                                   */
+  /* -------------------------------------------------------------------------- */
+  "jest.jestCommandLine": "npx jest",
+  /* -------------------------------------------------------------------------- */
+  /*                                 file types                                 */
+  /* -------------------------------------------------------------------------- */
+  "[feature]": {
+    "editor.formatOnType": true,
+    "editor.formatOnSave": true,
+  },
+  "jest.autoRun": "false",
+}
