@@ -11,7 +11,6 @@ export class Transliteration extends Value<'Transliteration'> {
     public readonly lines: string[],
   ) {
     super()
-    if (!lines) { throw new Error('lines is required') }
     if (lines.length <= 0) { throw new Error('lines must contain at least one line') }
     if (lines.some((line) => !line)) { throw new Error('lines must not contain empty values') }
   }

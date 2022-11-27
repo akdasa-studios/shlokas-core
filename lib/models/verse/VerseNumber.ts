@@ -11,7 +11,6 @@ export class VerseNumber extends Value<'VerseNumber'> {
     public readonly sections: string[],
   ) {
     super()
-    if (!sections) { throw new Error('sections is required') }
     if (sections.length <= 0) { throw new Error('sections must contain at least one section') }
     if (sections.some((section) => !section)) { throw new Error('sections must not contain empty sections') }
   }
