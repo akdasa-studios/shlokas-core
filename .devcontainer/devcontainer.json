@@ -1,0 +1,17 @@
+{
+  "name": "Shlokas (core)",
+  "extensions": [
+    "GitHub.vscode-pull-request-github",
+    "stackbreak.comment-divider",
+    "dbaeumer.vscode-eslint",
+    "GitHub.copilot",
+    "Orta.vscode-jest",
+    "yzhang.markdown-all-in-one",
+    "bierner.markdown-mermaid",
+    "eg2.vscode-npm-script",
+    "howardzuo.vscode-npm-dependency",
+    "craig-simko.open-stryker-report",
+    "jasonnutter.search-node-modules",
+    "alexkrechik.cucumberautocomplete"
+  ]
+}
