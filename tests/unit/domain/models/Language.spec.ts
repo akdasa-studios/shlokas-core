@@ -29,5 +29,11 @@ describe('Language', () => {
     it('should set the name property', () => {
       expect(new Language('en', 'English').name).toEqual('English')
     })
+
+    it('should create a new instance of Language class with the given code and name', () => {
+      const lang = new Language('en', 'English')
+      expect(lang.code).toEqual('en')
+      expect(lang.name).toEqual('English')
+    })
   })
 })
