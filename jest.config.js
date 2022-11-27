@@ -5,6 +5,7 @@ module.exports = {
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
   testMatch: [
+    '<rootDir>/tests/**/*.feature.ts',
     '<rootDir>/tests/**/*.spec.ts'
   ],
   moduleNameMapper: {

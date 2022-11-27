@@ -29,6 +29,12 @@
   "[feature]": {
     "editor.formatOnType": true,
     "editor.formatOnSave": true,
+    "editor.wordWrapColumn": 80,
+    "editor.rulers": [80]
   },
+  "cucumberautocomplete.smartSnippets": true,
+  "cucumberautocomplete.steps": [
+    "tests/features/**/*.steps.ts"
+  ],
   "jest.autoRun": "false",
 }
