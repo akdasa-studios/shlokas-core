@@ -1,5 +1,5 @@
 import { Language } from '@lib/models'
-import { Verse, VerseId, VerseNumber, Translation, Transliteration, Synonym } from '@/models/verse'
+import { Verse, VerseId, VerseNumber, Translation, Transliteration, Synonym } from '@lib/models/verse'
 
 describe('Verse', () => {
   describe('constructor', () => {
