@@ -9,10 +9,10 @@ describe('Verse', () => {
         new VerseNumber(['BG', '1', '1']),
         new Language('EN', 'English'),
         new Transliteration([
-          "dehino ’smin yathā dehe",
-          "kaumāraṁ yauvanaṁ jarā",
-          "tathā dehāntara-prāptir",
-          "dhīras tatra na muhyati"
+          'dehino `smin yathā dehe',
+          'kaumāraṁ yauvanaṁ jarā',
+          'tathā dehāntara-prāptir',
+          'dhīras tatra na muhyati'
         ]),
         new Translation(
           'As the embodied soul continuously passes, in this body, from boyhood to youth to old age, the soul similarly passes into another body at death. A sober person is not bewildered by such a change.'),

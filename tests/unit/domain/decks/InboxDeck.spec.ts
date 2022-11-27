@@ -1,6 +1,6 @@
 import { InboxDeck } from '@lib/models/decks'
 import { VerseId } from '@lib/models/verse'
-import { InboxCardBuilder } from "@lib/models/cards"
+import { InboxCardBuilder } from '@lib/models/cards'
 import { InboxCardType } from '@lib/models/cards'
 
 

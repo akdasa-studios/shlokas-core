@@ -1,7 +1,7 @@
-import { InboxDeck } from "@lib/models/decks"
-import { VerseId } from "@lib/models/verse"
+import { InboxDeck } from '@lib/models/decks'
+import { VerseId } from '@lib/models/verse'
 import { InboxCardType } from '@lib/models/cards'
-import { AddVerseToInboxDeck, InboxContext } from "@lib/commands/inbox"
+import { AddVerseToInboxDeck, InboxContext } from '@lib/commands/inbox'
 
 
 describe('AddVerseToInbox', () => {
