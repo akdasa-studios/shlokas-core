@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "module": "ES6",
+    "moduleResolution": "node",
+    "target": "ES2018",
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "./dist.esm",
+    "rootDir": "./lib",
+    "strictNullChecks": true,
+    "baseUrl": ".",
+    "allowSyntheticDefaultImports": true,
+    // "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    // "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "experimentalDecorators": true,
+    "paths": {
+      "@lib/*": [
+        "./lib/*"
+      ],
+      "@tests/*": [
+        "./tests/*"
+      ]
+    }
+  },
+  "include": [
+    "lib/**/*"
+  ]
+}

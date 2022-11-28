@@ -5,7 +5,7 @@
     "target": "ES2018",
     "declaration": true,
     "sourceMap": true,
-    "outDir": "./dist",
+    "outDir": "./dist.cjs",
     "rootDir": "./lib",
     "strictNullChecks": true,
     "baseUrl": ".",

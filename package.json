@@ -1,22 +1,24 @@
 {
   "name": "@akdasa-studios/shlokas-core",
-  "version": "0.0.12",
+  "version": "0.0.14",
   "description": "Core library for shlokas app",
-  "main": "dist/index.js",
+  "main": "dist.cjs/index.js",
+  "module": "dist.esm/index.js",
   "typings": "dist/index.d.js",
   "files": [
     "./dist/**/*"
   ],
   "exports": {
     "./*": {
-      "types": "./dist/*/index.d.ts",
-      "require": "./dist/*/index.js"
+      "types": "./dist.cjs/*/index.d.ts",
+      "require": "./dist.cjs/*/index.js",
+      "import": "./dist.esm/*/index.js"
     }
   },
   "typesVersions": {
     ">=3.2": {
       "*": [
-        "./dist/index.d.ts"
+        "./dist.cjs/index.d.ts"
       ]
     }
   },
@@ -24,7 +26,7 @@
     "test:unit": "jest",
     "test:mutational": "stryker run",
     "lint": "eslint . --ext .ts",
-    "build": "tsc && resolve-tspaths"
+    "build": "tsc -p ./tsconfig.cjs.json && resolve-tspaths -p ./tsconfig.cjs.json && tsc -p ./tsconfig.esm.json && resolve-tspaths -p ./tsconfig.esm.json"
   },
   "repository": {
     "type": "git",
