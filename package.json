@@ -1,20 +1,16 @@
 {
   "name": "@akdasa-studios/shlokas-core",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Core library for shlokas app",
   "main": "dist/index.js",
   "typings": "dist/index.d.js",
-  "directories": {
-    "lib": "lib"
-  },
   "files": [
     "./dist/**/*"
   ],
   "exports": {
     "./*": {
       "types": "./dist/*/index.d.ts",
-      "require": "./dist/*/index.js",
-      "import": "./dist/*/index.js"
+      "require": "./dist/*/index.js"
     }
   },
   "typesVersions": {
