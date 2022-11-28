@@ -1,10 +1,10 @@
 {
   "name": "@akdasa-studios/shlokas-core",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Core library for shlokas app",
   "main": "dist.cjs/index.js",
   "module": "dist.esm/index.js",
-  "typings": "dist/index.d.js",
+  "typings": "dist.cjs/index.d.js",
   "files": [
     "./dist.cjs/**/*",
     "./dist.esm/**/*"
@@ -40,7 +40,7 @@
   },
   "homepage": "https://github.com/akdasa-studios/shlokas-core#readme",
   "dependencies": {
-    "@akdasa-studios/framework": "^0.0.9",
+    "@akdasa-studios/framework": "^0.0.12",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
