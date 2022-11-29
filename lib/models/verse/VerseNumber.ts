@@ -1,4 +1,4 @@
-import { Value } from '@akdasa-studios/framework/domain/models'
+import { Result, Value } from '@akdasa-studios/framework/domain/models'
 
 /**
  * Verse Number
@@ -29,6 +29,19 @@ export class VerseNumber extends Value<'VerseNumber'> {
 
     // return the text part and number part separated by a space
     return (textPart + ' ' + numberPart).trim()
+  }
+}
+
+export class VerseNumberBuilder  {
+  private _sections: string[] = []
+
+  fromString(verseNumber: string): VerseNumberBuilder {
+    this._sections = verseNumber.split(/ |\./)
+    return this
+  }
+
+  build(): Result<VerseNumber, string> {
+    return Result.ok(new VerseNumber(this._sections))
   }
 }
 

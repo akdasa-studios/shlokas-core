@@ -1,4 +1,7 @@
 import { StepDefinitions } from 'jest-cucumber'
+import { AddVerseToInboxDeck } from '@lib/commands/inbox'
+import { VerseNumberBuilder } from '@lib/models'
+
 import { context } from '@tests/features/context'
 
 
@@ -8,7 +11,7 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
   /*                                   Given                                    */
   /* -------------------------------------------------------------------------- */
 
-  given('Inbox deck is empty', () => {
+  given('Empty Inbox deck', () => {
     console.log('11')
   })
 
@@ -16,17 +19,25 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
   /*                                    When                                    */
   /* -------------------------------------------------------------------------- */
 
-  when(/^I add a verse "(.*)" to the Inbox deck$/, (verseNumber: string) => {
-    console.log(verseNumber)
+  when(/^I add a verse "(.*)" to the Inbox deck$/, (verseNumberString: string) => {
+
+
+    const command = new AddVerseToInboxDeck(verseNumber.value)
+  })
+
+  when('I revert the last action', () => {
   })
 
   /* -------------------------------------------------------------------------- */
   /*                                    Then                                    */
   /* -------------------------------------------------------------------------- */
 
-  then('The inbox deck contains the following cards:', (cards) => {
+  then('Inbox deck contains the following cards:', (cards) => {
     for (const card of cards) {
       console.log(card)
     }
+  })
+
+  then('Inbox deck contains no cards', () => {
   })
 }

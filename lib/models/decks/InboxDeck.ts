@@ -12,7 +12,7 @@ export class InboxDeck {
    * @param cards Initial cards
    */
   constructor(
-    cards: InboxCard[],
+    cards: InboxCard[] = [],
   ) {
     this._cards = cards
   }

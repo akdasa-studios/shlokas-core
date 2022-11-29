@@ -7,9 +7,26 @@ Feature: Decks / Inbox decks
       deck. Two new cards are created in the Inbox deck, which helps me
       memorize the verse's text and translation.
 
-      Given Inbox deck is empty
+      Given Empty Inbox deck
       When I add a verse "BG 1.1" to the Inbox deck
-      Then The inbox deck contains the following cards:
+      Then Inbox deck contains the following cards:
         | Verse Number | Card Type       |
         | BG 1.1       | Translation     |
         | BG 1.1       | Transliteration |
+
+    Scenario: User removes accidentally added verse from the Inbox deck
+      I, as a user, want to remove an accidentally added verse from the Inbox
+
+      Given Empty Inbox deck
+      When I add a verse "BG 1.1" to the Inbox deck
+      And I revert the last action
+      Then Inbox deck contains no cards
+
+    Scenario: User removes previously added verse from the Inbox deck
+      I, as a user, want to remove the previously added verse If found it
+      hard and return back to it later
+
+      Given Empty Inbox deck
+      When I add a verse "BG 1.1" to the Inbox deck
+      And I revert the last action
+      Then Inbox deck contains no cards
