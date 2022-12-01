@@ -2,18 +2,18 @@
   "compilerOptions": {
     "module": "commonjs",
     "moduleResolution": "node",
-    "target": "ES2018",
-    "declaration": true,
+    "target": "ES6",
+    // "declaration": true,
     "sourceMap": true,
-    "outDir": "./dist.cjs",
+    "outDir": "./build",
     "rootDir": "./lib",
-    "strictNullChecks": true,
+    // "strictNullChecks": true,
     "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
-    // "noImplicitAny": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    // "noUnusedLocals": true,
+    // // "noImplicitAny": true,
+    // // "noUnusedLocals": true,
     "noUnusedParameters": true,
     "experimentalDecorators": true,
     "paths": {
@@ -23,9 +23,9 @@
       "@tests/*": [
         "./tests/*"
       ]
-    }
+    },
   },
   "include": [
-    "lib/**/*"
-  ]
+    "lib/**/*.ts",
+  ],
 }

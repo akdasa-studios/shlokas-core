@@ -27,7 +27,7 @@
     "test:unit": "jest",
     "test:mutational": "stryker run",
     "lint": "eslint . --ext .ts",
-    "build": "tsc -p ./tsconfig.cjs.json && resolve-tspaths -p ./tsconfig.cjs.json && tsc -p ./tsconfig.esm.json && resolve-tspaths -p ./tsconfig.esm.json"
+    "build": "webpack && tsc --emitDeclarationOnly --declaration --out ./dist/index.d.ts"
   },
   "repository": {
     "type": "git",
@@ -40,14 +40,14 @@
   },
   "homepage": "https://github.com/akdasa-studios/shlokas-core#readme",
   "dependencies": {
-    "@akdasa-studios/framework": "^0.0.12",
+    "@akdasa-studios/framework": "^0.1.5",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@stryker-mutator/core": "^6.3.0",
     "@stryker-mutator/jest-runner": "^6.3.0",
     "@stryker-mutator/typescript-checker": "^6.3.0",
-    "@types/jest": "^29.1.2",
+    "@types/jest": "^29.2.3",
     "@typescript-eslint/eslint-plugin": "^5.44.0",
     "@typescript-eslint/parser": "^5.44.0",
     "eslint": "^8.28.0",
@@ -55,6 +55,9 @@
     "jest-cucumber": "^3.0.1",
     "resolve-tspaths": "^0.8.1",
     "ts-jest": "^29.0.3",
-    "typescript": "^4.9.3"
+    "ts-loader": "^9.4.1",
+    "typescript": "^4.9.3",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.0"
   }
 }

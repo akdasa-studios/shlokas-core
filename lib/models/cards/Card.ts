@@ -1,4 +1,4 @@
-import { UuidIdentity, Aggregate } from '@akdasa-studios/framework/domain/models'
+import { UuidIdentity, Aggregate } from '@akdasa-studios/framework'
 import { VerseId } from '@lib/models/verse'
 
 
