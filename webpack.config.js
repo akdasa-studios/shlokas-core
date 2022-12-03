@@ -29,10 +29,10 @@ module.exports = {
   },
   externals: {
     '@akdasa-studios/framework': {
-      commonjs: 'framework',
-      commonjs2: 'framework',
-      amd: 'framework',
-      root: 'framework',
+      commonjs: '@akdasa-studios/framework',
+      commonjs2: '@akdasa-studios/framework',
+      amd: '@akdasa-studios/framework',
+      root: '@akdasa-studios/framework',
     },
     uuid: {
       commonjs: 'uuid',
