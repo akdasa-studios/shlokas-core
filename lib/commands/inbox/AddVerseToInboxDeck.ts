@@ -2,7 +2,7 @@ import { Result } from '@akdasa-studios/framework'
 import { ICommand } from '@akdasa-studios/framework'
 
 import { VerseId } from '@lib/models'
-import { InboxCard, InboxCardBuilder, InboxCardType } from '@lib/models'
+import { InboxCard, InboxCardBuilder, InboxCardType } from '@lib/models/cards'
 
 import { InboxContext } from './InboxContext'
 

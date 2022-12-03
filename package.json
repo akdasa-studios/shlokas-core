@@ -2,32 +2,24 @@
   "name": "@akdasa-studios/shlokas-core",
   "version": "0.0.16",
   "description": "Core library for shlokas app",
-  "main": "dist.cjs/index.js",
-  "module": "dist.esm/index.js",
-  "typings": "dist.cjs/index.d.js",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "files": [
-    "./dist.cjs/**/*",
-    "./dist.esm/**/*"
+    "./dist/index.js",
+    "./dist/index.d.ts"
   ],
   "exports": {
-    "./*": {
-      "types": "./dist.cjs/*/index.d.ts",
-      "require": "./dist.cjs/*/index.js",
-      "import": "./dist.esm/*/index.js"
-    }
-  },
-  "typesVersions": {
-    ">=3.2": {
-      "*": [
-        "./dist.cjs/index.d.ts"
-      ]
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "scripts": {
     "test:unit": "jest",
     "test:mutational": "stryker run",
     "lint": "eslint . --ext .ts",
-    "build": "webpack && tsc --emitDeclarationOnly --declaration --out ./dist/index.d.ts"
+    "build": "webpack && tsc --emitDeclarationOnly --declaration --outDir ./temp && api-extractor run --local && true"
   },
   "repository": {
     "type": "git",
@@ -40,8 +32,7 @@
   },
   "homepage": "https://github.com/akdasa-studios/shlokas-core#readme",
   "dependencies": {
-    "@akdasa-studios/framework": "^0.1.5",
-    "uuid": "^9.0.0"
+    "@akdasa-studios/framework": "0.1.12"
   },
   "devDependencies": {
     "@stryker-mutator/core": "^6.3.0",
@@ -58,6 +49,7 @@
     "ts-loader": "^9.4.1",
     "typescript": "^4.9.3",
     "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.0"
+    "webpack-cli": "^5.0.0",
+    "@microsoft/api-extractor": "^7.33.6"
   }
 }
