@@ -25,7 +25,7 @@ describe('AddVerseToInbox', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.execute', () => {
-    it('adds translation and transliteration cards to the inbox deck', () => {
+    it('adds translation and text cards to the inbox deck', () => {
       const command = new AddVerseToInboxDeck(verseId)
       const result = command.execute(context)
 

@@ -1,6 +1,6 @@
 import { Result } from '@akdasa-studios/framework'
 import { Aggregate, UuidIdentity } from '@akdasa-studios/framework'
-import { VerseNumber, Transliteration, NoTransliteration, Translation, NoTranslation, Synonym, UnknownVerseNumber } from '@lib/models/verse'
+import { VerseNumber, Text, NoText, Translation, NoTranslation, Synonym, UnknownVerseNumber } from '@lib/models/verse'
 import { Language, UnknownLanguage } from '@lib/models'
 
 
@@ -17,7 +17,7 @@ export class Verse extends Aggregate<VerseId> {
     id: VerseId,
     public readonly number: VerseNumber,
     public readonly language: Language,
-    public readonly transliteration: Transliteration,
+    public readonly text: Text,
     public readonly translation: Translation,
     public readonly synonyms: Synonym[],
   ) {
@@ -29,7 +29,7 @@ export class VerseBuilder {
   private _id?: VerseId
   private _number: VerseNumber = UnknownVerseNumber
   private _language: Language = UnknownLanguage
-  private _transliteration: Transliteration = NoTransliteration
+  private _text: Text = NoText
   private _translation: Translation = NoTranslation
   private _synonyms: Synonym[] = []
 
@@ -43,8 +43,8 @@ export class VerseBuilder {
     return this
   }
 
-  withText(transliteration: Transliteration): VerseBuilder {
-    this._transliteration = transliteration
+  withText(text: Text): VerseBuilder {
+    this._text = text
     return this
   }
 
@@ -59,7 +59,7 @@ export class VerseBuilder {
       id,
       this._number,
       this._language,
-      this._transliteration,
+      this._text,
       this._translation,
       this._synonyms
     )

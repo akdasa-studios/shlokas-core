@@ -3,9 +3,9 @@ import { Value } from '@akdasa-studios/framework'
 /**
  * Verse transliteration
  */
-export class Transliteration extends Value<'Transliteration'> {
+export class Text extends Value<'Text'> {
   /**
-   * Initialize a new instance of Transliteration class with the given lines
+   * Initialize a new instance of Text class with the given lines
    */
   constructor (
     public readonly lines: string[],
@@ -16,4 +16,4 @@ export class Transliteration extends Value<'Transliteration'> {
   }
 }
 
-export const NoTransliteration = new Transliteration(['No Transliteration', 'No Transliteration'])
+export const NoText = new Text(['No Text', 'No Text'])
