@@ -13,19 +13,19 @@ export class Application {
     this._versesLibrary = new VersesLibrary(versesRepository)
   }
 
-  get inboxDeck() {
+  get inboxDeck() : InboxDeck {
     return this._inboxDeck
   }
 
-  get processor() {
+  get processor() : Processor<Application> {
     return this._processor
   }
 
-  get versesLibrary() {
+  get versesLibrary() : VersesLibrary {
     return this._versesLibrary
   }
 
-  get language() {
+  get language() : Language {
     return this._language
   }
 }

@@ -18,5 +18,6 @@
     "high": 30,
     "low": 10,
     "break": 50
-  }
+  },
+  "ignoreStatic": true
 }

@@ -13,12 +13,12 @@ export class Context {
     this._app = new Application(this._versesRepository)
   }
 
-  get app() {
+  get app() : Application {
     return this._app
   }
 }
 
-export let context: Context
+export let context: Context = new Context()
 export function newContext() {
   context = new Context()
 }
