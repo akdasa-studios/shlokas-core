@@ -37,12 +37,12 @@ class Verse {
     +language
     +book
     +number
-    +transliteration
+    +text
     +translation
     +synonyms
 }
 
-class Transliteration {
+class Text {
     <<value>>
     +lines[]
 }
@@ -53,7 +53,7 @@ class Translation {
 
 class InboxCardType {
     <<enumeration>>
-    Transliteration,
+    Text,
     Translation,
     Word
 }
@@ -95,7 +95,7 @@ Verse --> Language : has translation in
 Verse --> VerseNumber : has
 Verse --> Book : belongs to
 Verse --> Synonym : has many
-Verse --> Transliteration : has
+Verse --> Text : has
 Verse --> Translation : has
 Verse --> "M" Collection : belongs to
 

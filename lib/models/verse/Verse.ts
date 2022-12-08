@@ -43,7 +43,7 @@ export class VerseBuilder {
     return this
   }
 
-  withTransliteration(transliteration: Transliteration): VerseBuilder {
+  withText(transliteration: Transliteration): VerseBuilder {
     this._transliteration = transliteration
     return this
   }

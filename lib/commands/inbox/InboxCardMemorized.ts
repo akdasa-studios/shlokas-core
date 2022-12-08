@@ -1,10 +1,9 @@
-import { Result } from '@akdasa-studios/framework'
-import { ICommand } from '@akdasa-studios/framework'
+import { Command, Result } from '@akdasa-studios/framework'
 import { InboxCard } from '@lib/models/cards'
 import { InboxContext } from './InboxContext'
 
 
-export class InboxCardMemorized implements ICommand<InboxContext, Result<InboxCard, string>> {
+export class InboxCardMemorized implements Command<InboxContext, Result<InboxCard, string>> {
   private _inboxCard: InboxCard
 
   constructor(inboxCard: InboxCard) {

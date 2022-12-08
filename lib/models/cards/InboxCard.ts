@@ -3,7 +3,7 @@ import { Card, CardId } from './Card'
 
 
 export enum InboxCardType {
-  Transliteration = 'Transliteration',
+  Text = 'Text',
   Translation = 'Translation',
 }
 

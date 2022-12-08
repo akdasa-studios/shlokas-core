@@ -1,4 +1,5 @@
-import { InboxCard } from '@lib/models/cards'
+import { InboxCard, InboxCardType } from '@lib/models/cards'
+import { VerseId } from '../verse'
 
 
 /**
@@ -38,5 +39,16 @@ export class InboxDeck {
    */
   removeCard(card: InboxCard) {
     this._cards = this._cards.filter(x => x.id !== card.id)
+  }
+
+  get isEmpty(): boolean {
+    return this._cards.length === 0
+  }
+
+  getCards(
+    verseId: VerseId,
+    cardType?: InboxCardType,
+  ) {
+    return this._cards.filter(x => x.verseId.equals(verseId) && (cardType ? x.type === cardType : true))
   }
 }

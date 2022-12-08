@@ -1,13 +1,11 @@
-import { Result } from '@akdasa-studios/framework'
-import { ICommand } from '@akdasa-studios/framework'
+import { Command, Result } from '@akdasa-studios/framework'
+import { Application } from '@lib/Application'
 
 import { VerseId } from '@lib/models'
 import { InboxCard, InboxCardBuilder, InboxCardType } from '@lib/models/cards'
 
-import { InboxContext } from './InboxContext'
 
-
-export class AddVerseToInboxDeck implements ICommand<InboxContext, Result<InboxCard[], string>> {
+export class AddVerseToInboxDeck implements Command<Application, Result<InboxCard[], string>> {
   private _verseId: VerseId
   private _addedCards: InboxCard[] = []
 
@@ -15,14 +13,14 @@ export class AddVerseToInboxDeck implements ICommand<InboxContext, Result<InboxC
     this._verseId = verseId
   }
 
-  execute(context: InboxContext): Result<InboxCard[], string> {
+  execute(context: Application): Result<InboxCard[], string> {
     // create two cards for the verse
     const card1 = this.getCard.ofType(InboxCardType.Translation).build()
-    const card2 = this.getCard.ofType(InboxCardType.Transliteration).build()
+    const card2 = this.getCard.ofType(InboxCardType.Text).build()
 
     // add the cards to the deck
-    context.deck.addCard(card1)
-    context.deck.addCard(card2)
+    context.inboxDeck.addCard(card1)
+    context.inboxDeck.addCard(card2)
 
     // store the added cards
     this._addedCards = [card1, card2]
@@ -31,9 +29,9 @@ export class AddVerseToInboxDeck implements ICommand<InboxContext, Result<InboxC
     return Result.ok(this._addedCards) // TODO: make copy
   }
 
-  revert(context: InboxContext): void {
+  revert(context: Application): void {
     for(const card of this._addedCards) {
-      context.deck.removeCard(card)
+      context.inboxDeck.removeCard(card)
     }
   }
 

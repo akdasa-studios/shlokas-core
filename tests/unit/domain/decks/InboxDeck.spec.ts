@@ -10,7 +10,7 @@ describe('InboxDeck', () => {
   const b = (
     new InboxCardBuilder()
       .ofVerse(new VerseId())
-      .ofType(InboxCardType.Transliteration)
+      .ofType(InboxCardType.Text)
   )
 
   beforeEach(() => {
