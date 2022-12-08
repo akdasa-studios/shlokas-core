@@ -1,8 +1,7 @@
-import { Result } from '@akdasa-studios/framework/core'
-import { Aggregate, UuidIdentity } from '@akdasa-studios/framework/domain/models'
-
+import { Result } from '@akdasa-studios/framework'
+import { Aggregate, UuidIdentity } from '@akdasa-studios/framework'
 import { VerseNumber, Transliteration, NoTransliteration, Translation, NoTranslation, Synonym, UnknownVerseNumber } from '@lib/models/verse'
-import { Language, UnknownLanguage } from '@lib/models/Language'
+import { Language, UnknownLanguage } from '@lib/models'
 
 
 /**

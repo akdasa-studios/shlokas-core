@@ -6,3 +6,5 @@ dist/
 dist.cjs/
 dist.esm/
 .DS_Store
+build
+temp/

@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "target": "ES6",
+    // "strict": true,
     "moduleResolution": "node",
-    "target": "ES2018",
-    "declaration": true,
+    "importHelpers": false,
+    // "declaration": true,
     "sourceMap": true,
-    "outDir": "./dist.cjs",
+    "outDir": "./dist",
     "rootDir": "./lib",
     "strictNullChecks": true,
     "baseUrl": ".",
@@ -26,6 +28,7 @@
     }
   },
   "include": [
-    "lib/**/*"
+    "lib/**/*.ts",
+    "lib/**/*.d.ts"
   ]
 }

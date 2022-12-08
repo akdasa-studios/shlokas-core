@@ -1,5 +1,5 @@
-import { Result } from '@akdasa-studios/framework/core'
-import { ICommand } from '@akdasa-studios/framework/commands'
+import { Result } from '@akdasa-studios/framework'
+import { ICommand } from '@akdasa-studios/framework'
 import { InboxCard } from '@lib/models/cards'
 import { InboxContext } from './InboxContext'
 

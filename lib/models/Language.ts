@@ -1,4 +1,5 @@
-import { Value } from '@akdasa-studios/framework/domain/models'
+import { Value } from '@akdasa-studios/framework'
+
 
 /**
  * Language

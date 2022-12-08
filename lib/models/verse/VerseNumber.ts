@@ -1,4 +1,4 @@
-import { Result, Value } from '@akdasa-studios/framework/domain/models'
+import { Result, Value } from '@akdasa-studios/framework'
 
 /**
  * Verse Number
