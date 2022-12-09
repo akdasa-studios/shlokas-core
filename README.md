@@ -1,5 +1,8 @@
-# Shlokas Core
-Core library for [Shlokas](https://github.com/akdasa-studios/shlokas) application. This library is used by both the web and mobile apps. It contains the domain models, business logic.
+<p align="center">
+    <img src="docs/logo.svg" height="184px"/>
+</p>
+
+Core library for [Shlokas](https://github.com/akdasa-studios/shlokas) application. This library is used by both the web and mobile apps. It contains the domain models and business logic.
 
 ## Documentation
 1. [Application Architecture](docs/app.md) - The overall architecture of the application.
