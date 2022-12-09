@@ -1,4 +1,4 @@
-import { InboxCard } from '@lib/models/cards'
+import { InboxCard, InboxCardBuilder, InboxCardType, VerseId } from '@lib/models'
 
 
 /**
@@ -12,7 +12,7 @@ export class InboxDeck {
    * @param cards Initial cards
    */
   constructor(
-    cards: InboxCard[],
+    cards: InboxCard[] = [],
   ) {
     this._cards = cards
   }
@@ -20,9 +20,21 @@ export class InboxDeck {
   /**
    * Returns the cards in the deck in the order they were added.
    */
-  get cards(): InboxCard[] {
+  get cards(): readonly InboxCard[] {
     return this._cards.sort((x, y) => x.addedAt.getTime() - y.addedAt.getTime())
   }
+
+  /**
+   * Returns true if the deck is empty, otherwise false.
+   * @returns True if the deck is empty, otherwise false
+   */
+  get isEmpty(): boolean {
+    return this._cards.length === 0
+  }
+
+  /* -------------------------------------------------------------------------- */
+  /*                                    Cards                                   */
+  /* -------------------------------------------------------------------------- */
 
   /**
    * Adds the given card to the deck.
@@ -38,5 +50,61 @@ export class InboxDeck {
    */
   removeCard(card: InboxCard) {
     this._cards = this._cards.filter(x => x.id !== card.id)
+  }
+
+  /**
+   * Marks card as memorized.
+   * @param card Card to mark as memorized
+   */
+  cardMemorized(card: InboxCard) {
+    this.removeCard(card)
+  }
+
+  /* -------------------------------------------------------------------------- */
+  /*                                   Verses                                   */
+  /* -------------------------------------------------------------------------- */
+
+  /**
+   * Creates two cards for the given verse and adds them to the deck.
+   * @param verseId Verse ID to add to the deck
+   * @returns Created cards
+   */
+  addVerse(verseId: VerseId) : readonly InboxCard[] {
+    const b = new InboxCardBuilder()
+      .ofVerse(verseId)
+      .addedAt(new Date())
+
+    // create two cards for the verse
+    const card1 = b.ofType(InboxCardType.Translation).build()
+    const card2 = b.ofType(InboxCardType.Text).build()
+    this._cards.push(card1)
+    this._cards.push(card2)
+    return [card1, card2]
+  }
+
+  /**
+   * Removes all cards for the given verse from the deck.
+   * @param verseId Verse ID to remove from the deck
+   * @returns Removed cards
+   */
+  removeVerse(verseId: VerseId) : readonly InboxCard[] {
+    const removedCards = this.getVerseCards(verseId)
+    for(const card of removedCards) {
+      this.removeCard(card)
+    }
+    return removedCards
+  }
+
+  /**
+   * Returns all cards for the given verse.
+   * @param verseId Verse to get cards for
+   * @param cardType Card type to filter by
+   * @returns List of cards for the given verse
+   */
+  getVerseCards(
+    verseId: VerseId,
+    cardType?: InboxCardType,
+  ) : readonly InboxCard[] {
+    return this._cards.filter(x => x.verseId.equals(verseId) && (cardType ? x.type === cardType : true))
   }
 }

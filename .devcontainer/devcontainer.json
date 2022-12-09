@@ -12,6 +12,7 @@
     "howardzuo.vscode-npm-dependency",
     "craig-simko.open-stryker-report",
     "jasonnutter.search-node-modules",
-    "alexkrechik.cucumberautocomplete"
+    "alexkrechik.cucumberautocomplete",
+    "kahole.magit"
   ]
 }

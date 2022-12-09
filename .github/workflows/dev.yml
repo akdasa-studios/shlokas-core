@@ -23,7 +23,7 @@ jobs:
 
       # Run tests
       - name: Tests
-        run: npm run test:unit
+        run: npm run test
 
       # Upload test coverage
       - name: Upload coverage to Codecov

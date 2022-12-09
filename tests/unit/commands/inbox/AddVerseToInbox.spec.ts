@@ -1,7 +1,8 @@
-import { InboxDeck } from '@lib/models/decks'
-import { VerseId } from '@lib/models/verse'
+import { InMemoryRepository } from '@akdasa-studios/framework'
+import { Application } from '@lib/app/Application'
+import { AddVerseToInboxDeck } from '@lib/commands/inbox'
 import { InboxCardType } from '@lib/models/cards'
-import { AddVerseToInboxDeck, InboxContext } from '@lib/commands/inbox'
+import { Verse, VerseId } from '@lib/models/verse'
 
 
 describe('AddVerseToInbox', () => {
@@ -10,11 +11,11 @@ describe('AddVerseToInbox', () => {
   /*                                   Context                                  */
   /* -------------------------------------------------------------------------- */
 
-  let context: InboxContext
+  let context: Application
   let verseId: VerseId
 
   beforeEach(() => {
-    context = new InboxContext(new InboxDeck([]))
+    context = new Application(new InMemoryRepository<Verse>())
     verseId = new VerseId()
   })
 
@@ -24,7 +25,7 @@ describe('AddVerseToInbox', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.execute', () => {
-    it('adds translation and transliteration cards to the inbox deck', () => {
+    it('adds translation and text cards to the inbox deck', () => {
       const command = new AddVerseToInboxDeck(verseId)
       const result = command.execute(context)
 
@@ -32,9 +33,9 @@ describe('AddVerseToInbox', () => {
       expect(result.value).toHaveLength(2)
       expect(result.value.map(x => x.type)).toEqual([
         InboxCardType.Translation,
-        InboxCardType.Transliteration
+        InboxCardType.Text
       ])
-      expect(context.deck.cards).toHaveLength(2)
+      expect(context.inboxDeck.cards).toHaveLength(2)
     })
   })
 
@@ -53,9 +54,9 @@ describe('AddVerseToInbox', () => {
 
       command1.revert(context)
 
-      expect(context.deck.cards).toHaveLength(2)
-      expect(context.deck.cards).toEqual(result2.value)
-      expect(context.deck.cards).not.toContain(result1.value)
+      expect(context.inboxDeck.cards).toHaveLength(2)
+      expect(context.inboxDeck.cards).toEqual(result2.value)
+      expect(context.inboxDeck.cards).not.toContain(result1.value)
     })
   })
 })

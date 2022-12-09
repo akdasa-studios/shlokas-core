@@ -16,7 +16,9 @@
     }
   },
   "scripts": {
-    "test:unit": "jest",
+    "test": "jest",
+    "test:unit": "jest --testMatch **/*.spec.ts",
+    "test:acceptance": "jest --testMatch **/*.feature.ts",
     "test:mutational": "stryker run",
     "lint": "eslint . --ext .ts",
     "build": "webpack && tsc --emitDeclarationOnly --declaration --outDir ./temp && api-extractor run --local && true"
@@ -32,7 +34,7 @@
   },
   "homepage": "https://github.com/akdasa-studios/shlokas-core#readme",
   "dependencies": {
-    "@akdasa-studios/framework": "0.1.12"
+    "@akdasa-studios/framework": "0.1.16"
   },
   "devDependencies": {
     "@stryker-mutator/core": "^6.3.0",

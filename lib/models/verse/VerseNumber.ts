@@ -1,4 +1,4 @@
-import { Value } from '@akdasa-studios/framework'
+import { Result, Value } from '@akdasa-studios/framework'
 
 /**
  * Verse Number
@@ -16,6 +16,19 @@ export class VerseNumber extends Value<'VerseNumber'> {
   }
 
   /**
+   * Compares the verse number with the given verse number
+   * @param value Verse number to compare with
+   * @returns True if the verse numbers are equal, false otherwise
+   */
+  equals(value: VerseNumber): boolean {
+    if (this.sections.length !== value.sections.length) { return false }
+    for (let i = 0; i < this.sections.length; i++) {
+      if (this.sections[i] !== value.sections[i]) { return false }
+    }
+    return true
+  }
+
+  /**
    * Returns the verse number as a string
    * @returns String representation of the verse number
    */
@@ -29,6 +42,19 @@ export class VerseNumber extends Value<'VerseNumber'> {
 
     // return the text part and number part separated by a space
     return (textPart + ' ' + numberPart).trim()
+  }
+}
+
+export class VerseNumberBuilder  {
+  private _sections: string[] = []
+
+  fromString(verseNumber: string): VerseNumberBuilder {
+    this._sections = verseNumber.split(/ |\./)
+    return this
+  }
+
+  build(): Result<VerseNumber, string> {
+    return Result.ok(new VerseNumber(this._sections))
   }
 }
 

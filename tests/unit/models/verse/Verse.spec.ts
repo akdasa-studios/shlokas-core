@@ -1,5 +1,5 @@
 import { Language } from '@lib/models'
-import { Verse, VerseId, VerseNumber, Translation, Transliteration, Synonym } from '@lib/models/verse'
+import { Verse, VerseId, VerseNumber, Translation, Text, Synonym } from '@lib/models/verse'
 
 describe('Verse', () => {
   describe('constructor', () => {
@@ -8,7 +8,7 @@ describe('Verse', () => {
         new VerseId(),
         new VerseNumber(['BG', '1', '1']),
         new Language('EN', 'English'),
-        new Transliteration([
+        new Text([
           'dehino `smin yathā dehe',
           'kaumāraṁ yauvanaṁ jarā',
           'tathā dehāntara-prāptir',
