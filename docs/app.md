@@ -1,4 +1,4 @@
-# Application
+# Application Architecture
 
 ```mermaid
 classDiagram
