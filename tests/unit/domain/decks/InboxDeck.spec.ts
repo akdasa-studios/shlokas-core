@@ -1,7 +1,4 @@
-import { InboxDeck } from '@lib/models/decks'
-import { VerseId } from '@lib/models/verse'
-import { InboxCardBuilder } from '@lib/models/cards'
-import { InboxCardType } from '@lib/models/cards'
+import { InboxCardBuilder, InboxCardType, InboxDeck, VerseId } from '@lib/models'
 
 
 describe('InboxDeck', () => {
@@ -34,6 +31,22 @@ describe('InboxDeck', () => {
   })
 
   /* -------------------------------------------------------------------------- */
+  /*                                   isEmpty                                  */
+  /* -------------------------------------------------------------------------- */
+
+  describe('.isEmpty', () => {
+    it('returns true if the deck is empty', () => {
+      expect(deck.isEmpty).toBe(true)
+    })
+
+    it('returns false if the deck is not empty', () => {
+      const card1 = b.addedAt(new Date(2020, 1, 1)).build()
+      const deck = new InboxDeck([card1])
+      expect(deck.isEmpty).toBe(false)
+    })
+  })
+
+  /* -------------------------------------------------------------------------- */
   /*                                   addCard                                  */
   /* -------------------------------------------------------------------------- */
 
@@ -57,6 +70,40 @@ describe('InboxDeck', () => {
       const deck = new InboxDeck([card1, card2])
       deck.removeCard(card1)
       expect(deck.cards).toEqual([card2])
+    })
+  })
+
+  describe('.addVerse', () => {
+    it('adds two cards', () => {
+      const verseId = new VerseId()
+      const addedCards = deck.addVerse(verseId)
+      expect(addedCards).toHaveLength(2)
+
+      expect(addedCards[0].verseId).toEqual(verseId)
+      expect(addedCards[1].verseId).toEqual(verseId)
+
+      expect(addedCards[0].type).toEqual(InboxCardType.Translation)
+      expect(addedCards[1].type).toEqual(InboxCardType.Text)
+    })
+  })
+
+  /* -------------------------------------------------------------------------- */
+  /*                                  removeVerse                               */
+  /* -------------------------------------------------------------------------- */
+
+  describe('.removeVerse', () => {
+    it('removes all cards for a verse from the deck', () => {
+      const verse1Id = new VerseId()
+      const verse2Id = new VerseId()
+      const card1 = b.ofVerse(verse1Id).build()
+      const card2 = b.ofVerse(verse1Id).build()
+      const card3 = b.ofVerse(verse2Id).build()
+      deck.addCard(card1)
+      deck.addCard(card2)
+      deck.addCard(card3)
+      const removedCards = deck.removeVerse(verse1Id)
+      expect(removedCards).toEqual([card1, card2])
+      expect(deck.cards).toEqual([card3])
     })
   })
 })

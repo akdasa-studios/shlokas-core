@@ -1,13 +1,12 @@
-import { loadFeature, autoBindSteps } from 'jest-cucumber'
-
-import { inboxDeckSteps } from '@tests/features/decks/steps/InboxDeck.steps'
+import { autoBindSteps, loadFeature } from 'jest-cucumber'
 import { newContext } from '@tests/features/context'
+import { inboxDeckSteps } from '@tests/features/decks/steps/InboxDeck.steps'
 
 
 beforeEach(() => { newContext() })
 
 autoBindSteps([
-  loadFeature('features/decks/inbox-deck.feature'),
+  loadFeature('features/decks/InboxDeck.feature'),
 ], [
   inboxDeckSteps,
 ])
