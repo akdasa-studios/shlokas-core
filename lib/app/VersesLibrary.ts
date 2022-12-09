@@ -1,5 +1,5 @@
 import { QueryBuilder, Repository, Result } from '@akdasa-studios/framework'
-import { Verse, VerseNumberBuilder } from '@lib/models'
+import { Verse, VerseNumber } from '@lib/models'
 
 /**
  * Verses library
@@ -31,20 +31,15 @@ export class VersesLibrary {
    * @returns Result of the operation
    * @remarks If the verse is not found, the result will be a failure.
    */
-  findVerseByNumber(number: string): Result<Verse, string> {
-    if (typeof number === 'string') {
-      const verseNumber = new VerseNumberBuilder().fromString(number).build()
-      if (verseNumber.isFailure) { return Result.fail('Incorrect verse number: ' + number) }
+  findVerseByNumber(verseNumber: VerseNumber): Result<Verse, string> {
+    const queryBuilder = new QueryBuilder<Verse>()
+    const query = queryBuilder.eq('number', verseNumber)
 
-      const queryBuilder = new QueryBuilder<Verse>()
-      const query = queryBuilder.eq('number', verseNumber.value)
+    const result = this._repository.find(query)
 
-      const result = this._repository.find(query)
-
-      if (result.length === 0) { return Result.fail('Verse not found: ' + number) }
-      if (result.length > 1) { return Result.fail('More than one verse found: ' + number) }
-      return Result.ok(result[0])
+    if (result.length === 0) {
+      return Result.fail('Verse not found: ' + verseNumber.toString())
     }
-    return Result.fail('Incorrect verse number: ' + number)
+    return Result.ok(result[0])
   }
 }
