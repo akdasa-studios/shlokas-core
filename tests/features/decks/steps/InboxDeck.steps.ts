@@ -37,7 +37,7 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
         .withNumber(verseNumber.value)
         .withText(verseListLine['Text'])
         .withTranslation(verseListLine['Translation'])
-        .ofLanguage(context.app.language)
+        .ofLanguage(context.app.settings.language)
         .build()
       context.app.versesLibrary.addVerse(verse.value)
     }

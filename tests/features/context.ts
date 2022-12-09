@@ -1,5 +1,5 @@
 import { InMemoryRepository, Repository } from '@akdasa-studios/framework'
-import { Application } from '@lib/Application'
+import { Application } from '@lib/app/Application'
 import { Verse } from '@lib/models'
 
 

@@ -64,6 +64,11 @@ export class InboxDeck {
   /*                                   Verses                                   */
   /* -------------------------------------------------------------------------- */
 
+  /**
+   * Creates two cards for the given verse and adds them to the deck.
+   * @param verseId Verse ID to add to the deck
+   * @returns Created cards
+   */
   addVerse(verseId: VerseId) : readonly InboxCard[] {
     const b = new InboxCardBuilder()
       .ofVerse(verseId)

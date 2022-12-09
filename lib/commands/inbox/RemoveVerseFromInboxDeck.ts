@@ -1,5 +1,5 @@
 import { Command, Result } from '@akdasa-studios/framework'
-import { Application } from '@lib/Application'
+import { Application } from '@lib/app/Application'
 import { VerseId } from '@lib/models'
 import { InboxCard } from '@lib/models/cards'
 

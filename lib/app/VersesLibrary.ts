@@ -1,47 +1,36 @@
-import { Processor, QueryBuilder, Repository, Result } from '@akdasa-studios/framework'
-import { InboxDeck, Language, Verse, VerseNumberBuilder } from '@lib/models'
+import { QueryBuilder, Repository, Result } from '@akdasa-studios/framework'
+import { Verse, VerseNumberBuilder } from '@lib/models'
 
-export class Application {
-  private _inboxDeck = new InboxDeck()
-  private _processor = new Processor<Application>(this)
-  private _versesLibrary: VersesLibrary
-  private _language: Language = new Language('en', 'English')
-
-  constructor(
-    versesRepository: Repository<Verse>,
-  ) {
-    this._versesLibrary = new VersesLibrary(versesRepository)
-  }
-
-  get inboxDeck() : InboxDeck {
-    return this._inboxDeck
-  }
-
-  get processor() : Processor<Application> {
-    return this._processor
-  }
-
-  get versesLibrary() : VersesLibrary {
-    return this._versesLibrary
-  }
-
-  get language() : Language {
-    return this._language
-  }
-}
-
+/**
+ * Verses library
+ */
 export class VersesLibrary {
   private _repository: Repository<Verse>
+
+  /**
+   * Initialize a new instance of VersesLibrary class with the given parameters.
+   * @param repository Repository of verses
+   */
   constructor(repository: Repository<Verse>) {
     this._repository = repository
   }
 
+  /**
+   * Adds a verse to the library.
+   * @param verse Verse to add
+   * @returns Result of the operation
+   */
   addVerse(verse: Verse): Result<Verse, string> {
     this._repository.save(verse)
-    // console.log(this._repository.find({}))
     return Result.ok(verse)
   }
 
+  /**
+   * Finds a verse by its number.
+   * @param number Number of the verse
+   * @returns Result of the operation
+   * @remarks If the verse is not found, the result will be a failure.
+   */
   findVerseByNumber(number: string): Result<Verse, string> {
     if (typeof number === 'string') {
       const verseNumber = new VerseNumberBuilder().fromString(number).build()
@@ -49,11 +38,8 @@ export class VersesLibrary {
 
       const queryBuilder = new QueryBuilder<Verse>()
       const query = queryBuilder.eq('number', verseNumber.value)
-      // const query = queryBuilder.eq('transliteration', 'dharma-ksetre kuru-ksetre')
-
 
       const result = this._repository.find(query)
-      // console.log('>>>>>> ', result, '<<<<<<<<')
 
       if (result.length === 0) { return Result.fail('Verse not found: ' + number) }
       if (result.length > 1) { return Result.fail('More than one verse found: ' + number) }

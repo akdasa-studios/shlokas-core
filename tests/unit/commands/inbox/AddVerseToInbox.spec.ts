@@ -1,5 +1,5 @@
 import { InMemoryRepository } from '@akdasa-studios/framework'
-import { Application } from '@lib/Application'
+import { Application } from '@lib/app/Application'
 import { AddVerseToInboxDeck } from '@lib/commands/inbox'
 import { InboxCardType } from '@lib/models/cards'
 import { Verse, VerseId } from '@lib/models/verse'
