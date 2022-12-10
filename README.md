@@ -2,6 +2,13 @@
     <img src="docs/logo.svg" height="184px"/>
 </p>
 
+<p align="center">
+  <a href="https://github.com/akdasa-studios/shlokas-core/actions/workflows/tests.yml"><img src="https://github.com/akdasa-studios/shlokas-core/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
+  <a href="https://codecov.io/gh/akdasa-studios/shlokas-core"><img src="https://codecov.io/gh/akdasa-studios/shlokas-core/branch/main/graph/badge.svg?token=OB1AZJDMY5" alt="codecov"></a>
+  <a href="https://dashboard.stryker-mutator.io/reports/github.com/akdasa-studios/shlokas-core/main"><img src="https://img.shields.io/endpoint?style=flat&amp;url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fakdasa-studios%2Fshlokas-core%2Fmain" alt="Mutation testing badge"></a>
+  <a href="https://www.codacy.com/gh/akdasa-studios/shlokas-core/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=akdasa-studios/shlokas-core&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/a2f433a5afe841ca8bda8e6025ee4929" alt="Codacy Badge"></a>
+</p>
+
 Core library for [Shlokas](https://github.com/akdasa-studios/shlokas) application. This library is used by both the web and mobile apps. It contains the domain models and business logic.
 
 ## Documentation
