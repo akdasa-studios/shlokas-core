@@ -1,5 +1,5 @@
 import { QueryBuilder, Repository, Result } from '@akdasa-studios/framework'
-import { Verse, VerseNumber } from '@lib/models'
+import { Verse, VerseId, VerseNumber } from '@lib/models'
 
 /**
  * Verses library
@@ -41,5 +41,13 @@ export class VersesLibrary {
       return Result.fail('Verse not found: ' + verseNumber.toString())
     }
     return Result.ok(result[0])
+  }
+
+  findVerseById(id: VerseId) : Result<Verse, string> {
+    const result = this._repository.get(id)
+    if (result.isFailure) {
+      return Result.fail('Verse not found: ' + id.toString())
+    }
+    return Result.ok(result.value)
   }
 }

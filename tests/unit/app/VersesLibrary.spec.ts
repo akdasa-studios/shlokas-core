@@ -1,6 +1,6 @@
 import { InMemoryRepository, Repository } from '@akdasa-studios/framework'
 import { VersesLibrary } from '@lib/app/VersesLibrary'
-import { Verse, VerseBuilder, VerseNumber, VerseNumberBuilder } from '@lib/models'
+import { Verse, VerseBuilder, VerseId, VerseNumber, VerseNumberBuilder } from '@lib/models'
 
 describe('VersesLibrary', () => {
   let versesRepository: Repository<Verse>
@@ -53,6 +53,31 @@ describe('VersesLibrary', () => {
 
       const result = library.findVerseByNumber(verseNumber)
       expect(result.isSuccess).toBeTruthy()
+    })
+  })
+
+  /* -------------------------------------------------------------------------- */
+  /*                                findVerseById                               */
+  /* -------------------------------------------------------------------------- */
+
+  describe('findVerseById', () => {
+    it('should return the verse if it is found', () => {
+      const verse = getVerse('BG 1.1')
+      library.addVerse(verse)
+
+      const result = library.findVerseById(verse.id)
+      expect(result.isSuccess).toBeTruthy()
+      expect(result.value.id).toBe(verse.id)
+    })
+
+    it('should return error if the verse is not found', () => {
+      const notFoundId = new VerseId()
+      const verse = getVerse('BG 1.1')
+      library.addVerse(verse)
+
+      const result = library.findVerseById(notFoundId)
+      expect(result.isSuccess).toBeFalsy()
+      expect(result.error).toBe('Verse not found: ' + notFoundId.toString())
     })
   })
 })
