@@ -22,6 +22,7 @@ export class VerseNumber extends Value<'VerseNumber'> {
    */
   equals(value: VerseNumber): boolean {
     if (this.sections.length !== value.sections.length) { return false }
+    // Stryker disable next-line all
     for (let i = 0; i < this.sections.length; i++) {
       if (this.sections[i] !== value.sections[i]) { return false }
     }
