@@ -39,15 +39,24 @@ describe('VerseNumber', () => {
 
   describe('.equals()', () => {
     it('should return true if sections are equal', () => {
-      expect(new VerseNumber(['1', '2']).equals(new VerseNumber(['1', '2']))).toBe(true)
+      const vn1 = new VerseNumber(['1', '2'])
+      const vn2 = new VerseNumber(['1', '2'])
+      expect(vn1.equals(vn2)).toBe(true)
+      expect(vn2.equals(vn1)).toBe(true)
     })
 
     it('should return false if sections are not equal', () => {
-      expect(new VerseNumber(['1', '2']).equals(new VerseNumber(['1', '3']))).toBe(false)
+      const vn1 = new VerseNumber(['1', '2'])
+      const vn2 = new VerseNumber(['1', '3'])
+      expect(vn1.equals(vn2)).toBe(false)
+      expect(vn2.equals(vn1)).toBe(false)
     })
 
     it('should return false if length of sections are not equal', () => {
-      expect(new VerseNumber(['1', '2']).equals(new VerseNumber(['q', 'w', 'e', 'z']))).toBe(false)
+      const vn1 = new VerseNumber(['1', '2'])
+      const vn2 = new VerseNumber(['1', '2', 'e', 'z'])
+      expect(vn1.equals(vn2)).toBe(false)
+      expect(vn2.equals(vn1)).toBe(false)
     })
   })
 })
