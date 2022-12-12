@@ -18,21 +18,10 @@ describe('Language', () => {
       expect(() => new Language('too_loong', 'English')).toThrowError('code must be at most 5 characters long')
     })
 
-    it('should create a new instance of Language class', () => {
-      expect(new Language('en', 'English')).toBeInstanceOf(Language)
-    })
-
-    it('should set the code property', () => {
-      expect(new Language('en', 'English').code).toEqual('en')
-    })
-
-    it('should set the name property', () => {
-      expect(new Language('en', 'English').name).toEqual('English')
-    })
-
     it('should create a new instance of Language class with the given code and name', () => {
-      const lang = new Language('en', 'English')
-      expect(lang.code).toEqual('en')
+      const lang = new Language('en_EN', 'English')
+      expect(lang).toBeInstanceOf(Language)
+      expect(lang.code).toEqual('en_EN')
       expect(lang.name).toEqual('English')
     })
   })

@@ -1,4 +1,4 @@
-import { VerseNumber } from '@lib/models/verse'
+import { VerseNumber, VerseNumberBuilder } from '@lib/models/verse'
 
 describe('VerseNumber', () => {
   describe('constructor', () => {
@@ -35,5 +35,36 @@ describe('VerseNumber', () => {
     it('should separate numbers and text parts even if there are multiple text parts', () => {
       expect(new VerseNumber(['CC', 'Adi', '1', '2']).toString()).toEqual('CC Adi 1.2')
     })
+  })
+
+  describe('.equals()', () => {
+    it('should return true if sections are equal', () => {
+      const vn1 = new VerseNumber(['1', '2'])
+      const vn2 = new VerseNumber(['1', '2'])
+      expect(vn1.equals(vn2)).toBe(true)
+      expect(vn2.equals(vn1)).toBe(true)
+    })
+
+    it('should return false if sections are not equal', () => {
+      const vn1 = new VerseNumber(['1', '2'])
+      const vn2 = new VerseNumber(['1', '3'])
+      expect(vn1.equals(vn2)).toBe(false)
+      expect(vn2.equals(vn1)).toBe(false)
+    })
+
+    it('should return false if length of sections are not equal', () => {
+      const vn1 = new VerseNumber(['1', '2'])
+      const vn2 = new VerseNumber(['1', '2', 'e', 'z'])
+      expect(vn1.equals(vn2)).toBe(false)
+      expect(vn2.equals(vn1)).toBe(false)
+    })
+  })
+})
+
+
+describe('VerseNumberBuilder', () => {
+  it('should return failure if sections are not set', () => {
+    const result = new VerseNumberBuilder().build()
+    expect(result.isFailure).toBe(true)
   })
 })

@@ -1,5 +1,5 @@
-import { QueryBuilder, Repository, Result } from '@akdasa-studios/framework'
-import { Verse, VerseId, VerseNumber } from '@lib/models'
+import { Query, Repository, Result } from '@akdasa-studios/framework'
+import { Verse, VerseId, VerseNumber, VerseQueries } from '@lib/models'
 
 /**
  * Verses library
@@ -13,6 +13,10 @@ export class VersesLibrary {
    */
   constructor(repository: Repository<Verse>) {
     this._repository = repository
+  }
+
+  find(query: Query<Verse>): readonly Verse[] {
+    return this._repository.find(query)
   }
 
   /**
@@ -31,19 +35,15 @@ export class VersesLibrary {
    * @returns Result of the operation
    * @remarks If the verse is not found, the result will be a failure.
    */
-  findVerseByNumber(verseNumber: VerseNumber): Result<Verse, string> {
-    const queryBuilder = new QueryBuilder<Verse>()
-    const query = queryBuilder.eq('number', verseNumber)
-
-    const result = this._repository.find(query)
-
+  getByNumber(verseNumber: VerseNumber | string): Result<Verse, string> {
+    const result = this._repository.find(VerseQueries.byNumber(verseNumber))
     if (result.length === 0) {
       return Result.fail('Verse not found: ' + verseNumber.toString())
     }
     return Result.ok(result[0])
   }
 
-  findVerseById(id: VerseId) : Result<Verse, string> {
+  getById(id: VerseId) : Result<Verse, string> {
     const result = this._repository.get(id)
     if (result.isFailure) {
       return Result.fail('Verse not found: ' + id.toString())
