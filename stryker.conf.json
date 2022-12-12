@@ -15,9 +15,9 @@
   "ignorePatterns": ["dist/*"],
   "tsconfigFile": "tsconfig.json",
   "thresholds": {
-    "high": 30,
-    "low": 10,
-    "break": 50
+    "high": 80,
+    "low": 60,
+    "break": 100
   },
   "ignoreStatic": true
 }

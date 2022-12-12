@@ -31,8 +31,8 @@ describe('Language', () => {
     })
 
     it('should create a new instance of Language class with the given code and name', () => {
-      const lang = new Language('en', 'English')
-      expect(lang.code).toEqual('en')
+      const lang = new Language('en_EN', 'English')
+      expect(lang.code).toEqual('en_EN')
       expect(lang.name).toEqual('English')
     })
   })

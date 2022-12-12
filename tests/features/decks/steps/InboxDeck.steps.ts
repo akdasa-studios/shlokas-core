@@ -8,8 +8,7 @@ import { context } from '@tests/features/context'
 export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
   function getVerse(verseNumberStr: string) {
-    const verseNumber = new VerseNumberBuilder().fromString(verseNumberStr).build().value
-    const verse = context.app.versesLibrary.getByNumber(verseNumber)
+    const verse = context.app.versesLibrary.getByNumber(verseNumberStr)
     if (verse.isFailure) { throw new Error(verse.error) }
     return verse.value
   }

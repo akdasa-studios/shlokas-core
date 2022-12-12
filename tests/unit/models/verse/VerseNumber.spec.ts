@@ -1,4 +1,4 @@
-import { VerseNumber } from '@lib/models/verse'
+import { VerseNumber, VerseNumberBuilder } from '@lib/models/verse'
 
 describe('VerseNumber', () => {
   describe('constructor', () => {
@@ -49,5 +49,13 @@ describe('VerseNumber', () => {
     it('should return false if lenth of sections are not equal', () => {
       expect(new VerseNumber(['1', '2']).equals(new VerseNumber(['1', '2', '3']))).toBe(false)
     })
+  })
+})
+
+
+describe('VerseNumberBuilder', () => {
+  it('should return failure if sections are not set', () => {
+    const result = new VerseNumberBuilder().build()
+    expect(result.isFailure).toBe(true)
   })
 })

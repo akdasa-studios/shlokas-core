@@ -46,7 +46,7 @@ export class VerseNumber extends Value<'VerseNumber'> {
 }
 
 export class VerseNumberBuilder  {
-  private _sections: string[] = []
+  private _sections: string[]
 
   fromString(verseNumber: string): VerseNumberBuilder {
     this._sections = verseNumber.split(/ |\./)
@@ -54,7 +54,11 @@ export class VerseNumberBuilder  {
   }
 
   build(): Result<VerseNumber, string> {
-    return Result.ok(new VerseNumber(this._sections))
+    try {
+      return Result.ok(new VerseNumber(this._sections))
+    } catch (error) {
+      return Result.fail(error.message)
+    }
   }
 }
 
