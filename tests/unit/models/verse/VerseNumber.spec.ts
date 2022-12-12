@@ -46,8 +46,8 @@ describe('VerseNumber', () => {
       expect(new VerseNumber(['1', '2']).equals(new VerseNumber(['1', '3']))).toBe(false)
     })
 
-    it('should return false if lenth of sections are not equal', () => {
-      expect(new VerseNumber(['1', '2']).equals(new VerseNumber(['1', '2', '3']))).toBe(false)
+    it('should return false if length of sections are not equal', () => {
+      expect(new VerseNumber(['1', '2']).equals(new VerseNumber(['q', 'w', 'e', 'z']))).toBe(false)
     })
   })
 })
