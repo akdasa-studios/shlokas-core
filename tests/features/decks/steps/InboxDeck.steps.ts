@@ -9,7 +9,7 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
   function getVerse(verseNumberStr: string) {
     const verseNumber = new VerseNumberBuilder().fromString(verseNumberStr).build().value
-    const verse = context.app.versesLibrary.findVerseByNumber(verseNumber)
+    const verse = context.app.versesLibrary.getByNumber(verseNumber)
     if (verse.isFailure) { throw new Error(verse.error) }
     return verse.value
   }

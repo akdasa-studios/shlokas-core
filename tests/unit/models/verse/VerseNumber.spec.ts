@@ -36,4 +36,18 @@ describe('VerseNumber', () => {
       expect(new VerseNumber(['CC', 'Adi', '1', '2']).toString()).toEqual('CC Adi 1.2')
     })
   })
+
+  describe('.equals()', () => {
+    it('should return true if sections are equal', () => {
+      expect(new VerseNumber(['1', '2']).equals(new VerseNumber(['1', '2']))).toBe(true)
+    })
+
+    it('should return false if sections are not equal', () => {
+      expect(new VerseNumber(['1', '2']).equals(new VerseNumber(['1', '3']))).toBe(false)
+    })
+
+    it('should return false if lenth of sections are not equal', () => {
+      expect(new VerseNumber(['1', '2']).equals(new VerseNumber(['1', '2', '3']))).toBe(false)
+    })
+  })
 })

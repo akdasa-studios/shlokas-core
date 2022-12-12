@@ -106,4 +106,33 @@ describe('InboxDeck', () => {
       expect(deck.cards).toEqual([card3])
     })
   })
+
+  /* -------------------------------------------------------------------------- */
+  /*                               cardMemorized                                */
+  /* -------------------------------------------------------------------------- */
+
+  describe('.cardMemorized', () => {
+    it('removes the card from the deck', () => {
+      const card1 = b.build()
+      const card2 = b.build()
+      const deck = new InboxDeck([card1, card2])
+      deck.cardMemorized(card1)
+      expect(deck.cards).toEqual([card2])
+    })
+  })
+
+  describe('.getVerseCards', () => {
+    it('returns all cards for a verse', () => {
+      const verse1Id = new VerseId()
+      const verse2Id = new VerseId()
+      const card1 = b.ofVerse(verse1Id).build()
+      const card2 = b.ofVerse(verse1Id).build()
+      const card3 = b.ofVerse(verse2Id).build()
+      deck.addCard(card1)
+      deck.addCard(card2)
+      deck.addCard(card3)
+      const verseCards = deck.getVerseCards(verse1Id)
+      expect(verseCards).toEqual([card1, card2])
+    })
+  })
 })
