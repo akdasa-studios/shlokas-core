@@ -8,7 +8,7 @@ import { context } from '@tests/features/context'
 export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
   function getVerse(verseNumberStr: string) {
-    const verse = context.app.versesLibrary.getByNumber(verseNumberStr)
+    const verse = context.app.library.getByNumber(verseNumberStr)
     if (verse.isFailure) { throw new Error(verse.error) }
     return verse.value
   }
@@ -36,7 +36,7 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
         .withTranslation(new Translation(verseListLine['Translation']))
         .ofLanguage(context.app.settings.language)
         .build()
-      context.app.versesLibrary.addVerse(verse.value)
+      context.app.library.addVerse(verse.value)
     }
   })
 

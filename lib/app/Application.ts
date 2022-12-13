@@ -1,12 +1,12 @@
 import { Processor, Repository } from '@akdasa-studios/framework'
 import { InboxDeck, Verse } from '@lib/models'
+import { Library } from './Library'
 import { Settings } from './Settings'
-import { VersesLibrary } from './VersesLibrary'
 
 export class Application {
   private _inboxDeck = new InboxDeck()
   private _processor = new Processor<Application>(this)
-  private _versesLibrary: VersesLibrary
+  private _library: Library
   private _settings = new Settings()
 
   /**
@@ -16,7 +16,7 @@ export class Application {
   constructor(
     versesRepository: Repository<Verse>,
   ) {
-    this._versesLibrary = new VersesLibrary(versesRepository)
+    this._library = new Library(versesRepository)
   }
 
   /**
@@ -39,8 +39,8 @@ export class Application {
    * Returns the verses library.
    * @returns Verses library
    */
-  get versesLibrary() : VersesLibrary {
-    return this._versesLibrary
+  get library() : Library {
+    return this._library
   }
 
   /**

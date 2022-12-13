@@ -1,7 +1,7 @@
 import { StepDefinitions } from 'jest-cucumber'
 
-import { context } from '@tests/features/context'
 import { Verse } from '@lib/models'
+import { context } from '@tests/features/context'
 
 
 export const librarySearchSteps: StepDefinitions = ({ when, then }) => {
@@ -13,7 +13,7 @@ export const librarySearchSteps: StepDefinitions = ({ when, then }) => {
   /* -------------------------------------------------------------------------- */
 
   when(/^I search for verse in the library by "(.*)"$/, (queryString: string) => {
-    lastSearch = context.app.versesLibrary.finqByString(queryString)
+    lastSearch = context.app.library.finqByString(queryString)
   })
 
   /* -------------------------------------------------------------------------- */
@@ -21,6 +21,8 @@ export const librarySearchSteps: StepDefinitions = ({ when, then }) => {
   /* -------------------------------------------------------------------------- */
 
   then('I should see the following verses in the library:', (versesTable) => {
+    expect(lastSearch.length).toBe(versesTable.length)
+
     for (const verseLine of versesTable) {
       const verseAppearedInSearch = lastSearch.filter(
         (verse: Verse) => verse.number.value === verseLine['Verse Number']

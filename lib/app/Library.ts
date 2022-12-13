@@ -4,11 +4,11 @@ import { Verse, VerseId, VerseNumber, VerseQueries } from '@lib/models'
 /**
  * Verses library
  */
-export class VersesLibrary {
+export class Library {
   private _repository: Repository<Verse>
 
   /**
-   * Initialize a new instance of VersesLibrary class with the given parameters.
+   * Initialize a new instance of Library class with the given parameters.
    * @param repository Repository of verses
    */
   constructor(repository: Repository<Verse>) {

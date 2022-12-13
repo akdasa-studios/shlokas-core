@@ -1,10 +1,10 @@
 import { InMemoryRepository, Repository } from '@akdasa-studios/framework'
-import { VersesLibrary } from '@lib/app/VersesLibrary'
+import { Library } from '@lib/app/Library'
 import { Verse, VerseBuilder, VerseId, VerseNumber, VerseQueries } from '@lib/models'
 
-describe('VersesLibrary', () => {
+describe('Library', () => {
   let versesRepository: Repository<Verse>
-  let library: VersesLibrary
+  let library: Library
 
   function getVerseNumber(verseNumberStr: string): VerseNumber {
     return new VerseNumber(verseNumberStr)
@@ -17,7 +17,7 @@ describe('VersesLibrary', () => {
 
   beforeEach(() => {
     versesRepository = new InMemoryRepository<Verse>()
-    library = new VersesLibrary(versesRepository)
+    library = new Library(versesRepository)
   })
 
   /* -------------------------------------------------------------------------- */
