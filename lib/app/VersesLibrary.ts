@@ -19,6 +19,10 @@ export class VersesLibrary {
     return this._repository.find(query)
   }
 
+  finqByString(queryString: string): readonly Verse[] {
+    return this._repository.find(VerseQueries.byContent(queryString))
+  }
+
   /**
    * Adds a verse to the library.
    * @param verse Verse to add
@@ -46,7 +50,7 @@ export class VersesLibrary {
   getById(id: VerseId) : Result<Verse, string> {
     const result = this._repository.get(id)
     if (result.isFailure) {
-      return Result.fail('Verse not found: ' + id.toString())
+      return Result.fail('Verse not found: ' + id.value)
     }
     return Result.ok(result.value)
   }

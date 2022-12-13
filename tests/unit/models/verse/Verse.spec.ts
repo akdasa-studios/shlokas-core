@@ -6,7 +6,7 @@ describe('Verse', () => {
     it('should return a new instance of Verse class', () => {
       expect(new Verse(
         new VerseId(),
-        new VerseNumber(['BG', '1', '1']),
+        new VerseNumber('BG 1.1'),
         new Language('EN', 'English'),
         new Text([
           'dehino `smin yathā dehe',

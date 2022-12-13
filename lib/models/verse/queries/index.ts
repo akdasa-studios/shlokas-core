@@ -1,16 +1,25 @@
 import { Query, QueryBuilder } from '@akdasa-studios/framework'
 import { Verse } from '../Verse'
-import { VerseNumber, VerseNumberBuilder } from '../VerseNumber'
+import { VerseNumber } from '../VerseNumber'
 
 export class VerseQueries {
   public static byNumber(number: VerseNumber | string): Query<Verse> {
     let searchNumber: VerseNumber
     if (typeof number === 'string') {
-      searchNumber = new VerseNumberBuilder().fromString(number).build().value
+      searchNumber = new VerseNumber(number)
     } else {
       searchNumber = number
     }
     const queryBuilder = new QueryBuilder<Verse>()
     return queryBuilder.eq('number', searchNumber)
+  }
+
+  public static byContent(text: string): Query<Verse> {
+    const queryBuilder = new QueryBuilder<Verse>()
+    return queryBuilder.or(
+      queryBuilder.contains('text.lines', text),
+      queryBuilder.contains('number.value', text),
+      queryBuilder.contains('translation.text', text),
+    )
   }
 }
