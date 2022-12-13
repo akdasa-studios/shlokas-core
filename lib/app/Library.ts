@@ -15,6 +15,10 @@ export class Library {
     this._repository = repository
   }
 
+  get all(): readonly Verse[] {
+    return this._repository.all()
+  }
+
   find(query: Query<Verse>): readonly Verse[] {
     return this._repository.find(query)
   }
