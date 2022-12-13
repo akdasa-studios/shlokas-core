@@ -4,19 +4,27 @@ import { Verse, VerseId, VerseNumber, VerseQueries } from '@lib/models'
 /**
  * Verses library
  */
-export class VersesLibrary {
+export class Library {
   private _repository: Repository<Verse>
 
   /**
-   * Initialize a new instance of VersesLibrary class with the given parameters.
+   * Initialize a new instance of Library class with the given parameters.
    * @param repository Repository of verses
    */
   constructor(repository: Repository<Verse>) {
     this._repository = repository
   }
 
+  get all(): readonly Verse[] {
+    return this._repository.all()
+  }
+
   find(query: Query<Verse>): readonly Verse[] {
     return this._repository.find(query)
+  }
+
+  finqByString(queryString: string): readonly Verse[] {
+    return this._repository.find(VerseQueries.byContent(queryString))
   }
 
   /**
@@ -46,7 +54,7 @@ export class VersesLibrary {
   getById(id: VerseId) : Result<Verse, string> {
     const result = this._repository.get(id)
     if (result.isFailure) {
-      return Result.fail('Verse not found: ' + id.toString())
+      return Result.fail('Verse not found: ' + id.value)
     }
     return Result.ok(result.value)
   }

@@ -1,13 +1,13 @@
 import { InMemoryRepository, Repository } from '@akdasa-studios/framework'
-import { VersesLibrary } from '@lib/app/VersesLibrary'
-import { Verse, VerseBuilder, VerseId, VerseNumber, VerseNumberBuilder, VerseQueries } from '@lib/models'
+import { Library } from '@lib/app/Library'
+import { Verse, VerseBuilder, VerseId, VerseNumber, VerseQueries } from '@lib/models'
 
-describe('VersesLibrary', () => {
+describe('Library', () => {
   let versesRepository: Repository<Verse>
-  let library: VersesLibrary
+  let library: Library
 
   function getVerseNumber(verseNumberStr: string): VerseNumber {
-    return new VerseNumberBuilder().fromString(verseNumberStr).build().value
+    return new VerseNumber(verseNumberStr)
   }
 
   function getVerse(verseNumberStr: string): Verse {
@@ -17,7 +17,7 @@ describe('VersesLibrary', () => {
 
   beforeEach(() => {
     versesRepository = new InMemoryRepository<Verse>()
-    library = new VersesLibrary(versesRepository)
+    library = new Library(versesRepository)
   })
 
   /* -------------------------------------------------------------------------- */
@@ -43,7 +43,7 @@ describe('VersesLibrary', () => {
       const verseNumber = getVerseNumber('BG 1.1')
       const result = library.getByNumber(verseNumber)
       expect(result.isFailure).toBeTruthy()
-      expect(result.error).toBe('Verse not found: ' + verseNumber.toString())
+      expect(result.error).toBe('Verse not found: ' + verseNumber.value)
     })
 
     it('should return a success if the verse is found', () => {
@@ -53,7 +53,7 @@ describe('VersesLibrary', () => {
 
       const result = library.getByNumber('BG 2.13')
       expect(result.isSuccess).toBeTruthy()
-      expect(result.value.number.toString()).toBe('BG 2.13')
+      expect(result.value.number.value).toBe('BG 2.13')
     })
   })
 
@@ -73,12 +73,11 @@ describe('VersesLibrary', () => {
 
     it('should return error if the verse is not found', () => {
       const notFoundId = new VerseId()
-      const verse = getVerse('BG 1.1')
-      library.addVerse(verse)
+      library.addVerse(getVerse('BG 1.1'))
 
       const result = library.getById(notFoundId)
       expect(result.isSuccess).toBeFalsy()
-      expect(result.error).toBe('Verse not found: ' + notFoundId.toString())
+      expect(result.error).toBe('Verse not found: ' + notFoundId.value)
     })
   })
 
@@ -103,7 +102,7 @@ describe('VersesLibrary', () => {
 
       const result = library.find(VerseQueries.byNumber('BG 2.13'))
       expect(result.length).toBe(1)
-      expect(result[0].number.toString()).toBe('BG 2.13')
+      expect(result[0].number.value).toBe('BG 2.13')
     })
   })
 })

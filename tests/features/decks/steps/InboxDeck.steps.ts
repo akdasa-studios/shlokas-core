@@ -1,5 +1,5 @@
 import { AddVerseToInboxDeck, RemoveVerseFromInboxDeck } from '@lib/commands/inbox'
-import { InboxCardBuilder, InboxCardType, VerseBuilder, VerseNumberBuilder } from '@lib/models'
+import { InboxCardBuilder, InboxCardType, Text, Translation, VerseBuilder, VerseNumber } from '@lib/models'
 import { StepDefinitions } from 'jest-cucumber'
 
 import { context } from '@tests/features/context'
@@ -8,7 +8,7 @@ import { context } from '@tests/features/context'
 export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
   function getVerse(verseNumberStr: string) {
-    const verse = context.app.versesLibrary.getByNumber(verseNumberStr)
+    const verse = context.app.library.getByNumber(verseNumberStr)
     if (verse.isFailure) { throw new Error(verse.error) }
     return verse.value
   }
@@ -30,16 +30,13 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
   given('Verse library contains the following verses:', (versesList) => {
     for (const verseListLine of versesList) {
-      const verseNumber = new VerseNumberBuilder()
-        .fromString(verseListLine['Verse Number'])
-        .build()
       const verse = new VerseBuilder()
-        .withNumber(verseNumber.value)
-        .withText(verseListLine['Text'])
-        .withTranslation(verseListLine['Translation'])
+        .withNumber(new VerseNumber(verseListLine['Verse Number']))
+        .withText(new Text([verseListLine['Text']]))
+        .withTranslation(new Translation(verseListLine['Translation']))
         .ofLanguage(context.app.settings.language)
         .build()
-      context.app.versesLibrary.addVerse(verse.value)
+      context.app.library.addVerse(verse.value)
     }
   })
 

@@ -29,7 +29,6 @@
   "[feature]": {
     "editor.formatOnType": true,
     "editor.formatOnSave": true,
-    "editor.wordWrapColumn": 80,
     "editor.rulers": [80]
   },
   "cucumberautocomplete.smartSnippets": true,
