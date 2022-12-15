@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="docs/logo.svg" height="184px"/>
+    <img src="https://raw.githubusercontent.com/akdasa-studios/shlokas/main/docs/logo.svg" height="184px"/>
 </p>
 
 <p align="center">
