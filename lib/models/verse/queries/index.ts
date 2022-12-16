@@ -1,6 +1,7 @@
 import { Query, QueryBuilder } from '@akdasa-studios/framework'
-import { Verse } from '../Verse'
+import { Verse, VerseId } from '../Verse'
 import { VerseNumber } from '../VerseNumber'
+import { VerseStatus } from '../VerseStatus'
 
 export class VerseQueries {
   public static byNumber(number: VerseNumber | string): Query<Verse> {
@@ -21,5 +22,12 @@ export class VerseQueries {
       queryBuilder.contains('number.value', text),
       queryBuilder.contains('translation.text', text),
     )
+  }
+}
+
+export class VerseStatusQueries {
+  public static byVerseId(verseId: VerseId) : Query<VerseStatus> {
+    const queryBuilder = new QueryBuilder<VerseStatus>()
+    return queryBuilder.eq('verseId', verseId)
   }
 }

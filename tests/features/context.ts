@@ -1,16 +1,18 @@
-import { InMemoryRepository, Repository } from '@akdasa-studios/framework'
-import { Application } from '@lib/app/Application'
-import { Verse } from '@lib/models'
-
+import { InMemoryRepository } from '@akdasa-studios/framework'
+import { Application, Repositories } from '@lib/app/Application'
+import { Verse, VerseStatus } from '@lib/models'
 
 
 export class Context {
-  private _versesRepository: Repository<Verse>
+  private _repositories: Repositories
   private _app: Application
 
   constructor() {
-    this._versesRepository = new InMemoryRepository<Verse>()
-    this._app = new Application(this._versesRepository)
+    this._repositories = new Repositories(
+      new InMemoryRepository<Verse>(),
+      new InMemoryRepository<VerseStatus>()
+    )
+    this._app = new Application(this._repositories)
   }
 
   get app() : Application {

@@ -1,8 +1,8 @@
 import { InMemoryRepository } from '@akdasa-studios/framework'
-import { Application } from '@lib/app/Application'
+import { Application, Repositories } from '@lib/app/Application'
 import { RemoveVerseFromInboxDeck } from '@lib/commands/inbox'
 import { InboxCardType } from '@lib/models/cards'
-import { Verse, VerseId } from '@lib/models/verse'
+import { Verse, VerseId, VerseStatus } from '@lib/models/verse'
 
 
 describe('RemoveVerseFromInboxDeck', () => {
@@ -16,7 +16,10 @@ describe('RemoveVerseFromInboxDeck', () => {
   let verse2Id: VerseId
 
   beforeEach(() => {
-    context = new Application(new InMemoryRepository<Verse>())
+    context = new Application(new Repositories(
+      new InMemoryRepository<Verse>(),
+      new InMemoryRepository<VerseStatus>()
+    ))
     verse1Id = new VerseId()
     verse2Id = new VerseId()
     context.inboxDeck.addVerse(verse1Id)
