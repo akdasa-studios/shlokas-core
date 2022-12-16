@@ -1,8 +1,9 @@
-import { AddVerseToInboxDeck, RemoveVerseFromInboxDeck } from '@lib/commands/inbox'
+import { AddVerseToInboxDeck, RemoveVerseFromInboxDeck, UpdateVerseStatus } from '@lib/commands'
 import { InboxCardBuilder, InboxCardType, Text, Translation, VerseBuilder, VerseNumber } from '@lib/models'
 import { StepDefinitions } from 'jest-cucumber'
 
 import { context } from '@tests/features/context'
+import { Transaction } from '@akdasa-studios/framework'
 
 
 export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
@@ -46,8 +47,9 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
   when(/^I add a verse "(.*)" to the Inbox deck$/, (verseNumberString: string) => {
     const verse = getVerse(verseNumberString)
-    const command = new AddVerseToInboxDeck(verse.id)
-    context.app.processor.execute(command)
+    const transaction = new Transaction('id')
+    context.app.processor.execute(new AddVerseToInboxDeck(verse.id), transaction)
+    context.app.processor.execute(new UpdateVerseStatus(verse.id), transaction)
   })
 
   when('I revert the last action', () => {
@@ -56,8 +58,9 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
   when(/^I remove verse "(.*)" from the Inbox deck$/, (verseNumberString: string) => {
     const verse = getVerse(verseNumberString)
-    const command = new RemoveVerseFromInboxDeck(verse.id)
-    context.app.processor.execute(command)
+    const transaction = new Transaction('id')
+    context.app.processor.execute(new RemoveVerseFromInboxDeck(verse.id), transaction)
+    context.app.processor.execute(new UpdateVerseStatus(verse.id), transaction)
   })
 
   /* -------------------------------------------------------------------------- */

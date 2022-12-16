@@ -1,9 +1,10 @@
 import { InMemoryRepository, Repository } from '@akdasa-studios/framework'
 import { Library } from '@lib/app/Library'
-import { Verse, VerseBuilder, VerseId, VerseNumber, VerseQueries } from '@lib/models'
+import { Decks, Verse, VerseBuilder, VerseId, VerseNumber, VerseQueries, VerseStatus, VerseStatusId } from '@lib/models'
 
 describe('Library', () => {
   let versesRepository: Repository<Verse>
+  let verseStatusesRepository: Repository<VerseStatus>
   let library: Library
 
   function getVerseNumber(verseNumberStr: string): VerseNumber {
@@ -17,7 +18,8 @@ describe('Library', () => {
 
   beforeEach(() => {
     versesRepository = new InMemoryRepository<Verse>()
-    library = new Library(versesRepository)
+    verseStatusesRepository = new InMemoryRepository<VerseStatus>()
+    library = new Library(versesRepository, verseStatusesRepository)
   })
 
   /* -------------------------------------------------------------------------- */
@@ -86,15 +88,6 @@ describe('Library', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.find', () => {
-    // it('should return all verses if no query is provided', () => {
-    //   library.addVerse(getVerse('BG 1.1'))
-    //   library.addVerse(getVerse('BG 2.13'))
-    //   library.addVerse(getVerse('BG 2.20'))
-
-    //   const result = library.find()
-    //   expect(result.length).toBe(3)
-    // })
-
     it('should return verses that match the query', () => {
       library.addVerse(getVerse('BG 1.1'))
       library.addVerse(getVerse('BG 2.13'))
@@ -103,6 +96,41 @@ describe('Library', () => {
       const result = library.find(VerseQueries.byNumber('BG 2.13'))
       expect(result.length).toBe(1)
       expect(result[0].number.value).toBe('BG 2.13')
+    })
+  })
+
+  /* -------------------------------------------------------------------------- */
+  /*                                  getStatusById                             */
+  /* -------------------------------------------------------------------------- */
+
+  describe('getStatusById', () => {
+    it('should return the status of the verse', () => {
+      const verse = library.addVerse(getVerse('BG 1.1')).value
+      verseStatusesRepository.save(
+        new VerseStatus(new VerseStatusId(), verse.id, Decks.None)
+      )
+
+      const result = library.getStatusById(verse.id)
+      expect(result.isSuccess).toBeTruthy()
+      expect(result.value.verseId).toBe(verse.id)
+    })
+
+    it('should create a new status if it does not exist', () => {
+      const verse = getVerse('BG 1.1')
+      library.addVerse(verse)
+
+      const result = library.getStatusById(verse.id)
+      expect(result.isSuccess).toBeTruthy()
+      expect(result.value.verseId).toBe(verse.id)
+      expect(result.value.inDeck).toEqual(Decks.None)
+    })
+  })
+
+  describe('getStatusByNumber', () => {
+    it('should return error if verse not found', () => {
+      const result = library.getStatusByNumber('BG 1.1.1')
+      expect(result.isFailure).toBeTruthy()
+      expect(result.error).toBe('No verse BG 1.1.1 found')
     })
   })
 })

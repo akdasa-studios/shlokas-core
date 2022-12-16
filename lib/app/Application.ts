@@ -1,7 +1,14 @@
 import { Processor, Repository } from '@akdasa-studios/framework'
-import { InboxDeck, Verse } from '@lib/models'
+import { InboxDeck, Verse, VerseStatus } from '@lib/models'
 import { Library } from './Library'
 import { Settings } from './Settings'
+
+export class Repositories {
+  constructor(
+    public readonly verses: Repository<Verse>,
+    public readonly verseStatuses: Repository<VerseStatus>
+  ) {}
+}
 
 export class Application {
   private _inboxDeck = new InboxDeck()
@@ -14,9 +21,12 @@ export class Application {
    * @param versesRepository Repository of verses
    */
   constructor(
-    versesRepository: Repository<Verse>,
+    public readonly repositories: Repositories
   ) {
-    this._library = new Library(versesRepository)
+    this._library = new Library(
+      repositories.verses,
+      repositories.verseStatuses
+    )
   }
 
   /**
