@@ -2,17 +2,21 @@ import { VerseId } from '@lib/models/verse'
 import { Card, CardId } from './Card'
 
 
-export enum InboxCardType {
-  Text = 'Text',
-  Translation = 'Translation',
+export enum ReviewCardType {
+  NumberToTranslation = 'NumberToTranslation',
+  NumberToText = 'NumberToText',
+  TranslationToNumber = 'TranslationToNumber',
+  TextToNumber = 'TextToNumber',
+  TextToTranslation = 'TextToTranslation',
+  TranslationToText = 'TranslationToText'
 }
 
 /**
- * An inbox card.
+ * An review card.
  */
-export class InboxCard extends Card {
+export class ReviewCard extends Card {
   /**
-   * Initialize a new instance of InboxCard class with the given parameters.
+   * Initialize a new instance of ReviewCard class with the given parameters.
    * @param id Identity of the card
    * @param verseId Verse identity
    * @param type Type of the card
@@ -21,7 +25,7 @@ export class InboxCard extends Card {
   constructor(
     id: CardId,
     verseId: VerseId,
-    public readonly type: InboxCardType,
+    public readonly type: ReviewCardType,
     public readonly addedAt: Date,
   ) {
     super(id, verseId)
@@ -31,17 +35,17 @@ export class InboxCard extends Card {
 /**
  * A builder for the inbox card.
  */
-export class InboxCardBuilder {
+export class ReviewCardBuilder {
   private _id?: CardId
   private _verseId?: VerseId
-  private _inboxCardType?: InboxCardType
+  private _cardType?: ReviewCardType
   private _addedAt?: Date
 
   /**
    * (required) Sets verse id from which the card is created.
    * @param verseId Verse id
    */
-  ofVerse(verseId: VerseId): InboxCardBuilder {
+  ofVerse(verseId: VerseId): ReviewCardBuilder {
     this._verseId = verseId
     return this
   }
@@ -50,8 +54,8 @@ export class InboxCardBuilder {
    * (required) Sets the type of the card.
    * @param type Type of the card
    */
-  ofType(inboxCardType: InboxCardType): InboxCardBuilder {
-    this._inboxCardType = inboxCardType
+  ofType(reviewCardType: ReviewCardType): ReviewCardBuilder {
+    this._cardType = reviewCardType
     return this
   }
 
@@ -59,7 +63,7 @@ export class InboxCardBuilder {
    * (optional) Sets the date when the card is added to the inbox. Current date is used if not set.
    * @param addedAt Date when the card is added to the inbox
    */
-  addedAt(addedAt: Date): InboxCardBuilder {
+  addedAt(addedAt: Date): ReviewCardBuilder {
     this._addedAt = addedAt
     return this
   }
@@ -68,11 +72,11 @@ export class InboxCardBuilder {
    * Creates a new instance of InboxCard class with the given parameters.
    * @returns A new instance of InboxCard class.
    */
-  build(): InboxCard {
-    return new InboxCard(
+  build(): ReviewCard {
+    return new ReviewCard(
       this._id || new CardId(),
       this._verseId as VerseId,
-      this._inboxCardType as InboxCardType,
+      this._cardType as ReviewCardType,
       this._addedAt as Date || new Date()
     )
   }

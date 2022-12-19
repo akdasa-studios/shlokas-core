@@ -1,9 +1,9 @@
-import { AddVerseToInboxDeck, RemoveVerseFromInboxDeck, UpdateVerseStatus } from '@lib/commands'
-import { InboxCardBuilder, InboxCardType, Text, Translation, VerseBuilder, VerseNumber } from '@lib/models'
+import { AddVerseToInboxDeck, InboxCardMemorized, RemoveVerseFromInboxDeck, UpdateVerseStatus } from '@lib/commands'
+import { InboxCardBuilder, InboxCardType, ReviewCardType, Text, Translation, VerseBuilder, VerseNumber } from '@lib/models'
 import { StepDefinitions } from 'jest-cucumber'
 
-import { context } from '@tests/features/context'
 import { Transaction } from '@akdasa-studios/framework'
+import { context } from '@tests/features/context'
 
 
 export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
@@ -12,6 +12,12 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
     const verse = context.app.library.getByNumber(verseNumberStr)
     if (verse.isFailure) { throw new Error(verse.error) }
     return verse.value
+  }
+
+  function getReviewCardType(name: string): ReviewCardType {
+    return ReviewCardType[
+      name.replace(' -> ', 'To')
+    ]
   }
 
   /* -------------------------------------------------------------------------- */
@@ -45,8 +51,8 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
   /*                                    When                                    */
   /* -------------------------------------------------------------------------- */
 
-  when(/^I add a verse "(.*)" to the Inbox deck$/, (verseNumberString: string) => {
-    const verse = getVerse(verseNumberString)
+  when(/^I add a verse "(.*)" to the Inbox deck$/, (verseNumber: string) => {
+    const verse = getVerse(verseNumber)
     const transaction = new Transaction('id')
     context.app.processor.execute(new AddVerseToInboxDeck(verse.id), transaction)
     context.app.processor.execute(new UpdateVerseStatus(verse.id), transaction)
@@ -56,18 +62,27 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
     context.app.processor.revert()
   })
 
-  when(/^I remove verse "(.*)" from the Inbox deck$/, (verseNumberString: string) => {
-    const verse = getVerse(verseNumberString)
+  when(/^I remove verse "(.*)" from the Inbox deck$/, (verseNumber: string) => {
+    const verse = getVerse(verseNumber)
     const transaction = new Transaction('id')
     context.app.processor.execute(new RemoveVerseFromInboxDeck(verse.id), transaction)
     context.app.processor.execute(new UpdateVerseStatus(verse.id), transaction)
   })
+
+  when(/^I mark the "(.*)" card of the "(.*)" type as memorized$/, (verseNumber: string, cardType: string) => {
+    const verse = getVerse(verseNumber)
+    const cards = context.app.inboxDeck.getVerseCards(verse.id, InboxCardType[cardType])
+    context.app.processor.execute(new InboxCardMemorized(cards[0]))
+  })
+
 
   /* -------------------------------------------------------------------------- */
   /*                                    Then                                    */
   /* -------------------------------------------------------------------------- */
 
   then('Inbox deck contains the following cards:', (cards) => {
+    expect(context.app.inboxDeck.cards.length).toEqual(cards.length)
+
     for (const card of cards) {
       const verse = getVerse(card['Verse Number'])
       const f = context.app.inboxDeck.getVerseCards(
@@ -77,7 +92,23 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
     }
   })
 
+  then('Review deck contains the following cards:', (cards) => {
+    expect(context.app.reviewDeck.cards.length).toEqual(cards.length)
+
+    for (const card of cards) {
+      const verse = getVerse(card['Verse Number'])
+      const f = context.app.reviewDeck.getVerseCards(
+        verse.id, getReviewCardType(card['Card Type'])
+      )
+      expect(f).toHaveLength(1)
+    }
+  })
+
   then('Inbox deck contains no cards', () => {
     expect(context.app.inboxDeck.isEmpty).toBeTruthy()
+  })
+
+  then('Review deck contains no cards', () => {
+    expect(context.app.reviewDeck.isEmpty).toBeTruthy()
   })
 }

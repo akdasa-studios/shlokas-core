@@ -19,5 +19,6 @@
     "low": 60,
     "break": 100
   },
-  "ignoreStatic": true
+  "ignoreStatic": true,
+  "incremental": true
 }
