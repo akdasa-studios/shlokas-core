@@ -1,5 +1,5 @@
 import { AddVerseToInboxDeck, InboxCardMemorized, RemoveVerseFromInboxDeck, UpdateVerseStatus } from '@lib/commands'
-import { InboxCardBuilder, InboxCardType, ReviewCardType, Text, Translation, VerseBuilder, VerseNumber } from '@lib/models'
+import { InboxCardBuilder, InboxCardType } from '@lib/models'
 import { StepDefinitions } from 'jest-cucumber'
 
 import { Transaction } from '@akdasa-studios/framework'
@@ -12,12 +12,6 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
     const verse = context.app.library.getByNumber(verseNumberStr)
     if (verse.isFailure) { throw new Error(verse.error) }
     return verse.value
-  }
-
-  function getReviewCardType(name: string): ReviewCardType {
-    return ReviewCardType[
-      name.replace(' -> ', 'To')
-    ]
   }
 
   /* -------------------------------------------------------------------------- */
@@ -35,18 +29,6 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
     }
   })
 
-  given('Verse library contains the following verses:', (versesList) => {
-    for (const verseListLine of versesList) {
-      const verse = new VerseBuilder()
-        .withNumber(new VerseNumber(verseListLine['Verse Number']))
-        .withText(new Text([verseListLine['Text']]))
-        .withTranslation(new Translation(verseListLine['Translation']))
-        .ofLanguage(context.app.settings.language)
-        .build()
-      context.app.library.addVerse(verse.value)
-    }
-  })
-
   /* -------------------------------------------------------------------------- */
   /*                                    When                                    */
   /* -------------------------------------------------------------------------- */
@@ -56,10 +38,6 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
     const transaction = new Transaction('id')
     context.app.processor.execute(new AddVerseToInboxDeck(verse.id), transaction)
     context.app.processor.execute(new UpdateVerseStatus(verse.id), transaction)
-  })
-
-  when('I revert the last action', () => {
-    context.app.processor.revert()
   })
 
   when(/^I remove verse "(.*)" from the Inbox deck$/, (verseNumber: string) => {
@@ -92,23 +70,7 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
     }
   })
 
-  then('Review deck contains the following cards:', (cards) => {
-    expect(context.app.reviewDeck.cards.length).toEqual(cards.length)
-
-    for (const card of cards) {
-      const verse = getVerse(card['Verse Number'])
-      const f = context.app.reviewDeck.getVerseCards(
-        verse.id, getReviewCardType(card['Card Type'])
-      )
-      expect(f).toHaveLength(1)
-    }
-  })
-
   then('Inbox deck contains no cards', () => {
     expect(context.app.inboxDeck.isEmpty).toBeTruthy()
-  })
-
-  then('Review deck contains no cards', () => {
-    expect(context.app.reviewDeck.isEmpty).toBeTruthy()
   })
 }
