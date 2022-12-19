@@ -119,7 +119,7 @@ Feature: Decks / Inbox Deck
 
   Rule: User can revert marked card
 
-    Scenario: Reverts last added card
+    Scenario: User reverts one added card
 
       When I add a verse "BG 1.1" to the Inbox deck
       And I mark the "BG 1.1" card of the "Text" type as memorized
@@ -130,7 +130,7 @@ Feature: Decks / Inbox Deck
         | BG 1.1       | Translation |
         | BG 1.1       | Text        |
 
-    Scenario: Reverts last added cards
+    Scenario: User reverts two added cards
 
       When I add a verse "BG 1.1" to the Inbox deck
       And I mark the "BG 1.1" card of the "Text" type as memorized
@@ -143,5 +143,3 @@ Feature: Decks / Inbox Deck
         | Verse Number | Card Type      |
         | BG 1.1       | Number -> Text |
         | BG 1.1       | Text -> Number |
-
-
