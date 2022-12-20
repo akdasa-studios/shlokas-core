@@ -73,7 +73,7 @@ export class InboxCardBuilder {
       this._id || new CardId(),
       this._verseId as VerseId,
       this._inboxCardType as InboxCardType,
-      this._addedAt as Date
+      this._addedAt as Date || new Date()
     )
   }
 }

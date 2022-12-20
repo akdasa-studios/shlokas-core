@@ -1,9 +1,9 @@
-import { AddVerseToInboxDeck, RemoveVerseFromInboxDeck, UpdateVerseStatus } from '@lib/commands'
-import { InboxCardBuilder, InboxCardType, Text, Translation, VerseBuilder, VerseNumber } from '@lib/models'
+import { AddVerseToInboxDeck, InboxCardMemorized, RemoveVerseFromInboxDeck, UpdateVerseStatus } from '@lib/commands'
+import { InboxCardBuilder, InboxCardType } from '@lib/models'
 import { StepDefinitions } from 'jest-cucumber'
 
-import { context } from '@tests/features/context'
 import { Transaction } from '@akdasa-studios/framework'
+import { context } from '@tests/features/context'
 
 
 export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
@@ -29,45 +29,38 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
     }
   })
 
-  given('Verse library contains the following verses:', (versesList) => {
-    for (const verseListLine of versesList) {
-      const verse = new VerseBuilder()
-        .withNumber(new VerseNumber(verseListLine['Verse Number']))
-        .withText(new Text([verseListLine['Text']]))
-        .withTranslation(new Translation(verseListLine['Translation']))
-        .ofLanguage(context.app.settings.language)
-        .build()
-      context.app.library.addVerse(verse.value)
-    }
-  })
-
   /* -------------------------------------------------------------------------- */
   /*                                    When                                    */
   /* -------------------------------------------------------------------------- */
 
-  when(/^I add a verse "(.*)" to the Inbox deck$/, (verseNumberString: string) => {
-    const verse = getVerse(verseNumberString)
+  when(/^I add a verse "(.*)" to the Inbox deck$/, (verseNumber: string) => {
+    const verse = getVerse(verseNumber)
     const transaction = new Transaction('id')
     context.app.processor.execute(new AddVerseToInboxDeck(verse.id), transaction)
     context.app.processor.execute(new UpdateVerseStatus(verse.id), transaction)
   })
 
-  when('I revert the last action', () => {
-    context.app.processor.revert()
-  })
-
-  when(/^I remove verse "(.*)" from the Inbox deck$/, (verseNumberString: string) => {
-    const verse = getVerse(verseNumberString)
+  when(/^I remove verse "(.*)" from the Inbox deck$/, (verseNumber: string) => {
+    const verse = getVerse(verseNumber)
     const transaction = new Transaction('id')
     context.app.processor.execute(new RemoveVerseFromInboxDeck(verse.id), transaction)
     context.app.processor.execute(new UpdateVerseStatus(verse.id), transaction)
   })
+
+  when(/^I mark the "(.*)" card of the "(.*)" type as memorized$/, (verseNumber: string, cardType: string) => {
+    const verse = getVerse(verseNumber)
+    const cards = context.app.inboxDeck.getVerseCards(verse.id, InboxCardType[cardType])
+    context.app.processor.execute(new InboxCardMemorized(cards[0]))
+  })
+
 
   /* -------------------------------------------------------------------------- */
   /*                                    Then                                    */
   /* -------------------------------------------------------------------------- */
 
   then('Inbox deck contains the following cards:', (cards) => {
+    expect(context.app.inboxDeck.cards.length).toEqual(cards.length)
+
     for (const card of cards) {
       const verse = getVerse(card['Verse Number'])
       const f = context.app.inboxDeck.getVerseCards(

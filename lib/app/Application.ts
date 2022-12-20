@@ -1,5 +1,5 @@
 import { Processor, Repository } from '@akdasa-studios/framework'
-import { InboxDeck, Verse, VerseStatus } from '@lib/models'
+import { InboxDeck, ReviewDeck, Verse, VerseStatus } from '@lib/models'
 import { Library } from './Library'
 import { Settings } from './Settings'
 
@@ -12,9 +12,11 @@ export class Repositories {
 
 export class Application {
   private _inboxDeck = new InboxDeck()
+  private _reviewDeck = new ReviewDeck()
   private _processor = new Processor<Application>(this)
   private _library: Library
   private _settings = new Settings()
+  private _now = new Date()
 
   /**
    * Initializes a new instance of Application class.
@@ -27,6 +29,11 @@ export class Application {
       repositories.verses,
       repositories.verseStatuses
     )
+  }
+
+  get now(): Date { return new Date(this._now) }
+  setNow(date: Date) {
+    this._now = date
   }
 
   /**
@@ -43,6 +50,14 @@ export class Application {
    */
   get inboxDeck() : InboxDeck {
     return this._inboxDeck
+  }
+
+  /**
+   * Returns the review deck.
+   * @returns Review deck
+   */
+  get reviewDeck() : ReviewDeck {
+    return this._reviewDeck
   }
 
   /**

@@ -1,7 +1,7 @@
 import { InMemoryRepository } from '@akdasa-studios/framework'
 import { Application, Repositories } from '@lib/app/Application'
 import { InboxCardMemorized } from '@lib/commands/inbox'
-import { InboxCard } from '@lib/models/cards'
+import { InboxCard, ReviewCardType } from '@lib/models/cards'
 import { Verse, VerseId, VerseStatus } from '@lib/models/verse'
 
 
@@ -39,6 +39,27 @@ describe('InboxCardMemorized', () => {
         verse1InboxCards[1]
       ])
     })
+
+    it('adds two cards to the review deck if only one card from inbox deck was memorized', () => {
+      const command = new InboxCardMemorized(verse1InboxCards[0])
+      const result = command.execute(context)
+
+      expect(result.isSuccess).toBe(true)
+      expect(context.reviewDeck.cards).toHaveLength(2)
+      expect(context.reviewDeck.cards.map(c => c.type)).toEqual([
+        ReviewCardType.NumberToTranslation,
+        ReviewCardType.TranslationToNumber
+      ])
+    })
+
+    it('adds six cards to the review deck if all cards from inbox deck were memorized', () => {
+      const command1 = new InboxCardMemorized(verse1InboxCards[0])
+      const command2 = new InboxCardMemorized(verse1InboxCards[0])
+      command1.execute(context)
+      command2.execute(context)
+      expect(context.reviewDeck.cards).toHaveLength(6)
+    })
+
   })
 
 

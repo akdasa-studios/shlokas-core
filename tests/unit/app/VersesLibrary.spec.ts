@@ -23,6 +23,22 @@ describe('Library', () => {
   })
 
   /* -------------------------------------------------------------------------- */
+  /*                                     all                                    */
+  /* -------------------------------------------------------------------------- */
+
+  describe('all', () => {
+    it('returns empty array if library is empty', () => {
+      expect(library.all).toHaveLength(0)
+    })
+
+    it('returns all the verses', () => {
+      library.addVerse(getVerse('BG 1.1'))
+      expect(library.all).toHaveLength(1)
+      expect(library.all[0].number.toString()).toEqual('BG 1.1')
+    })
+  })
+
+  /* -------------------------------------------------------------------------- */
   /*                                  addVerse                                  */
   /* -------------------------------------------------------------------------- */
 
