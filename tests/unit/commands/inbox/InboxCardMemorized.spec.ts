@@ -57,7 +57,6 @@ describe('InboxCardMemorized', () => {
       const command2 = new InboxCardMemorized(verse1InboxCards[0])
       command1.execute(context)
       command2.execute(context)
-
       expect(context.reviewDeck.cards).toHaveLength(6)
     })
 
