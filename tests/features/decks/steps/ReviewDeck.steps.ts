@@ -31,6 +31,7 @@ export const reviewDeckSteps: StepDefinitions = ({ then }) => {
         verse.id, getReviewCardType(card['Card Type'])
       )
       expect(f).toHaveLength(1)
+      expect(f[0].dueTo.toLocaleDateString('en-ZA')).toEqual(card['Due To'])
     }
   })
 

@@ -42,10 +42,27 @@ export class InboxCardMemorized implements
     // Step 4: create cards and add to the Review deck
     const builder = new ReviewCardBuilder()
       .ofVerse(this._inboxCard.verseId)
+      .dueTo(context.now)
+
     for (const cardTypeToCreate of this._addedCardTypes) {
-      context.reviewDeck.addCard(
-        builder.ofType(cardTypeToCreate).build()
-      )
+      let lastDate = new Date(context.now)
+      const anyCards = context.reviewDeck
+        .getVerseCards(this._inboxCard.verseId)
+
+      if (anyCards.length > 0) {
+        lastDate = new Date(anyCards
+          .map(x => x.dueTo)
+          // Stryker disable next-line all
+          .reduce((a, b) => a > b ? a : b, lastDate))
+        lastDate.setDate(lastDate.getDate() + 1)
+      }
+
+      const card = builder
+        .ofType(cardTypeToCreate)
+        .dueTo(new Date(lastDate))
+        .build()
+
+      context.reviewDeck.addCard(card)
     }
 
     return Result.ok()

@@ -6,6 +6,7 @@ Feature: Decks / Inbox Deck
       | BG 1.1       | dharma-ksetre kuru-ksetre | O Sanjaya, after my sons |
       | BG 1.2       | drstva tu pandavanikam    | King, after looking ...  |
       | BG 1.3       | pasyaitam pandu-putranam  | O my teacher, behold ... |
+    And Now is "2022/12/01"
 
   Rule: User can add verses to the Inbox deck
 
@@ -88,17 +89,17 @@ Feature: Decks / Inbox Deck
       When I add a verse "BG 1.1" to the Inbox deck
       And I mark the "BG 1.1" card of the "Text" type as memorized
       Then Review deck contains the following cards:
-        | Verse Number | Card Type      |
-        | BG 1.1       | Number -> Text |
-        | BG 1.1       | Text -> Number |
+        | Verse Number | Card Type      | Due To     |
+        | BG 1.1       | Number -> Text | 2022/12/01 |
+        | BG 1.1       | Text -> Number | 2022/12/02 |
 
     Scenario: Number and Translation cards added to the Review deck
       When I add a verse "BG 1.1" to the Inbox deck
       And I mark the "BG 1.1" card of the "Translation" type as memorized
       Then Review deck contains the following cards:
-        | Verse Number | Card Type             |
-        | BG 1.1       | Number -> Translation |
-        | BG 1.1       | Translation -> Number |
+        | Verse Number | Card Type             | Due To     |
+        | BG 1.1       | Number -> Translation | 2022/12/01 |
+        | BG 1.1       | Translation -> Number | 2022/12/02 |
 
     Scenario: All card types added to the Review deck
       Once all cards are marked as memorized in the input deck, then all cards
@@ -108,13 +109,13 @@ Feature: Decks / Inbox Deck
       And I mark the "BG 1.1" card of the "Text" type as memorized
       And I mark the "BG 1.1" card of the "Translation" type as memorized
       Then Review deck contains the following cards:
-        | Verse Number | Card Type             |
-        | BG 1.1       | Number -> Text        |
-        | BG 1.1       | Text -> Number        |
-        | BG 1.1       | Number -> Translation |
-        | BG 1.1       | Translation -> Number |
-        | BG 1.1       | Text -> Translation   |
-        | BG 1.1       | Translation -> Text   |
+        | Verse Number | Card Type             | Due To     |
+        | BG 1.1       | Number -> Text        | 2022/12/01 |
+        | BG 1.1       | Text -> Number        | 2022/12/02 |
+        | BG 1.1       | Number -> Translation | 2022/12/03 |
+        | BG 1.1       | Translation -> Number | 2022/12/04 |
+        | BG 1.1       | Text -> Translation   | 2022/12/05 |
+        | BG 1.1       | Translation -> Text   | 2022/12/06 |
 
 
   Rule: User can revert marked card
@@ -140,6 +141,6 @@ Feature: Decks / Inbox Deck
         | Verse Number | Card Type   |
         | BG 1.1       | Translation |
       And Review deck contains the following cards:
-        | Verse Number | Card Type      |
-        | BG 1.1       | Number -> Text |
-        | BG 1.1       | Text -> Number |
+        | Verse Number | Card Type      | Due To     |
+        | BG 1.1       | Number -> Text | 2022/12/01 |
+        | BG 1.1       | Text -> Number | 2022/12/02 |
