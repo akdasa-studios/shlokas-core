@@ -50,10 +50,9 @@ export class InboxCardMemorized implements
         .getVerseCards(this._inboxCard.verseId)
 
       if (anyCards.length > 0) {
-        lastDate = new Date(anyCards
-          .map(x => x.dueTo)
-          // Stryker disable next-line all
-          .reduce((a, b) => a > b ? a : b, lastDate))
+        // Stryker disable next-line all
+        const maxDate = anyCards.map(x => x.dueTo).reduce((a, b) => a.getTime() > b.getTime() ? a : b, lastDate)
+        lastDate = new Date(maxDate)
         lastDate.setDate(lastDate.getDate() + 1)
       }
 
