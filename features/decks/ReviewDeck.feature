@@ -70,7 +70,7 @@ Feature: Decks / Review Deck
       I, as a user, mark a card as reviewed, and it is removed from the Review
       deck.
 
-      When I review card "BG 1.1" "Number -> Text" with mark "Easy"
+      When I review card "BG 1.1" "Number -> Text" with mark "Hard"
       Then I see the following cards for review on "2022-01-02":
         | Verse  | Type           |
         | BG 1.2 | Number -> Text |

@@ -1,4 +1,4 @@
-import { VerseId } from '@lib/models/verse'
+import { VerseId, ReviewGrade } from '@lib/models'
 import { Card, CardId } from './Card'
 
 
@@ -40,8 +40,16 @@ export class ReviewCard extends Card {
     return this._dueTo
   }
 
-  review(mark: number) {
-    this._dueTo.setDate(this.dueTo.getDate() + mark)
+  review(grade: ReviewGrade) {
+    const daysToAdd = {
+      [ReviewGrade.DontRemember]: 0,
+      [ReviewGrade.VeryHard]: 0,
+      [ReviewGrade.Hard]: 1,
+      [ReviewGrade.Good]: 2,
+      [ReviewGrade.Easy]: 3,
+      [ReviewGrade.Perfect]: 4,
+    }
+    this._dueTo.setDate(this.dueTo.getDate() + daysToAdd[grade])
   }
 }
 

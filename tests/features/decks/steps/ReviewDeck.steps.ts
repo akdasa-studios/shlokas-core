@@ -1,4 +1,4 @@
-import { ReviewCardBuilder, ReviewCardType } from '@lib/models'
+import { ReviewCardBuilder, ReviewCardType, ReviewGrade } from '@lib/models'
 import { StepDefinitions } from 'jest-cucumber'
 
 import { context } from '@tests/features/context'
@@ -20,8 +20,12 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
   function getMark(value: string) {
     switch (value) {
-    case 'Easy': return 1
-    case 'Hard': return 3
+    case 'Do Not Remember': return ReviewGrade.DontRemember
+    case 'Very Hard': return ReviewGrade.VeryHard
+    case 'Hard': return ReviewGrade.Hard
+    case 'Good': return ReviewGrade.Good
+    case 'Easy': return ReviewGrade.Easy
+    case 'Perfect': return ReviewGrade.Perfect
     default: return 2
     }
   }

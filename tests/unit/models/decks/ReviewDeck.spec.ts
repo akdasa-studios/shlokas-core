@@ -91,4 +91,30 @@ describe('ReviewDeck', () => {
       expect(verseCards).toEqual([card1, card2])
     })
   })
+
+
+  /* -------------------------------------------------------------------------- */
+  /*                                  dueToCards                                */
+  /* -------------------------------------------------------------------------- */
+
+  describe('.dueToCards', () => {
+    it('returns cards due to the given date', () => {
+      const card1 = b.dueTo(new Date(2020, 1, 1)).build()
+      const card2 = b.dueTo(new Date(2020, 1, 2)).build()
+      const card3 = b.dueTo(new Date(2020, 1, 3)).build()
+      const deck = new ReviewDeck([card1, card2, card3])
+      const dueToCards = deck.dueToCards(new Date(2020, 1, 2))
+      expect(dueToCards).toEqual([card1, card2])
+    })
+
+    it('does not return cards if there is no due to cards', () => {
+      const card1 = b.dueTo(new Date(2020, 1, 1)).build()
+      const card2 = b.dueTo(new Date(2020, 1, 2)).build()
+      const card3 = b.dueTo(new Date(2020, 1, 3)).build()
+      const deck = new ReviewDeck([card1, card2, card3])
+      const dueToCards = deck.dueToCards(new Date(2019, 1, 2))
+      expect(dueToCards).toEqual([])
+    })
+
+  })
 })

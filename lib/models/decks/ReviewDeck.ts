@@ -56,8 +56,13 @@ export class ReviewDeck {
     this._cards = this._cards.filter(x => x.id !== card.id)
   }
 
-  reviewCard(card: ReviewCard, mark: number) {
-    card.review(mark)
+  /**
+   * Reviews the given card.
+   * @param card Card to review
+   * @param grade Grade to give the card
+   */
+  reviewCard(card: ReviewCard, grade: number) {
+    card.review(grade)
   }
 
   /* -------------------------------------------------------------------------- */
