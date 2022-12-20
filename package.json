@@ -1,7 +1,7 @@
 {
   "name": "@akdasa-studios/shlokas-core",
-  "version": "0.0.24",
-  "description": "Core library for shlokas app",
+  "version": "0.0.25",
+  "description": "Core library for the Shlokas app",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
