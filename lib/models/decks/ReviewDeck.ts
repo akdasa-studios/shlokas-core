@@ -24,6 +24,10 @@ export class ReviewDeck {
     return this._cards.sort((x, y) => x.addedAt.getTime() - y.addedAt.getTime())
   }
 
+  dueToCards(date: Date): readonly ReviewCard[] {
+    return this._cards.filter(x => x.dueTo.getTime() <= date.getTime())
+  }
+
   /**
    * Returns true if the deck is empty, otherwise false.
    * @returns True if the deck is empty, otherwise false
@@ -52,6 +56,10 @@ export class ReviewDeck {
     this._cards = this._cards.filter(x => x.id !== card.id)
   }
 
+  reviewCard(card: ReviewCard, mark: number) {
+    card.review(mark)
+  }
+
   /* -------------------------------------------------------------------------- */
   /*                                   Verses                                   */
   /* -------------------------------------------------------------------------- */
@@ -65,7 +73,12 @@ export class ReviewDeck {
   getVerseCards(
     verseId: VerseId,
     cardType?: ReviewCardType,
+    date?: Date,
   ) : readonly ReviewCard[] {
-    return this._cards.filter(x => x.verseId.equals(verseId) && (cardType ? x.type === cardType : true))
+    return this._cards.filter(
+      x => x.verseId.equals(verseId) &&
+      (cardType ? x.type === cardType : true) &&
+      (date ? x.dueTo.getTime() <= date.getTime() : true)
+    )
   }
 }

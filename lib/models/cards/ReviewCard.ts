@@ -15,6 +15,8 @@ export enum ReviewCardType {
  * An review card.
  */
 export class ReviewCard extends Card {
+  private _dueTo: Date
+
   /**
    * Initialize a new instance of ReviewCard class with the given parameters.
    * @param id Identity of the card
@@ -28,9 +30,18 @@ export class ReviewCard extends Card {
     verseId: VerseId,
     public readonly type: ReviewCardType,
     public readonly addedAt: Date,
-    public readonly dueTo: Date,
+    dueTo: Date,
   ) {
     super(id, verseId)
+    this._dueTo = new Date(dueTo)
+  }
+
+  public get dueTo(): Date {
+    return this._dueTo
+  }
+
+  review(mark: number) {
+    this._dueTo.setDate(this.dueTo.getDate() + mark)
   }
 }
 
