@@ -14,13 +14,8 @@ describe('ReviewCard', () => {
   })
 
   describe('review', () => {
-    it('should set dueTo to the same day if grade is DontRemember', () => {
-      reviewCard.review(ReviewGrade.DontRemember)
-      expect(reviewCard.dueTo).toEqual(new Date('2020-01-01'))
-    })
-
-    it('should set dueTo to the same day if grade is VeryHard', () => {
-      reviewCard.review(ReviewGrade.VeryHard)
+    it('should set dueTo to the same day if grade is Forgot', () => {
+      reviewCard.review(ReviewGrade.Forgot)
       expect(reviewCard.dueTo).toEqual(new Date('2020-01-01'))
     })
 
@@ -37,11 +32,6 @@ describe('ReviewCard', () => {
     it('should add 3 days to dueTo if grade is Easy', () => {
       reviewCard.review(ReviewGrade.Easy)
       expect(reviewCard.dueTo).toEqual(new Date('2020-01-04'))
-    })
-
-    it('should add 4 days to dueTo if grade is Easy', () => {
-      reviewCard.review(ReviewGrade.Perfect)
-      expect(reviewCard.dueTo).toEqual(new Date('2020-01-05'))
     })
   })
 })

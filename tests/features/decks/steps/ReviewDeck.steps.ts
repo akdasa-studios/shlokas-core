@@ -20,13 +20,11 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
   function getMark(value: string) {
     switch (value) {
-    case 'Do Not Remember': return ReviewGrade.DontRemember
-    case 'Very Hard': return ReviewGrade.VeryHard
+    case 'Forgot': return ReviewGrade.Forgot
     case 'Hard': return ReviewGrade.Hard
     case 'Good': return ReviewGrade.Good
     case 'Easy': return ReviewGrade.Easy
-    case 'Perfect': return ReviewGrade.Perfect
-    default: return 2
+    default: throw new Error(`Unknown mark: ${value}`)
     }
   }
 

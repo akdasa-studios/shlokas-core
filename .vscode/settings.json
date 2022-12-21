@@ -35,5 +35,5 @@
   "cucumberautocomplete.steps": [
     "tests/features/**/*.steps.ts"
   ],
-  "jest.autoRun": "false",
+  "jest.autoRun": "off",
 }
