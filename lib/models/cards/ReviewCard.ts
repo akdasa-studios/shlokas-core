@@ -1,6 +1,10 @@
+import { TimeMachine } from '@lib/app/TimeMachine'
 import { VerseId, ReviewGrade } from '@lib/models'
 import { Card, CardId } from './Card'
+import * as dayjs from 'dayjs'
 
+const FORGOT_CARDS_DECRESE_EASE_FACTOR = 0.2
+const HOURS_24 = 86400000
 
 export enum ReviewCardType {
   NumberToTranslation = 'NumberToTranslation',
@@ -16,6 +20,9 @@ export enum ReviewCardType {
  */
 export class ReviewCard extends Card {
   private _dueTo: Date
+  private _interval = 0 /* 24 hours * 60 minutes */
+  private _ease = 2.5
+  private _lapses = 0
 
   /**
    * Initialize a new instance of ReviewCard class with the given parameters.
@@ -41,13 +48,33 @@ export class ReviewCard extends Card {
   }
 
   review(grade: ReviewGrade) {
-    const daysToAdd = {
-      [ReviewGrade.Forgot]: 0,
-      [ReviewGrade.Hard]: 1,
-      [ReviewGrade.Good]: 2,
-      [ReviewGrade.Easy]: 3,
+
+    if (this._interval !== 0) {
+      const intervalMultipliers = {
+        [ReviewGrade.Forgot]: 0,
+        [ReviewGrade.Hard]: .8,
+        [ReviewGrade.Good]: 1,
+        [ReviewGrade.Easy]: 1.3,
+      }
+
+      this._interval = Math.max(
+        grade !== ReviewGrade.Forgot ? 1440 : 0, /* 24 * 60 */
+        this._interval * this._ease * intervalMultipliers[grade]
+      )
+    } else {
+      this._interval = {
+        [ReviewGrade.Forgot]: 0,
+        [ReviewGrade.Hard]: 0,
+        [ReviewGrade.Good]: 1440,
+        [ReviewGrade.Easy]: 1440 * 2,
+      }[grade]
     }
-    this._dueTo.setDate(this.dueTo.getDate() + daysToAdd[grade])
+
+    this._dueTo = new Date(
+      TimeMachine.add(
+        TimeMachine.today, this._interval, 'm'
+      ).setHours(0,0,0,0)
+    )
   }
 }
 

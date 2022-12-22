@@ -1,3 +1,4 @@
+import { TimeMachine } from '@lib/app/TimeMachine'
 import { Processor, Repository } from '@akdasa-studios/framework'
 import { InboxDeck, ReviewDeck, Verse, VerseStatus } from '@lib/models'
 import { Library } from './Library'
@@ -31,9 +32,9 @@ export class Application {
     )
   }
 
-  get now(): Date { return new Date(this._now) }
+  get now(): Date { return TimeMachine.now }
   setNow(date: Date) {
-    this._now = date
+    TimeMachine.set(date)
   }
 
   /**

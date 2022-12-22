@@ -1,11 +1,17 @@
+import { TimeMachine } from '@lib/app/TimeMachine'
 import { ReviewCard, ReviewCardType, ReviewGrade } from '@lib/models'
 import { getReviewCard, getVerse } from '../env'
 
 describe('ReviewCard', () => {
 
   let reviewCard: ReviewCard
+  const today = new Date('2020-01-01T00:00')
+  const tomorrow = new Date('2020-01-02T00:00')
+  const in2days = new Date('2020-01-03T00:00')
+  // const in2days = new Date('2020-01-02T00:00')
 
   beforeEach(() => {
+    TimeMachine.set(today)
     reviewCard = getReviewCard(
       getVerse('BG 1.1'),
       ReviewCardType.NumberToText,
@@ -16,22 +22,22 @@ describe('ReviewCard', () => {
   describe('review', () => {
     it('should set dueTo to the same day if grade is Forgot', () => {
       reviewCard.review(ReviewGrade.Forgot)
-      expect(reviewCard.dueTo).toEqual(new Date('2020-01-01'))
+      expect(reviewCard.dueTo).toEqual(today)
     })
 
     it('should set dueTo to the next day if grade is Hard', () => {
       reviewCard.review(ReviewGrade.Hard)
-      expect(reviewCard.dueTo).toEqual(new Date('2020-01-02'))
+      expect(reviewCard.dueTo).toEqual(today)
     })
 
     it('should set dueTo to the day after tomorrow if grade is Good', () => {
       reviewCard.review(ReviewGrade.Good)
-      expect(reviewCard.dueTo).toEqual(new Date('2020-01-03'))
+      expect(reviewCard.dueTo).toEqual(tomorrow)
     })
 
-    it('should add 3 days to dueTo if grade is Easy', () => {
+    it('should add 2 days to dueTo if grade is Easy', () => {
       reviewCard.review(ReviewGrade.Easy)
-      expect(reviewCard.dueTo).toEqual(new Date('2020-01-04'))
+      expect(reviewCard.dueTo).toEqual(in2days)
     })
   })
 })
