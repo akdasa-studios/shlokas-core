@@ -1,5 +1,5 @@
-import { TimeMachine } from '@lib/app/TimeMachine'
 import { Processor, Repository } from '@akdasa-studios/framework'
+import { TimeController, TimeMachine } from '@lib/app/TimeMachine'
 import { InboxDeck, ReviewDeck, Verse, VerseStatus } from '@lib/models'
 import { Library } from './Library'
 import { Settings } from './Settings'
@@ -32,7 +32,7 @@ export class Application {
     )
   }
 
-  get timeMachine() {
+  get timeMachine() : TimeController {
     return TimeMachine
   }
 
