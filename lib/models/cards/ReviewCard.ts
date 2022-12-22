@@ -52,7 +52,7 @@ export class ReviewCard extends Card {
     if (this._interval !== 0) {
       const intervalMultipliers = {
         [ReviewGrade.Forgot]: 0,
-        [ReviewGrade.Hard]: .8,
+        [ReviewGrade.Hard]: .7,
         [ReviewGrade.Good]: 1,
         [ReviewGrade.Easy]: 1.3,
       }
