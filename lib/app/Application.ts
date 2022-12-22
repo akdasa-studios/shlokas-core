@@ -32,9 +32,8 @@ export class Application {
     )
   }
 
-  get now(): Date { return TimeMachine.now }
-  setNow(date: Date) {
-    TimeMachine.set(date)
+  get timeMachine() {
+    return TimeMachine
   }
 
   /**

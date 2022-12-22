@@ -10,7 +10,7 @@ export const appSteps: StepDefinitions = ({ given, when }) => {
   /* -------------------------------------------------------------------------- */
 
   given(/^Now is "(.*)"$/, (date: string) => {
-    context.app.setNow(new Date(date))
+    context.app.timeMachine.set(new Date(date)) // ? T00:00
   })
 
   /* -------------------------------------------------------------------------- */
