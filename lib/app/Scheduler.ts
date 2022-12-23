@@ -14,6 +14,9 @@ export class Scheduler {
     [ReviewGrade.Easy]: 1.3,
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  constructor() {}
+
   getNewInterval(
     currentInterval: number,
     currentEase: number,
