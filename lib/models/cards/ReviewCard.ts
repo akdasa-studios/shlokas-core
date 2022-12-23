@@ -56,6 +56,10 @@ export class ReviewCard extends Card {
     return this._ease
   }
 
+  get interval(): number {
+    return this._interval
+  }
+
   review(grade: ReviewGrade) {
     // Lap cout should be only increased by one per day
     const isCardDifficultyDecreasedToday = (

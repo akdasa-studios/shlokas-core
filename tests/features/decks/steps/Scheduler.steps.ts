@@ -42,9 +42,12 @@ export const schedulerSteps: StepDefinitions = ({ given, when, then }) => {
 
   then('Card stats are the following:', (stats) => {
     for (const stat of stats) {
+      const value = stat['Value']
+
       switch (stat['Name']) {
-      case 'Lapses': expect(card.lapses).toEqual(parseInt(stat['Value'])); break
-      case 'Ease': expect(card.ease).toEqual(parseFloat(stat['Value'])); break
+      case 'Lapses': expect(card.lapses).toEqual(parseInt(value)); break
+      case 'Ease': expect(card.ease).toEqual(parseFloat(value)); break
+      case 'Interval': expect(card.interval).toEqual(parseInt(value)); break
       case 'Due To':
         expect(card.dueTo).toEqual(new Date(
           new Date(stat['Value']).setHours(0,0,0,0)

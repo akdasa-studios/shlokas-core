@@ -52,7 +52,7 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
     const verse = getVerse(_verse)
     const type = getReviewCardType(_type)
     const card = context.app.reviewDeck.getVerseCards(verse.id, type)[0]
-    context.app.reviewDeck.reviewCard(card, getMark(_mark))
+    card.review(getMark(_mark))
   })
 
   /* -------------------------------------------------------------------------- */

@@ -12,14 +12,17 @@ Feature: Decks / Scheduler
 
       And The new card was added to the Review deck
       When I review it with garde "<Grade>"
-      Then Card due date is "<Due To>"
+      Then Card stats are the following:
+        | Name     | Value      |
+        | Due To   | <Due To>   |
+        | Interval | <Interval> |
 
       Examples:
-        | Grade  | Due To     |
-        | Forgot | 2020-01-01 |
-        | Hard   | 2020-01-01 |
-        | Good   | 2020-01-02 |
-        | Easy   | 2020-01-03 |
+        | Grade  | Due To     | Interval |
+        | Forgot | 2020-01-01 | 0        |
+        | Hard   | 2020-01-01 | 0        |
+        | Good   | 2020-01-02 | 1440     |
+        | Easy   | 2020-01-03 | 2880     |
 
 
   Rule: Second review uses ease to calculate next review date
@@ -31,14 +34,17 @@ Feature: Decks / Scheduler
       When I review it with garde "<Grade 1>"
       And Now is "2020-01-02"
       When I review it with garde "<Grade 2>"
-      Then Card due date is "<Due To>"
+      Then Card stats are the following:
+        | Name     | Value      |
+        | Due To   | <Due To>   |
+        | Interval | <Interval> |
 
       Examples:
-        | Grade 1 | Grade 2 | Due To     |
-        | Good    | Forgot  | 2020-01-02 |
-        | Good    | Hard    | 2020-01-03 |
-        | Good    | Good    | 2020-01-04 |
-        | Good    | Easy    | 2020-01-05 |
+        | Grade 1 | Grade 2 | Due To     | Interval |
+        | Good    | Forgot  | 2020-01-02 | 0        |
+        | Good    | Hard    | 2020-01-03 | 2520     |
+        | Good    | Good    | 2020-01-04 | 3600     |
+        | Good    | Easy    | 2020-01-05 | 4680     |
 
 
   Rule: "Again" garde decreases card difficulty
