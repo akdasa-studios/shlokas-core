@@ -1,4 +1,6 @@
-import { VerseId, ReviewGrade } from '@lib/models'
+import { Scheduler } from '@lib/app/Scheduler'
+import { TimeMachine } from '@lib/app/TimeMachine'
+import { ReviewGrade, VerseId } from '@lib/models'
 import { Card, CardId } from './Card'
 
 
@@ -16,6 +18,10 @@ export enum ReviewCardType {
  */
 export class ReviewCard extends Card {
   private _dueTo: Date
+  private _interval = 0 /* 24 hours * 60 minutes */
+  private _ease = 250
+  private _lapses = 0
+  private _lastDifficultyDecreasedAt: Date
 
   /**
    * Initialize a new instance of ReviewCard class with the given parameters.
@@ -40,14 +46,40 @@ export class ReviewCard extends Card {
     return this._dueTo
   }
 
+  public get lapses(): number {
+    return this._lapses
+  }
+
+  public get ease(): number {
+    return this._ease
+  }
+
+  get interval(): number {
+    return this._interval
+  }
+
   review(grade: ReviewGrade) {
-    const daysToAdd = {
-      [ReviewGrade.Forgot]: 0,
-      [ReviewGrade.Hard]: 1,
-      [ReviewGrade.Good]: 2,
-      [ReviewGrade.Easy]: 3,
+    // Decrease card difficulty
+    const isCardDifficultyDecreasedToday = (
+      this._lastDifficultyDecreasedAt?.getTime() === TimeMachine.today.getTime()
+    )
+    if (grade === ReviewGrade.Forgot && !isCardDifficultyDecreasedToday) {
+      this._lapses += 1
+      this._ease = Math.max(this._ease - 20, 130)
+      this._lastDifficultyDecreasedAt = TimeMachine.today
     }
-    this._dueTo.setDate(this.dueTo.getDate() + daysToAdd[grade])
+
+    // Calculate new interval
+    this._interval = new Scheduler().getNewInterval(
+      this._interval, this._ease / 100, grade
+    )
+
+    // Set new date
+    this._dueTo = new Date(
+      TimeMachine.add(
+        TimeMachine.today, this._interval, 'm'
+      ).setHours(0,0,0,0)
+    )
   }
 }
 

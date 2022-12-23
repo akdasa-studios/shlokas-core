@@ -42,10 +42,10 @@ export class InboxCardMemorized implements
     // Step 4: create cards and add to the Review deck
     const builder = new ReviewCardBuilder()
       .ofVerse(this._inboxCard.verseId)
-      .dueTo(context.now)
+      .dueTo(context.timeMachine.now)
 
     for (const cardTypeToCreate of this._addedCardTypes) {
-      let lastDate = new Date(context.now)
+      let lastDate = new Date(context.timeMachine.now)
       const anyCards = context.reviewDeck
         .getVerseCards(this._inboxCard.verseId)
 

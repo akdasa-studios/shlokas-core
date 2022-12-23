@@ -70,9 +70,11 @@ Feature: Decks / Review Deck
       I, as a user, mark a card as reviewed, and it is removed from the Review
       deck.
 
-      When I review card "BG 1.1" "Number -> Text" with mark "Hard"
-      Then I see the following cards for review on "2022-01-02":
+      When I review card "BG 1.1" "Number -> Text" with mark "Good"
+      Then I see no cards for review on "2022-01-01"
+      And I see the following cards for review on "2022-01-02":
         | Verse  | Type           |
+        | BG 1.1 | Number -> Text |
         | BG 1.2 | Number -> Text |
       And I see the following cards for review on "2022-01-03":
         | Verse  | Type           |
