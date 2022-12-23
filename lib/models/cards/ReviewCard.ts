@@ -1,3 +1,4 @@
+import { Scheduler } from '@lib/app/Scheduler'
 import { TimeMachine } from '@lib/app/TimeMachine'
 import { ReviewGrade, VerseId } from '@lib/models'
 import { Card, CardId } from './Card'
@@ -58,37 +59,22 @@ export class ReviewCard extends Card {
   }
 
   review(grade: ReviewGrade) {
-    // Lap cout should be only increased by one per day
+    // Decrease card difficulty
     const isCardDifficultyDecreasedToday = (
       this._lastDifficultyDecreasedAt?.getTime() === TimeMachine.today.getTime()
     )
     if (grade === ReviewGrade.Forgot && !isCardDifficultyDecreasedToday) {
       this._lapses += 1
-      this._lastDifficultyDecreasedAt = TimeMachine.today
       this._ease = Math.max(this._ease - 20, 130)
+      this._lastDifficultyDecreasedAt = TimeMachine.today
     }
 
-    if (this._interval !== 0) {
-      const intervalMultipliers = {
-        [ReviewGrade.Forgot]: 0,
-        [ReviewGrade.Hard]: .7,
-        [ReviewGrade.Good]: 1,
-        [ReviewGrade.Easy]: 1.3,
-      }
+    // Calculate new interval
+    this._interval = new Scheduler().getNewInterval(
+      this._interval, this._ease / 100, grade
+    )
 
-      this._interval = Math.max(
-        grade === ReviewGrade.Forgot ? 0 : 1440, /* 24 * 60 */
-        this._interval * (this._ease / 100) * intervalMultipliers[grade]
-      )
-    } else {
-      this._interval = {
-        [ReviewGrade.Forgot]: 0,
-        [ReviewGrade.Hard]: 0,
-        [ReviewGrade.Good]: 1440,
-        [ReviewGrade.Easy]: 1440 * 2,
-      }[grade]
-    }
-
+    // Set new date
     this._dueTo = new Date(
       TimeMachine.add(
         TimeMachine.today, this._interval, 'm'
