@@ -40,5 +40,11 @@ module.exports = {
       amd: 'uuid',
       root: 'uuid',
     },
+    dayjs: {
+      commonjs: 'dayjs',
+      commonjs2: 'dayjs',
+      amd: 'dayjs',
+      root: 'dayjs',
+    }
   },
 }
