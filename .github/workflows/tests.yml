@@ -27,7 +27,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 👨‍🔬 Tests
-        run: npm run test:unit
+        run: npm run test
 
       - name: 📝 Coverage report
         uses: codecov/codecov-action@v1
