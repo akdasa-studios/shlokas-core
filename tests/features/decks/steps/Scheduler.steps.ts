@@ -60,9 +60,14 @@ export const schedulerSteps: StepDefinitions = ({ given, when, then }) => {
   then('My review table is as follows:', (table) => {
     for (const row of table) {
       TimeMachine.set(new Date(row['Date']))
+
       card.review(ReviewGrade[row['Grade'] as string])
       expect(card.lapses).toEqual(parseInt(row['Lapses']))
       expect(card.ease).toEqual(parseInt(row['Ease']))
+      expect(card.interval).toEqual(parseInt(row['Interval']))
+      expect(card.dueTo).toEqual(new Date(
+        new Date(row['Due To']).setHours(0,0,0,0)
+      ))
     }
   })
 }

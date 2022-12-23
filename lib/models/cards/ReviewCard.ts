@@ -77,7 +77,7 @@ export class ReviewCard extends Card {
       }
 
       this._interval = Math.max(
-        grade !== ReviewGrade.Forgot ? 1440 : 0, /* 24 * 60 */
+        grade === ReviewGrade.Forgot ? 0 : 1440, /* 24 * 60 */
         this._interval * (this._ease / 100) * intervalMultipliers[grade]
       )
     } else {

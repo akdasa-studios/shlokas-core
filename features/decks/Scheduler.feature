@@ -47,6 +47,20 @@ Feature: Decks / Scheduler
         | Good    | Easy    | 2020-01-05 | 4680     |
 
 
+  Rule: "Again" resets card schedule
+
+    Scenario: "Again" resets card schedule
+
+      Given The new card was added to the Review deck
+      Then My review table is as follows:
+        | Date       | Grade  | Lapses | Ease | Interval | Due To     |
+        | 2020-01-01 | Good   | 0      | 250  | 1440     | 2020-01-02 |
+        | 2020-01-02 | Good   | 0      | 250  | 3600     | 2020-01-04 |
+        | 2020-01-04 | Good   | 0      | 250  | 9000     | 2020-01-10 |
+        | 2020-01-10 | Good   | 0      | 250  | 22500    | 2020-01-25 |
+        | 2020-01-25 | Forgot | 1      | 230  | 0        | 2020-01-25 |
+
+
   Rule: "Again" garde decreases card difficulty
 
     Scenario: "Again" grade decreases card difficulty
@@ -102,12 +116,12 @@ Feature: Decks / Scheduler
 
       Given The new card was added to the Review deck
       Then My review table is as follows:
-        | Date       | Grade  | Lapses | Ease | Due To     |
-        | 2020-01-01 | Forgot | 1      | 230  | 2020-01-01 |
-        | 2020-01-02 | Forgot | 2      | 210  | 2020-01-02 |
-        | 2020-01-03 | Forgot | 3      | 190  | 2020-01-03 |
-        | 2020-01-04 | Forgot | 4      | 170  | 2020-01-04 |
-        | 2020-01-05 | Forgot | 5      | 150  | 2020-01-05 |
-        | 2020-01-06 | Forgot | 6      | 130  | 2020-01-06 |
-        | 2020-01-07 | Forgot | 7      | 130  | 2020-01-07 |
-        | 2020-01-08 | Forgot | 8      | 130  | 2020-01-08 |
+        | Date       | Grade  | Lapses | Ease | Interval | Due To     |
+        | 2020-01-01 | Forgot | 1      | 230  | 0        | 2020-01-01 |
+        | 2020-01-02 | Forgot | 2      | 210  | 0        | 2020-01-02 |
+        | 2020-01-03 | Forgot | 3      | 190  | 0        | 2020-01-03 |
+        | 2020-01-04 | Forgot | 4      | 170  | 0        | 2020-01-04 |
+        | 2020-01-05 | Forgot | 5      | 150  | 0        | 2020-01-05 |
+        | 2020-01-06 | Forgot | 6      | 130  | 0        | 2020-01-06 |
+        | 2020-01-07 | Forgot | 7      | 130  | 0        | 2020-01-07 |
+        | 2020-01-08 | Forgot | 8      | 130  | 0        | 2020-01-08 |
