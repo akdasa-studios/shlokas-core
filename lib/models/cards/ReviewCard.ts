@@ -1,10 +1,7 @@
 import { TimeMachine } from '@lib/app/TimeMachine'
-import { VerseId, ReviewGrade } from '@lib/models'
+import { ReviewGrade, VerseId } from '@lib/models'
 import { Card, CardId } from './Card'
-import * as dayjs from 'dayjs'
 
-const FORGOT_CARDS_DECRESE_EASE_FACTOR = 0.2
-const HOURS_24 = 86400000
 
 export enum ReviewCardType {
   NumberToTranslation = 'NumberToTranslation',
