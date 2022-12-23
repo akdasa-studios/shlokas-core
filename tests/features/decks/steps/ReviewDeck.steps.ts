@@ -83,7 +83,6 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
   })
 
   then(/^I see the following cards for review on "(.*)":$/, (date: string, cards) => {
-    console.log(context.app.reviewDeck.cards)
     expect(
       context.app.reviewDeck.dueToCards(new Date(date)).length
     ).toEqual(cards.length)

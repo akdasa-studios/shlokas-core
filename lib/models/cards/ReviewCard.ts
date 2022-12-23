@@ -21,8 +21,9 @@ export enum ReviewCardType {
 export class ReviewCard extends Card {
   private _dueTo: Date
   private _interval = 0 /* 24 hours * 60 minutes */
-  private _ease = 2.5
+  private _ease = 250
   private _lapses = 0
+  private _lastDifficultyDecreasedAt: Date
 
   /**
    * Initialize a new instance of ReviewCard class with the given parameters.
@@ -47,7 +48,24 @@ export class ReviewCard extends Card {
     return this._dueTo
   }
 
+  public get lapses(): number {
+    return this._lapses
+  }
+
+  public get ease(): number {
+    return this._ease
+  }
+
   review(grade: ReviewGrade) {
+    // Lap cout should be only increased by one per day
+    const isCardDifficultyDecreasedToday = (
+      this._lastDifficultyDecreasedAt?.getTime() === TimeMachine.today.getTime()
+    )
+    if (grade === ReviewGrade.Forgot && !isCardDifficultyDecreasedToday) {
+      this._lapses += 1
+      this._lastDifficultyDecreasedAt = TimeMachine.today
+      this._ease = Math.max(this._ease - 20, 130)
+    }
 
     if (this._interval !== 0) {
       const intervalMultipliers = {
@@ -59,7 +77,7 @@ export class ReviewCard extends Card {
 
       this._interval = Math.max(
         grade !== ReviewGrade.Forgot ? 1440 : 0, /* 24 * 60 */
-        this._interval * this._ease * intervalMultipliers[grade]
+        this._interval * (this._ease / 100) * intervalMultipliers[grade]
       )
     } else {
       this._interval = {
