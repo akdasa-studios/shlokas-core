@@ -1,8 +1,10 @@
 import { InMemoryRepository, Repository } from '@akdasa-studios/framework'
 import { Library } from '@lib/app/Library'
-import { Decks, Verse, VerseBuilder, VerseId, VerseNumber, VerseQueries, VerseStatus, VerseStatusId } from '@lib/models'
+import { Decks, Verse, VerseBuilder, VerseId, VerseNumber, VerseQueries, VerseStatus, VerseStatusId, Language } from '@lib/models'
 
 describe('Library', () => {
+  const english = new Language('en', 'EN')
+  const serbian = new Language('rs', 'RS')
   let versesRepository: Repository<Verse>
   let verseStatusesRepository: Repository<VerseStatus>
   let library: Library
@@ -13,7 +15,7 @@ describe('Library', () => {
 
   function getVerse(verseNumberStr: string): Verse {
     const verseNumber = getVerseNumber(verseNumberStr)
-    return new VerseBuilder().withNumber(verseNumber).build().value
+    return new VerseBuilder().ofLanguage(english).withNumber(verseNumber).build().value
   }
 
   beforeEach(() => {
@@ -28,13 +30,14 @@ describe('Library', () => {
 
   describe('all', () => {
     it('returns empty array if library is empty', () => {
-      expect(library.all).toHaveLength(0)
+      expect(library.all(english)).toHaveLength(0)
     })
 
-    it('returns all the verses', () => {
+    it('returns all the verses of the specific language', () => {
       library.addVerse(getVerse('BG 1.1'))
-      expect(library.all).toHaveLength(1)
-      expect(library.all[0].number.toString()).toEqual('BG 1.1')
+      expect(library.all(english)).toHaveLength(1)
+      expect(library.all(english)[0].number.toString()).toEqual('BG 1.1')
+      expect(library.all(serbian)).toHaveLength(0)
     })
   })
 
@@ -48,7 +51,7 @@ describe('Library', () => {
       const verse = getVerse('BG 1.1')
       const result = library.addVerse(verse)
       expect(result.isSuccess).toBeTruthy()
-      expect(library.getByNumber(verseNumber).isSuccess).toBeTruthy()
+      expect(library.getByNumber(english, verseNumber).isSuccess).toBeTruthy()
     })
   })
 
@@ -59,7 +62,7 @@ describe('Library', () => {
   describe('getByNumber', () => {
     it('should return a failure if the verse is not found', () => {
       const verseNumber = getVerseNumber('BG 1.1')
-      const result = library.getByNumber(verseNumber)
+      const result = library.getByNumber(english, verseNumber)
       expect(result.isFailure).toBeTruthy()
       expect(result.error).toBe('Verse not found: ' + verseNumber.value)
     })
@@ -69,7 +72,7 @@ describe('Library', () => {
       library.addVerse(getVerse('BG 2.13'))
       library.addVerse(getVerse('BG 2.20'))
 
-      const result = library.getByNumber('BG 2.13')
+      const result = library.getByNumber(english, 'BG 2.13')
       expect(result.isSuccess).toBeTruthy()
       expect(result.value.number.value).toBe('BG 2.13')
     })
@@ -95,7 +98,7 @@ describe('Library', () => {
 
       const result = library.getById(notFoundId)
       expect(result.isSuccess).toBeFalsy()
-      expect(result.error).toBe('Verse not found: ' + notFoundId.value)
+      expect(result.error).toBe(`Entity '${notFoundId.value}' not found`)
     })
   })
 
@@ -109,24 +112,24 @@ describe('Library', () => {
       library.addVerse(getVerse('BG 2.13'))
       library.addVerse(getVerse('BG 2.20'))
 
-      const result = library.find(VerseQueries.byNumber('BG 2.13'))
+      const result = library.find(VerseQueries.number('BG 2.13'))
       expect(result.length).toBe(1)
       expect(result[0].number.value).toBe('BG 2.13')
     })
   })
 
   /* -------------------------------------------------------------------------- */
-  /*                                  getStatusById                             */
+  /*                                    getStatus                              */
   /* -------------------------------------------------------------------------- */
 
-  describe('getStatusById', () => {
+  describe('getStatus', () => {
     it('should return the status of the verse', () => {
       const verse = library.addVerse(getVerse('BG 1.1')).value
       verseStatusesRepository.save(
         new VerseStatus(new VerseStatusId(), verse.id, Decks.None)
       )
 
-      const result = library.getStatusById(verse.id)
+      const result = library.getStatus(verse.id)
       expect(result.isSuccess).toBeTruthy()
       expect(result.value.verseId).toBe(verse.id)
     })
@@ -135,18 +138,10 @@ describe('Library', () => {
       const verse = getVerse('BG 1.1')
       library.addVerse(verse)
 
-      const result = library.getStatusById(verse.id)
+      const result = library.getStatus(verse.id)
       expect(result.isSuccess).toBeTruthy()
       expect(result.value.verseId).toBe(verse.id)
       expect(result.value.inDeck).toEqual(Decks.None)
-    })
-  })
-
-  describe('getStatusByNumber', () => {
-    it('should return error if verse not found', () => {
-      const result = library.getStatusByNumber('BG 1.1.1')
-      expect(result.isFailure).toBeTruthy()
-      expect(result.error).toBe('No verse BG 1.1.1 found')
     })
   })
 })

@@ -16,7 +16,7 @@ export class UpdateVerseStatus implements
   }
 
   execute(context: Application): Result<VerseStatus, string> {
-    this._status = context.library.getStatusById(this._verseId).value
+    this._status = context.library.getStatus(this._verseId).value
 
     const inboxCards = context.inboxDeck.getVerseCards(this._verseId)
     if (inboxCards.length > 0) {

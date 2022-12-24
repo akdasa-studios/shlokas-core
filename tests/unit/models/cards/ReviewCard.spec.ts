@@ -1,6 +1,6 @@
 import { TimeMachine } from '@lib/app/TimeMachine'
 import { ReviewCard, ReviewCardType, ReviewGrade } from '@lib/models'
-import { getReviewCard, getVerse } from '../env'
+import { createReviewCard, createVerse } from '@tests/env'
 
 describe('ReviewCard', () => {
 
@@ -12,8 +12,8 @@ describe('ReviewCard', () => {
 
   beforeEach(() => {
     TimeMachine.set(today)
-    reviewCard = getReviewCard(
-      getVerse('BG 1.1'),
+    reviewCard = createReviewCard(
+      createVerse('BG 1.1'),
       ReviewCardType.NumberToText,
       new Date('2020-01-01')
     )

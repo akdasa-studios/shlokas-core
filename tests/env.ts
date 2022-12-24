@@ -3,16 +3,16 @@ import {
   VerseBuilder, VerseNumber
 } from '@lib/models'
 
-export function getVerseNumber(verseNumberStr: string): VerseNumber {
+export function createVerseNumber(verseNumberStr: string): VerseNumber {
   return new VerseNumber(verseNumberStr)
 }
 
-export function getVerse(verseNumberStr: string): Verse {
-  const verseNumber = getVerseNumber(verseNumberStr)
+export function createVerse(verseNumberStr: string): Verse {
+  const verseNumber = createVerseNumber(verseNumberStr)
   return new VerseBuilder().withNumber(verseNumber).build().value
 }
 
-export function getReviewCard(
+export function createReviewCard(
   verse: Verse,
   type: ReviewCardType,
   dueTo: Date = new Date('2020-01-01')

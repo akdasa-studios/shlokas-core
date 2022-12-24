@@ -1,5 +1,7 @@
-import { Fail, Query, Repository, Result } from '@akdasa-studios/framework'
-import { Verse, VerseId, VerseNumber, VerseQueries, VerseStatus, VerseStatusId, VerseStatusQueries } from '@lib/models'
+import { Query, Repository, Result } from '@akdasa-studios/framework'
+import {
+  Language, Verse, VerseId, VerseNumber, VerseQueries, VerseStatus, VerseStatusId, VerseStatusQueries
+} from '@lib/models'
 
 /**
  * Verses library
@@ -21,16 +23,49 @@ export class Library {
     this._statuses = verseStatuses
   }
 
-  get all(): readonly Verse[] {
-    return this._verses.all()
-  }
-
   find(query: Query<Verse>): readonly Verse[] {
     return this._verses.find(query)
   }
 
-  finqByString(queryString: string): readonly Verse[] {
-    return this._verses.find(VerseQueries.byContent(queryString))
+  /**
+   * Returns all verses
+   * @returns List of all verses in the library
+   */
+  all(lang: Language): readonly Verse[] {
+    return this._verses.find(VerseQueries.language(lang))
+  }
+
+  /**
+   * Gets verse by ID
+   * @param id Id of a verse
+   * @returns Result of operation
+   */
+  getById(id: VerseId): Result<Verse, string> {
+    return this._verses.get(id)
+  }
+
+  /**
+   * Finds a verse by its number.
+   * @param number Number of the verse
+   * @returns Result of the operation
+   * @remarks If the verse is not found, the result will be a failure.
+   */
+  getByNumber(lang: Language, verseNumber: VerseNumber | string): Result<Verse, string> {
+    const result = this._verses.find(VerseQueries.queryBuilder.and(
+      VerseQueries.language(lang),
+      VerseQueries.number(verseNumber)
+    ))
+    if (result.length === 0) {
+      return Result.fail('Verse not found: ' + verseNumber.toString())
+    }
+    return Result.ok(result[0])
+  }
+
+  findByContent(lang: Language, queryString: string): readonly Verse[] {
+    return this._verses.find(VerseQueries.queryBuilder.and(
+      VerseQueries.language(lang),
+      VerseQueries.content(queryString)
+    ))
   }
 
   /**
@@ -43,52 +78,22 @@ export class Library {
     return Result.ok(verse)
   }
 
-  /**
-   * Finds a verse by its number.
-   * @param number Number of the verse
-   * @returns Result of the operation
-   * @remarks If the verse is not found, the result will be a failure.
-   */
-  getByNumber(verseNumber: VerseNumber | string): Result<Verse, string> {
-    const result = this._verses.find(VerseQueries.byNumber(verseNumber))
-    if (result.length === 0) {
-      return Result.fail('Verse not found: ' + verseNumber.toString())
-    }
-    return Result.ok(result[0])
-  }
-
-  getById(id: VerseId) : Result<Verse, string> {
-    const result = this._verses.get(id)
-    if (result.isFailure) {
-      return Result.fail('Verse not found: ' + id.value)
-    }
-    return Result.ok(result.value)
-  }
+  /* -------------------------------------------------------------------------- */
+  /*                                   Status                                   */
+  /* -------------------------------------------------------------------------- */
 
   /**
    * Gets status of the verse. Creates it if it doesn't exist.
    * @param verseId Id of the verse
    * @returns Result of the operation
    */
-  getStatusById(verseId: VerseId): Result<VerseStatus, string> {
-    const result = this._statuses.find(VerseStatusQueries.byVerseId(verseId))
+  getStatus(verseId: VerseId): Result<VerseStatus, string> {
+    const result = this._statuses.find(VerseStatusQueries.verseId(verseId))
     if (result.length == 0) {
       const verseStatus = new VerseStatus(new VerseStatusId(), verseId)
       this._statuses.save(verseStatus)
       return Result.ok(verseStatus)
     }
     return Result.ok(result[0])
-  }
-
-  /**
-   * Gets status of the verse by its number. Creates it if it doesn't exist.
-   * @param number Number of the verse
-   * @returns Result of the operation
-   * @remarks If the verse is not found, the result will be a failure.
-   */
-  getStatusByNumber(verseNumber: VerseNumber | string): Result<VerseStatus, string> {
-    const verse = this.getByNumber(verseNumber)
-    if (verse.isFailure) { return Fail('No verse ' + verseNumber.toString() + ' found') }
-    return this.getStatusById(verse.value.id)
   }
 }
