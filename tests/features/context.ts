@@ -1,6 +1,6 @@
 import { InMemoryRepository } from '@akdasa-studios/framework'
 import { Application, Repositories } from '@lib/app/Application'
-import { Verse, VerseStatus } from '@lib/models'
+import { Verse, VerseStatus, InboxCard } from '@lib/models'
 
 
 export class Context {
@@ -10,13 +10,20 @@ export class Context {
   constructor() {
     this._repositories = new Repositories(
       new InMemoryRepository<Verse>(),
-      new InMemoryRepository<VerseStatus>()
+      new InMemoryRepository<VerseStatus>(),
+      new InMemoryRepository<InboxCard>()
     )
     this._app = new Application(this._repositories)
   }
 
   get app() : Application {
     return this._app
+  }
+
+  findVerse(verseNumber: string) {
+    const verse = this._app.library.getByNumber(context.app.settings.language, verseNumber)
+    if (verse.isFailure) { throw new Error(verse.error) }
+    return verse.value
   }
 }
 

@@ -7,4 +7,8 @@ export class Settings {
   get language() : Language {
     return this._language
   }
+
+  changeLanguage(lang: Language) {
+    this._language = lang
+  }
 }

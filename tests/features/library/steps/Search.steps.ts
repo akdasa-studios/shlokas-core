@@ -13,7 +13,7 @@ export const librarySearchSteps: StepDefinitions = ({ when, then }) => {
   /* -------------------------------------------------------------------------- */
 
   when(/^I search for verse in the library by "(.*)"$/, (queryString: string) => {
-    lastSearch = context.app.library.finqByString(queryString)
+    lastSearch = context.app.library.findByContent(context.app.settings.language, queryString)
   })
 
   /* -------------------------------------------------------------------------- */

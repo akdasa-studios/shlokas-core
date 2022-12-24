@@ -8,19 +8,13 @@ import { context } from '@tests/features/context'
 
 export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
-  function getVerse(verseNumberStr: string) {
-    const verse = context.app.library.getByNumber(verseNumberStr)
-    if (verse.isFailure) { throw new Error(verse.error) }
-    return verse.value
-  }
-
   /* -------------------------------------------------------------------------- */
   /*                                   Given                                    */
   /* -------------------------------------------------------------------------- */
 
   given('Inbox deck has the following cards:', (cardsList) => {
     for (const cardsListLine of cardsList) {
-      const verse = getVerse(cardsListLine['Verse Number'])
+      const verse = context.findVerse(cardsListLine['Verse Number'])
       const card = new InboxCardBuilder()
         .ofType(InboxCardType[cardsListLine['Card Type']])
         .ofVerse(verse.id)
@@ -34,21 +28,21 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
   /* -------------------------------------------------------------------------- */
 
   when(/^I add a verse "(.*)" to the Inbox deck$/, (verseNumber: string) => {
-    const verse = getVerse(verseNumber)
+    const verse = context.findVerse(verseNumber)
     const transaction = new Transaction('id')
     context.app.processor.execute(new AddVerseToInboxDeck(verse.id), transaction)
     context.app.processor.execute(new UpdateVerseStatus(verse.id), transaction)
   })
 
   when(/^I remove verse "(.*)" from the Inbox deck$/, (verseNumber: string) => {
-    const verse = getVerse(verseNumber)
+    const verse = context.findVerse(verseNumber)
     const transaction = new Transaction('id')
     context.app.processor.execute(new RemoveVerseFromInboxDeck(verse.id), transaction)
     context.app.processor.execute(new UpdateVerseStatus(verse.id), transaction)
   })
 
   when(/^I mark the "(.*)" card of the "(.*)" type as memorized$/, (verseNumber: string, cardType: string) => {
-    const verse = getVerse(verseNumber)
+    const verse = context.findVerse(verseNumber)
     const cards = context.app.inboxDeck.getVerseCards(verse.id, InboxCardType[cardType])
     context.app.processor.execute(new InboxCardMemorized(cards[0]))
   })
@@ -62,7 +56,7 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
     expect(context.app.inboxDeck.cards.length).toEqual(cards.length)
 
     for (const card of cards) {
-      const verse = getVerse(card['Verse Number'])
+      const verse = context.findVerse(card['Verse Number'])
       const f = context.app.inboxDeck.getVerseCards(
         verse.id, InboxCardType[card['Card Type']]
       )

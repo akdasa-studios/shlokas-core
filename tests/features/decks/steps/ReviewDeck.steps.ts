@@ -6,12 +6,6 @@ import { context } from '@tests/features/context'
 
 export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
-  function getVerse(verseNumberStr: string) {
-    const verse = context.app.library.getByNumber(verseNumberStr)
-    if (verse.isFailure) { throw new Error(verse.error) }
-    return verse.value
-  }
-
   function getReviewCardType(name: string): ReviewCardType {
     return ReviewCardType[
       name.replace(' -> ', 'To')
@@ -34,7 +28,7 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
   given('Review deck has the following cards:', (cards) => {
     for (const cardLine of cards) {
-      const verse = getVerse(cardLine['Verse'])
+      const verse = context.findVerse(cardLine['Verse'])
       const card = new ReviewCardBuilder()
         .ofType(getReviewCardType(cardLine['Type']))
         .ofVerse(verse.id)
@@ -49,7 +43,7 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
   /* -------------------------------------------------------------------------- */
 
   when(/^I review card "(.*)" "(.*)" with mark "(.*)"$/, (_verse: string, _type: string, _mark: string) => {
-    const verse = getVerse(_verse)
+    const verse = context.findVerse(_verse)
     const type = getReviewCardType(_type)
     const card = context.app.reviewDeck.getVerseCards(verse.id, type)[0]
     card.review(getMark(_mark))
@@ -63,7 +57,7 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
     expect(context.app.reviewDeck.cards.length).toEqual(cards.length)
 
     for (const card of cards) {
-      const verse = getVerse(card['Verse Number'])
+      const verse = context.findVerse(card['Verse Number'])
       const f = context.app.reviewDeck.getVerseCards(
         verse.id, getReviewCardType(card['Card Type'])
       )
@@ -88,7 +82,7 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
     ).toEqual(cards.length)
 
     for (const card of cards) {
-      const verse = getVerse(card['Verse'])
+      const verse = context.findVerse(card['Verse'])
       const f = context.app.reviewDeck.getVerseCards(
         verse.id,
         getReviewCardType(card['Type']),

@@ -1,8 +1,8 @@
-import { InMemoryRepository } from '@akdasa-studios/framework'
-import { Application, Repositories } from '@lib/app/Application'
+import { Application } from '@lib/app/Application'
 import { InboxCardMemorized } from '@lib/commands/inbox'
 import { InboxCard, ReviewCardType } from '@lib/models/cards'
-import { Verse, VerseId, VerseStatus } from '@lib/models/verse'
+import { VerseId } from '@lib/models/verse'
+import { createApplication } from '../env'
 
 
 describe('InboxCardMemorized', () => {
@@ -16,10 +16,7 @@ describe('InboxCardMemorized', () => {
   let verse1InboxCards: readonly InboxCard[]
 
   beforeEach(() => {
-    context = new Application(new Repositories(
-      new InMemoryRepository<Verse>(),
-      new InMemoryRepository<VerseStatus>()
-    ))
+    context = createApplication()
     verse1Id = new VerseId()
     verse1InboxCards = context.inboxDeck.addVerse(verse1Id)
   })

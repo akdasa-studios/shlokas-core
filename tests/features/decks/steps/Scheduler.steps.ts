@@ -1,6 +1,6 @@
 import { TimeMachine } from '@lib/app/TimeMachine'
 import { ReviewCard, ReviewCardType, ReviewGrade } from '@lib/models'
-import { getReviewCard, getVerse } from '@tests/unit/models/env'
+import { createReviewCard, createVerse } from '@tests/env'
 import { StepDefinitions } from 'jest-cucumber'
 
 
@@ -13,8 +13,8 @@ export const schedulerSteps: StepDefinitions = ({ given, when, then }) => {
   /* -------------------------------------------------------------------------- */
 
   given('The new card was added to the Review deck', () => {
-    card = getReviewCard(
-      getVerse('BG 1.1'),
+    card = createReviewCard(
+      createVerse('BG 1.1'),
       ReviewCardType.NumberToText,
       new Date('2020-01-01T00:00')
     )
