@@ -1,18 +1,19 @@
 import { Processor, Repository } from '@akdasa-studios/framework'
 import { TimeController, TimeMachine } from '@lib/app/TimeMachine'
-import { InboxDeck, ReviewDeck, Verse, VerseStatus } from '@lib/models'
+import { InboxCard, InboxDeck, ReviewDeck, Verse, VerseStatus } from '@lib/models'
 import { Library } from './Library'
 import { Settings } from './Settings'
 
 export class Repositories {
   constructor(
     public readonly verses: Repository<Verse>,
-    public readonly verseStatuses: Repository<VerseStatus>
+    public readonly verseStatuses: Repository<VerseStatus>,
+    public readonly inboxCards: Repository<InboxCard>
   ) {}
 }
 
 export class Application {
-  private _inboxDeck = new InboxDeck()
+  private _inboxDeck: InboxDeck
   private _reviewDeck = new ReviewDeck()
   private _processor = new Processor<Application>(this)
   private _library: Library
@@ -29,6 +30,7 @@ export class Application {
       repositories.verses,
       repositories.verseStatuses
     )
+    this._inboxDeck = new InboxDeck(repositories.inboxCards)
   }
 
   get timeMachine() : TimeController {

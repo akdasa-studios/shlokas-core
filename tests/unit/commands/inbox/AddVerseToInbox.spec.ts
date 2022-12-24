@@ -1,8 +1,8 @@
-import { InMemoryRepository } from '@akdasa-studios/framework'
-import { Application, Repositories } from '@lib/app/Application'
+import { Application } from '@lib/app/Application'
 import { AddVerseToInboxDeck } from '@lib/commands/inbox'
 import { InboxCardType } from '@lib/models/cards'
-import { Verse, VerseId, VerseStatus } from '@lib/models/verse'
+import { VerseId } from '@lib/models/verse'
+import { createApplication } from '../env'
 
 
 describe('AddVerseToInbox', () => {
@@ -15,10 +15,7 @@ describe('AddVerseToInbox', () => {
   let verseId: VerseId
 
   beforeEach(() => {
-    context = new Application(new Repositories(
-      new InMemoryRepository<Verse>(),
-      new InMemoryRepository<VerseStatus>()
-    ))
+    context = createApplication()
     verseId = new VerseId()
   })
 

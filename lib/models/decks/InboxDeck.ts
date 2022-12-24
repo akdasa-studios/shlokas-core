@@ -1,3 +1,4 @@
+import { Repository } from '@akdasa-studios/framework'
 import { InboxCard, InboxCardBuilder, InboxCardType, VerseId } from '@lib/models'
 
 
@@ -5,14 +6,14 @@ import { InboxCard, InboxCardBuilder, InboxCardType, VerseId } from '@lib/models
  * Inbox deck.
  */
 export class InboxDeck {
-  private _cards: InboxCard[]
+  private _cards: Repository<InboxCard>
 
   /**
    * Initializes a new instance of InboxDeck class.
    * @param cards Initial cards
    */
   constructor(
-    cards: InboxCard[] = [],
+    cards: Repository<InboxCard>,
   ) {
     this._cards = cards
   }
@@ -21,7 +22,7 @@ export class InboxDeck {
    * Returns the cards in the deck in the order they were added.
    */
   get cards(): readonly InboxCard[] {
-    return this._cards.sort((x, y) => x.addedAt.getTime() - y.addedAt.getTime())
+    return this._cards.all().slice().sort((x, y) => x.addedAt.getTime() - y.addedAt.getTime())
   }
 
   /**
@@ -29,7 +30,7 @@ export class InboxDeck {
    * @returns True if the deck is empty, otherwise false
    */
   get isEmpty(): boolean {
-    return this._cards.length === 0
+    return this._cards.all().length === 0
   }
 
   /* -------------------------------------------------------------------------- */
@@ -41,7 +42,7 @@ export class InboxDeck {
    * @param card Card to add to the deck
    */
   addCard(card: InboxCard) {
-    this._cards.push(card)
+    this._cards.save(card)
   }
 
   /**
@@ -49,7 +50,7 @@ export class InboxDeck {
    * @param card Card to remove from the deck
    */
   removeCard(card: InboxCard) {
-    this._cards = this._cards.filter(x => x.id !== card.id)
+    this._cards.delete(card.id)
   }
 
   /**
@@ -77,8 +78,8 @@ export class InboxDeck {
     // create two cards for the verse
     const card1 = b.ofType(InboxCardType.Translation).build()
     const card2 = b.ofType(InboxCardType.Text).build()
-    this._cards.push(card1)
-    this._cards.push(card2)
+    this.addCard(card1)
+    this.addCard(card2)
     return [card1, card2]
   }
 
@@ -105,6 +106,6 @@ export class InboxDeck {
     verseId: VerseId,
     cardType?: InboxCardType,
   ) : readonly InboxCard[] {
-    return this._cards.filter(x => x.verseId.equals(verseId) && (cardType ? x.type === cardType : true))
+    return this._cards.all().filter(x => x.verseId.equals(verseId) && (cardType ? x.type === cardType : true))
   }
 }

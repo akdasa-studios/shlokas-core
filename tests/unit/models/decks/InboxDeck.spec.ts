@@ -1,4 +1,5 @@
-import { InboxCardBuilder, InboxCardType, InboxDeck, VerseId } from '@lib/models'
+import { InMemoryRepository } from '@akdasa-studios/framework'
+import { InboxCard, InboxCardBuilder, InboxCardType, InboxDeck, VerseId } from '@lib/models'
 
 
 describe('InboxDeck', () => {
@@ -11,7 +12,7 @@ describe('InboxDeck', () => {
   )
 
   beforeEach(() => {
-    deck = new InboxDeck([])
+    deck = new InboxDeck(new InMemoryRepository<InboxCard>())
   })
 
   /* -------------------------------------------------------------------------- */
@@ -25,7 +26,11 @@ describe('InboxDeck', () => {
       const card3 = b.addedAt(new Date(2020, 1, 1, 1, 1, 3)).build()
       const card4 = b.addedAt(new Date(2020, 1, 2)).build()
       const card5 = b.addedAt(new Date(2020, 1, 3)).build()
-      const deck = new InboxDeck([card3, card5, card4, card2, card1])
+      deck.addCard(card3)
+      deck.addCard(card5)
+      deck.addCard(card4)
+      deck.addCard(card2)
+      deck.addCard(card1)
       expect(deck.cards).toEqual([card1, card2, card3, card4, card5])
     })
   })
@@ -41,7 +46,7 @@ describe('InboxDeck', () => {
 
     it('returns false if the deck is not empty', () => {
       const card1 = b.addedAt(new Date(2020, 1, 1)).build()
-      const deck = new InboxDeck([card1])
+      deck.addCard(card1)
       expect(deck.isEmpty).toBe(false)
     })
   })
@@ -67,7 +72,8 @@ describe('InboxDeck', () => {
     it('removes cards from the deck', () => {
       const card1 = b.addedAt(new Date(2020, 1, 1)).build()
       const card2 = b.addedAt(new Date(2020, 1, 2)).build()
-      const deck = new InboxDeck([card1, card2])
+      deck.addCard(card1)
+      deck.addCard(card2)
       deck.removeCard(card1)
       expect(deck.cards).toEqual([card2])
     })
@@ -115,7 +121,8 @@ describe('InboxDeck', () => {
     it('removes the card from the deck', () => {
       const card1 = b.build()
       const card2 = b.build()
-      const deck = new InboxDeck([card1, card2])
+      deck.addCard(card1)
+      deck.addCard(card2)
       deck.cardMemorized(card1)
       expect(deck.cards).toEqual([card2])
     })
