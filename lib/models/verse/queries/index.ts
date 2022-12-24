@@ -1,2 +1,5 @@
-export * as VerseQueries from './Verse'
-export * as VerseStatusQueries from './VerseStatus'
+import * as VerseQueries from './Verse'
+import * as VerseStatusQueries from './VerseStatus'
+export {
+  VerseQueries, VerseStatusQueries
+}
