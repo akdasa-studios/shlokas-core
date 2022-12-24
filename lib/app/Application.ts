@@ -17,7 +17,6 @@ export class Application {
   private _processor = new Processor<Application>(this)
   private _library: Library
   private _settings = new Settings()
-  private _now = new Date()
 
   /**
    * Initializes a new instance of Application class.
