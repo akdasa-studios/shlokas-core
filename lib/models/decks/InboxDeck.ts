@@ -21,16 +21,17 @@ export class InboxDeck {
   /**
    * Returns the cards in the deck in the order they were added.
    */
-  get cards(): readonly InboxCard[] {
-    return this._cards.all().slice().sort((x, y) => x.addedAt.getTime() - y.addedAt.getTime())
+  async cards(): Promise<readonly InboxCard[]> {
+    const cards = (await this._cards.all()).value
+    return cards.slice().sort((x, y) => x.addedAt.getTime() - y.addedAt.getTime())
   }
 
   /**
    * Returns true if the deck is empty, otherwise false.
    * @returns True if the deck is empty, otherwise false
    */
-  get isEmpty(): boolean {
-    return this._cards.all().length === 0
+  async isEmpty(): Promise<boolean> {
+    return (await this.cards()).length === 0
   }
 
   /* -------------------------------------------------------------------------- */
@@ -41,24 +42,24 @@ export class InboxDeck {
    * Adds the given card to the deck.
    * @param card Card to add to the deck
    */
-  addCard(card: InboxCard) {
-    this._cards.save(card)
+  async addCard(card: InboxCard) {
+    await this._cards.save(card)
   }
 
   /**
    * Removes the given card from the deck.
    * @param card Card to remove from the deck
    */
-  removeCard(card: InboxCard) {
-    this._cards.delete(card.id)
+  async removeCard(card: InboxCard) {
+    await this._cards.delete(card.id)
   }
 
   /**
    * Marks card as memorized.
    * @param card Card to mark as memorized
    */
-  cardMemorized(card: InboxCard) {
-    this.removeCard(card)
+  async cardMemorized(card: InboxCard) {
+    await this.removeCard(card)
   }
 
   /* -------------------------------------------------------------------------- */
@@ -70,7 +71,7 @@ export class InboxDeck {
    * @param verseId Verse ID to add to the deck
    * @returns Created cards
    */
-  addVerse(verseId: VerseId) : readonly InboxCard[] {
+  async addVerse(verseId: VerseId): Promise<readonly InboxCard[]> {
     const b = new InboxCardBuilder()
       .ofVerse(verseId)
       .addedAt(new Date())
@@ -78,8 +79,8 @@ export class InboxDeck {
     // create two cards for the verse
     const card1 = b.ofType(InboxCardType.Translation).build()
     const card2 = b.ofType(InboxCardType.Text).build()
-    this.addCard(card1)
-    this.addCard(card2)
+    await this.addCard(card1)
+    await this.addCard(card2)
     return [card1, card2]
   }
 
@@ -88,10 +89,10 @@ export class InboxDeck {
    * @param verseId Verse ID to remove from the deck
    * @returns Removed cards
    */
-  removeVerse(verseId: VerseId) : readonly InboxCard[] {
-    const removedCards = this.getVerseCards(verseId)
+  async removeVerse(verseId: VerseId): Promise<readonly InboxCard[]> {
+    const removedCards = await this.getVerseCards(verseId)
     for(const card of removedCards) {
-      this.removeCard(card)
+      await this.removeCard(card)
     }
     return removedCards
   }
@@ -102,10 +103,11 @@ export class InboxDeck {
    * @param cardType Card type to filter by
    * @returns List of cards for the given verse
    */
-  getVerseCards(
+  async getVerseCards(
     verseId: VerseId,
     cardType?: InboxCardType,
-  ) : readonly InboxCard[] {
-    return this._cards.all().filter(x => x.verseId.equals(verseId) && (cardType ? x.type === cardType : true))
+  ): Promise<readonly InboxCard[]> {
+    return (await this.cards())
+      .filter(x => x.verseId.equals(verseId) && (cardType ? x.type === cardType : true))
   }
 }

@@ -20,18 +20,18 @@ describe('InboxDeck', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.cards', () => {
-    it('sorts cards by addedAt', () => {
+    it('sorts cards by addedAt', async () => {
       const card1 = b.addedAt(new Date(2020, 1, 1)).build()
       const card2 = b.addedAt(new Date(2020, 1, 1, 1, 1, 2)).build()
       const card3 = b.addedAt(new Date(2020, 1, 1, 1, 1, 3)).build()
       const card4 = b.addedAt(new Date(2020, 1, 2)).build()
       const card5 = b.addedAt(new Date(2020, 1, 3)).build()
-      deck.addCard(card3)
-      deck.addCard(card5)
-      deck.addCard(card4)
-      deck.addCard(card2)
-      deck.addCard(card1)
-      expect(deck.cards).toEqual([card1, card2, card3, card4, card5])
+      await deck.addCard(card3),
+      await deck.addCard(card5),
+      await deck.addCard(card4),
+      await deck.addCard(card2),
+      await deck.addCard(card1),
+      expect(await deck.cards()).toEqual([card1, card2, card3, card4, card5])
     })
   })
 
@@ -40,14 +40,14 @@ describe('InboxDeck', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.isEmpty', () => {
-    it('returns true if the deck is empty', () => {
-      expect(deck.isEmpty).toBe(true)
+    it('returns true if the deck is empty', async () => {
+      expect(await deck.isEmpty()).toBe(true)
     })
 
-    it('returns false if the deck is not empty', () => {
+    it('returns false if the deck is not empty', async () => {
       const card1 = b.addedAt(new Date(2020, 1, 1)).build()
-      deck.addCard(card1)
-      expect(deck.isEmpty).toBe(false)
+      await deck.addCard(card1)
+      expect(await deck.isEmpty()).toBe(false)
     })
   })
 
@@ -56,10 +56,10 @@ describe('InboxDeck', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.addCard', () => {
-    it('adds cards to the deck', () => {
+    it('adds cards to the deck', async () => {
       const card1 = b.addedAt(new Date(2020, 1, 1)).build()
-      deck.addCard(card1)
-      expect(deck.cards).toEqual([card1])
+      await deck.addCard(card1)
+      expect(await deck.cards()).toEqual([card1])
     })
   })
 
@@ -69,20 +69,20 @@ describe('InboxDeck', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.removeCard', () => {
-    it('removes cards from the deck', () => {
+    it('removes cards from the deck', async () => {
       const card1 = b.addedAt(new Date(2020, 1, 1)).build()
       const card2 = b.addedAt(new Date(2020, 1, 2)).build()
-      deck.addCard(card1)
-      deck.addCard(card2)
-      deck.removeCard(card1)
-      expect(deck.cards).toEqual([card2])
+      await deck.addCard(card1),
+      await deck.addCard(card2),
+      await deck.removeCard(card1),
+      expect(await deck.cards()).toEqual([card2])
     })
   })
 
   describe('.addVerse', () => {
-    it('adds two cards', () => {
+    it('adds two cards', async () => {
       const verseId = new VerseId()
-      const addedCards = deck.addVerse(verseId)
+      const addedCards = await deck.addVerse(verseId)
       expect(addedCards).toHaveLength(2)
 
       expect(addedCards[0].verseId).toEqual(verseId)
@@ -98,18 +98,18 @@ describe('InboxDeck', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.removeVerse', () => {
-    it('removes all cards for a verse from the deck', () => {
+    it('removes all cards for a verse from the deck', async () => {
       const verse1Id = new VerseId()
       const verse2Id = new VerseId()
       const card1 = b.ofVerse(verse1Id).build()
       const card2 = b.ofVerse(verse1Id).build()
       const card3 = b.ofVerse(verse2Id).build()
-      deck.addCard(card1)
-      deck.addCard(card2)
-      deck.addCard(card3)
-      const removedCards = deck.removeVerse(verse1Id)
+      await deck.addCard(card1)
+      await deck.addCard(card2)
+      await deck.addCard(card3)
+      const removedCards = await deck.removeVerse(verse1Id)
       expect(removedCards).toEqual([card1, card2])
-      expect(deck.cards).toEqual([card3])
+      expect(await deck.cards()).toEqual([card3])
     })
   })
 
@@ -118,18 +118,18 @@ describe('InboxDeck', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.cardMemorized', () => {
-    it('removes the card from the deck', () => {
+    it('removes the card from the deck', async () => {
       const card1 = b.build()
       const card2 = b.build()
-      deck.addCard(card1)
-      deck.addCard(card2)
-      deck.cardMemorized(card1)
-      expect(deck.cards).toEqual([card2])
+      await deck.addCard(card1)
+      await deck.addCard(card2)
+      await deck.cardMemorized(card1)
+      expect(await deck.cards()).toEqual([card2])
     })
   })
 
   describe('.getVerseCards', () => {
-    it('returns all cards for a verse', () => {
+    it('returns all cards for a verse', async () => {
       const verse1Id = new VerseId()
       const verse2Id = new VerseId()
       const card1 = b.ofVerse(verse1Id).build()
@@ -138,7 +138,7 @@ describe('InboxDeck', () => {
       deck.addCard(card1)
       deck.addCard(card2)
       deck.addCard(card3)
-      const verseCards = deck.getVerseCards(verse1Id)
+      const verseCards = await deck.getVerseCards(verse1Id)
       expect(verseCards).toEqual([card1, card2])
     })
   })

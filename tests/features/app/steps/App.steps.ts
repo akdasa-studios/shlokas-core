@@ -17,8 +17,8 @@ export const appSteps: StepDefinitions = ({ given, when }) => {
   /*                                    When                                    */
   /* -------------------------------------------------------------------------- */
 
-  when('I revert the last action', () => {
-    context.app.processor.revert()
+  when('I revert the last action', async () => {
+    await context.app.processor.revert()
   })
 
 }

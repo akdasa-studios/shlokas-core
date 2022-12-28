@@ -26,15 +26,15 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
   /*                                    Given                                   */
   /* -------------------------------------------------------------------------- */
 
-  given('Review deck has the following cards:', (cards) => {
+  given('Review deck has the following cards:', async (cards) => {
     for (const cardLine of cards) {
-      const verse = context.findVerse(cardLine['Verse'])
+      const verse = await context.findVerse(cardLine['Verse'])
       const card = new ReviewCardBuilder()
         .ofType(getReviewCardType(cardLine['Type']))
         .ofVerse(verse.id)
         .dueTo(new Date(cardLine['Due To']))
         .build()
-      context.app.reviewDeck.addCard(card)
+      await context.app.reviewDeck.addCard(card)
     }
   })
 
@@ -42,9 +42,9 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
   /*                                    When                                    */
   /* -------------------------------------------------------------------------- */
 
-  when(/^I review card "(.*)" "(.*)" with mark "(.*)"$/, (_verse: string, _type: string, _mark: string) => {
-    const verse = context.findVerse(_verse)
-    const type = getReviewCardType(_type)
+  when(/^I review card "(.*)" "(.*)" with mark "(.*)"$/, async (_verse: string, _type: string, _mark: string) => {
+    const verse = await context.findVerse(_verse)
+    const type =  getReviewCardType(_type)
     const card = context.app.reviewDeck.getVerseCards(verse.id, type)[0]
     card.review(getMark(_mark))
   })
@@ -53,11 +53,11 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
   /*                                    Then                                    */
   /* -------------------------------------------------------------------------- */
 
-  then('Review deck contains the following cards:', (cards) => {
+  then('Review deck contains the following cards:', async (cards) => {
     expect(context.app.reviewDeck.cards.length).toEqual(cards.length)
 
     for (const card of cards) {
-      const verse = context.findVerse(card['Verse Number'])
+      const verse = await context.findVerse(card['Verse Number'])
       const f = context.app.reviewDeck.getVerseCards(
         verse.id, getReviewCardType(card['Card Type'])
       )
@@ -76,13 +76,13 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
     ).toEqual(0)
   })
 
-  then(/^I see the following cards for review on "(.*)":$/, (date: string, cards) => {
+  then(/^I see the following cards for review on "(.*)":$/, async (date: string, cards) => {
     expect(
       context.app.reviewDeck.dueToCards(new Date(date)).length
     ).toEqual(cards.length)
 
     for (const card of cards) {
-      const verse = context.findVerse(card['Verse'])
+      const verse = await context.findVerse(card['Verse'])
       const f = context.app.reviewDeck.getVerseCards(
         verse.id,
         getReviewCardType(card['Type']),

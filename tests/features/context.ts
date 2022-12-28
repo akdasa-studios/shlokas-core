@@ -20,8 +20,8 @@ export class Context {
     return this._app
   }
 
-  findVerse(verseNumber: string) {
-    const verse = this._app.library.getByNumber(context.app.settings.language, verseNumber)
+  async findVerse(verseNumber: string) {
+    const verse = await this._app.library.getByNumber(context.app.settings.language, verseNumber)
     if (verse.isFailure) { throw new Error(verse.error) }
     return verse.value
   }

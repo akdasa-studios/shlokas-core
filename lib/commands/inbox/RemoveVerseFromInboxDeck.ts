@@ -14,14 +14,14 @@ export class RemoveVerseFromInboxDeck implements
     this._verseId = verseId
   }
 
-  execute(context: Application): Result<readonly InboxCard[], string> {
-    this._removedCards = context.inboxDeck.removeVerse(this._verseId)
+  async execute(context: Application): Promise<Result<readonly InboxCard[], string>> {
+    this._removedCards = await context.inboxDeck.removeVerse(this._verseId)
     return Result.ok(this._removedCards)
   }
 
-  revert(context: Application): void {
+  async revert(context: Application): Promise<void> {
     for(const card of this._removedCards) {
-      context.inboxDeck.addCard(card)
+      await context.inboxDeck.addCard(card)
     }
   }
 }
