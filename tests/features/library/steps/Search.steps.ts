@@ -12,8 +12,8 @@ export const librarySearchSteps: StepDefinitions = ({ when, then }) => {
   /*                                    When                                    */
   /* -------------------------------------------------------------------------- */
 
-  when(/^I search for verse in the library by "(.*)"$/, (queryString: string) => {
-    lastSearch = context.app.library.findByContent(context.app.settings.language, queryString)
+  when(/^I search for verse in the library by "(.*)"$/, async (queryString: string) => {
+    lastSearch = await context.app.library.findByContent(context.app.settings.language, queryString)
   })
 
   /* -------------------------------------------------------------------------- */

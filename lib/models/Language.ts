@@ -18,6 +18,10 @@ export class Language extends Value<'Language'> {
     if (code.length < 2) { throw new Error('code must be at least 2 characters long') }
     if (code.length > 5) { throw new Error('code must be at most 5 characters long') }
   }
+
+  equals(value: Language): boolean {
+    return this.code === value.code
+  }
 }
 
 export const UnknownLanguage = new Language('??', 'Unknown')

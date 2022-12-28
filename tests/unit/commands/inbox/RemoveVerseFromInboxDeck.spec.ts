@@ -15,12 +15,12 @@ describe('RemoveVerseFromInboxDeck', () => {
   let verse1Id: VerseId
   let verse2Id: VerseId
 
-  beforeEach(() => {
+  beforeEach(async () => {
     context = createApplication()
     verse1Id = new VerseId()
     verse2Id = new VerseId()
-    context.inboxDeck.addVerse(verse1Id)
-    context.inboxDeck.addVerse(verse2Id)
+    await context.inboxDeck.addVerse(verse1Id)
+    await context.inboxDeck.addVerse(verse2Id)
   })
 
 
@@ -29,9 +29,9 @@ describe('RemoveVerseFromInboxDeck', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.execute', () => {
-    it('removes translation and text cards from the inbox deck', () => {
+    it('removes translation and text cards from the inbox deck', async () => {
       const command = new RemoveVerseFromInboxDeck(verse2Id)
-      const result = command.execute(context)
+      const result = await command.execute(context)
 
       expect(result.isSuccess).toBe(true)
       expect(result.value).toHaveLength(2)
@@ -39,8 +39,10 @@ describe('RemoveVerseFromInboxDeck', () => {
         InboxCardType.Translation,
         InboxCardType.Text
       ])
-      expect(context.inboxDeck.cards).toHaveLength(2)
-      expect(context.inboxDeck.cards.map(x => x.verseId)).toEqual([
+
+      const allCards = await context.inboxDeck.cards()
+      expect(allCards).toHaveLength(2)
+      expect(allCards.map(x => x.verseId)).toEqual([
         verse1Id, verse1Id
       ])
     })
@@ -52,12 +54,12 @@ describe('RemoveVerseFromInboxDeck', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.revert', () => {
-    it('removes added cards', () => {
+    it('removes added cards', async () => {
       const command = new RemoveVerseFromInboxDeck(verse1Id)
-      command.execute(context)
-      command.revert(context)
+      await command.execute(context)
+      await command.revert(context)
 
-      expect(context.inboxDeck.cards).toHaveLength(4)
+      expect(await context.inboxDeck.cards()).toHaveLength(4)
     })
   })
 })

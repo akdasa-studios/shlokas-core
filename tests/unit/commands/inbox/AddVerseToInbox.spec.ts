@@ -25,9 +25,9 @@ describe('AddVerseToInbox', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.execute', () => {
-    it('adds translation and text cards to the inbox deck', () => {
+    it('adds translation and text cards to the inbox deck', async () => {
       const command = new AddVerseToInboxDeck(verseId)
-      const result = command.execute(context)
+      const result = await command.execute(context)
 
       expect(result.isSuccess).toBe(true)
       expect(result.value).toHaveLength(2)
@@ -35,7 +35,7 @@ describe('AddVerseToInbox', () => {
         InboxCardType.Translation,
         InboxCardType.Text
       ])
-      expect(context.inboxDeck.cards).toHaveLength(2)
+      expect(await context.inboxDeck.cards()).toHaveLength(2)
     })
   })
 
@@ -45,18 +45,18 @@ describe('AddVerseToInbox', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.revert', () => {
-    it('removes added cards', () => {
+    it('removes added cards', async () => {
       const command1 = new AddVerseToInboxDeck(new VerseId())
       const command2 = new AddVerseToInboxDeck(new VerseId())
 
-      const result1 = command1.execute(context)
-      const result2 = command2.execute(context)
+      const result1 = await command1.execute(context)
+      const result2 = await command2.execute(context)
 
-      command1.revert(context)
+      await command1.revert(context)
 
-      expect(context.inboxDeck.cards).toHaveLength(2)
-      expect(context.inboxDeck.cards).toEqual(result2.value)
-      expect(context.inboxDeck.cards).not.toContain(result1.value)
+      expect(await context.inboxDeck.cards()).toHaveLength(2)
+      expect(await context.inboxDeck.cards()).toEqual(result2.value)
+      expect(await context.inboxDeck.cards()).not.toContain(result1.value)
     })
   })
 })

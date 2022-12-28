@@ -9,8 +9,6 @@ export class TimeController {
   }
 
   get today(): Date {
-    // console.log('tdy', dayjs(this.now).startOf('date').toDate().getTime())
-
     return dayjs(this.now).startOf('date').toDate()
   }
 

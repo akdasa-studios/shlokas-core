@@ -24,16 +24,16 @@ export class Library {
     this._statuses = verseStatuses
   }
 
-  find(query: Query<Verse>): readonly Verse[] {
-    return this._verses.find(query)
+  async find(query: Query<Verse>): Promise<readonly Verse[]> {
+    return (await this._verses.find(query)).value
   }
 
   /**
    * Returns all verses
    * @returns List of all verses in the library
    */
-  all(lang: Language): readonly Verse[] {
-    return this._verses.find(VerseQueries.language(lang))
+  async all(lang: Language): Promise<readonly Verse[]> {
+    return (await this._verses.find(VerseQueries.language(lang))).value
   }
 
   /**
@@ -41,8 +41,8 @@ export class Library {
    * @param id Id of a verse
    * @returns Result of operation
    */
-  getById(id: VerseId): Result<Verse, string> {
-    return this._verses.get(id)
+  async getById(id: VerseId): Promise<Result<Verse, string>> {
+    return await this._verses.get(id)
   }
 
   /**
@@ -51,22 +51,22 @@ export class Library {
    * @returns Result of the operation
    * @remarks If the verse is not found, the result will be a failure.
    */
-  getByNumber(lang: Language, verseNumber: VerseNumber | string): Result<Verse, string> {
-    const result = this._verses.find(VerseQueries.queryBuilder.and(
+  async getByNumber(lang: Language, verseNumber: VerseNumber | string): Promise<Result<Verse, string>> {
+    const result = (await this._verses.find(VerseQueries.queryBuilder.and(
       VerseQueries.language(lang),
       VerseQueries.number(verseNumber)
-    ))
+    ))).value
     if (result.length === 0) {
       return Result.fail('Verse not found: ' + verseNumber.toString())
     }
     return Result.ok(result[0])
   }
 
-  findByContent(lang: Language, queryString: string): readonly Verse[] {
-    return this._verses.find(VerseQueries.queryBuilder.and(
+  async findByContent(lang: Language, queryString: string): Promise<readonly Verse[]> {
+    return (await this._verses.find(VerseQueries.queryBuilder.and(
       VerseQueries.language(lang),
       VerseQueries.content(queryString)
-    ))
+    ))).value
   }
 
   /**
@@ -88,8 +88,8 @@ export class Library {
    * @param verseId Id of the verse
    * @returns Result of the operation
    */
-  getStatus(verseId: VerseId): Result<VerseStatus, string> {
-    const result = this._statuses.find(VerseStatusQueries.verseId(verseId))
+  async getStatus(verseId: VerseId): Promise<Result<VerseStatus, string>> {
+    const result = (await this._statuses.find(VerseStatusQueries.verseId(verseId))).value
     if (result.length == 0) {
       const verseStatus = new VerseStatus(new VerseStatusId(), verseId)
       this._statuses.save(verseStatus)

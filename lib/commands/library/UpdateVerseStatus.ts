@@ -15,10 +15,10 @@ export class UpdateVerseStatus implements
     this._verseId = verseId
   }
 
-  execute(context: Application): Result<VerseStatus, string> {
-    this._status = context.library.getStatus(this._verseId).value
+  async execute(context: Application): Promise<Result<VerseStatus, string>> {
+    this._status = (await context.library.getStatus(this._verseId)).value
+    const inboxCards = await context.inboxDeck.getVerseCards(this._verseId)
 
-    const inboxCards = context.inboxDeck.getVerseCards(this._verseId)
     if (inboxCards.length > 0) {
       this._previousDeck = this._status.inDeck
       this._status.movedToDeck(Decks.Inbox)

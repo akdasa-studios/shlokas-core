@@ -13,12 +13,12 @@ export class InboxCardMemorized implements
     this._inboxCard = inboxCard
   }
 
-  execute(context: Application): Result<void, string> {
+  async execute(context: Application): Promise<Result<void, string>> {
     const hasCardsOfThisVerse = context.reviewDeck
       .getVerseCards(this._inboxCard.verseId).length > 0
 
     // Step 1: remove card from the Inbox deck
-    context.inboxDeck.cardMemorized(this._inboxCard)
+    await context.inboxDeck.cardMemorized(this._inboxCard)
     const cardTypes = {
       [InboxCardType.Text]: [
         ReviewCardType.NumberToText,
@@ -46,7 +46,7 @@ export class InboxCardMemorized implements
 
     for (const cardTypeToCreate of this._addedCardTypes) {
       let lastDate = new Date(context.timeMachine.now)
-      const anyCards = context.reviewDeck
+      const anyCards = await context.reviewDeck
         .getVerseCards(this._inboxCard.verseId)
 
       if (anyCards.length > 0) {
@@ -61,20 +61,20 @@ export class InboxCardMemorized implements
         .dueTo(new Date(lastDate))
         .build()
 
-      context.reviewDeck.addCard(card)
+      await context.reviewDeck.addCard(card)
     }
 
     return Result.ok()
   }
 
-  revert(context: Application): void {
+  async revert(context: Application): Promise<void> {
     // TODO: doesn't restore to the same position
-    context.inboxDeck.addCard(this._inboxCard)
+    await context.inboxDeck.addCard(this._inboxCard)
 
     for (const addedCardType of this._addedCardTypes) {
-      context.reviewDeck.getVerseCards(
+      (await context.reviewDeck.getVerseCards(
         this._inboxCard.verseId, addedCardType
-      ).forEach(x => context.reviewDeck.removeCard(x))
+      )).forEach(async x => await context.reviewDeck.removeCard(x))
     }
   }
 }

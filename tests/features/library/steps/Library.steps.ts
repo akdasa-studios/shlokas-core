@@ -10,7 +10,7 @@ export const librarySteps: StepDefinitions = ({ given }) => {
   /*                                   Given                                    */
   /* -------------------------------------------------------------------------- */
 
-  given('Verse library contains the following verses:', (versesList) => {
+  given('Verse library contains the following verses:', async (versesList) => {
     for (const verseListLine of versesList) {
       const verse = new VerseBuilder()
         .withNumber(new VerseNumber(verseListLine['Verse Number']))
@@ -18,7 +18,7 @@ export const librarySteps: StepDefinitions = ({ given }) => {
         .withTranslation(new Translation(verseListLine['Translation']))
         .ofLanguage(context.app.settings.language)
         .build()
-      context.app.library.addVerse(verse.value)
+      await context.app.library.addVerse(verse.value)
     }
   })
 
