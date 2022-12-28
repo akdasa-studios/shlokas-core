@@ -34,6 +34,11 @@ export class VerseBuilder {
   private _translation: Translation = NoTranslation
   private _synonyms: Synonym[] = []
 
+  withId(id: VerseId): VerseBuilder {
+    this._id = id
+    return this
+  }
+
   withNumber(number: VerseNumber): VerseBuilder {
     this._number = number
     return this
@@ -54,10 +59,16 @@ export class VerseBuilder {
     return this
   }
 
+  withSynonym(word: string, translation: string): VerseBuilder {
+    this._synonyms.push(
+      new Synonym(word, translation)
+    )
+    return this
+  }
+
   build(): Result<Verse, string> {
-    const id = this._id || new VerseId()
     const verse = new Verse(
-      id,
+      this._id || new VerseId(),
       this._number,
       this._language,
       this._text,
