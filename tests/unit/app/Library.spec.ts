@@ -15,7 +15,11 @@ describe('Library', () => {
 
   function getVerse(verseNumberStr: string): Verse {
     const verseNumber = getVerseNumber(verseNumberStr)
-    return new VerseBuilder().ofLanguage(english).withNumber(verseNumber).build().value
+    return new VerseBuilder()
+      .ofLanguage(english)
+      .withNumber(verseNumber)
+      .withSynonym('word', 'translation')
+      .build().value
   }
 
   beforeEach(() => {
