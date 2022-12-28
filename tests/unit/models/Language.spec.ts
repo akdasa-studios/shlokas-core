@@ -25,4 +25,18 @@ describe('Language', () => {
       expect(lang.name).toEqual('English')
     })
   })
+
+  describe('.equals', () => {
+    it('should compare codes only', () => {
+      const lang1 = new Language('ru', 'Russian')
+      const lang2 = new Language('ru', 'Русский')
+      expect(lang1.equals(lang2)).toBeTruthy()
+    })
+
+    it('should return false if codes are not equal', () => {
+      const lang1 = new Language('ru', 'Russian')
+      const lang2 = new Language('EN', 'English')
+      expect(lang1.equals(lang2)).toBeFalsy()
+    })
+  })
 })
