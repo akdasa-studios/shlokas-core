@@ -1,0 +1,17 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Bump Version",
+      "icon": {
+        "id": "versions",
+        "color": "terminal.ansiCyan"
+      },
+      "command": [
+        "npx",
+        "npm-bump",
+        "patch"
+      ]
+    }
+  ]
+}

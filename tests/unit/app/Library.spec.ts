@@ -38,7 +38,7 @@ describe('Library', () => {
     })
 
     it('returns all the verses of the specific language', async () => {
-      library.addVerse(getVerse('BG 1.1'))
+      await library.addVerse(getVerse('BG 1.1'))
       expect(await library.all(english)).toHaveLength(1)
       expect((await library.all(english))[0].number.toString()).toEqual('BG 1.1')
       expect(await library.all(serbian)).toHaveLength(0)
@@ -75,9 +75,9 @@ describe('Library', () => {
     })
 
     it('should return a success if the verse is found', async () => {
-      library.addVerse(getVerse('BG 1.1'))
-      library.addVerse(getVerse('BG 2.13'))
-      library.addVerse(getVerse('BG 2.20'))
+      await library.addVerse(getVerse('BG 1.1'))
+      await library.addVerse(getVerse('BG 2.13'))
+      await library.addVerse(getVerse('BG 2.20'))
 
       const result = await library.getByNumber(english, 'BG 2.13')
       expect(result.isSuccess).toBeTruthy()
@@ -92,7 +92,7 @@ describe('Library', () => {
   describe('getById', () => {
     it('should return the verse if it is found', async () => {
       const verse = getVerse('BG 1.1')
-      library.addVerse(verse)
+      await library.addVerse(verse)
 
       const result = await library.getById(verse.id)
       expect(result.isSuccess).toBeTruthy()
@@ -101,7 +101,7 @@ describe('Library', () => {
 
     it('should return error if the verse is not found', async () => {
       const notFoundId = new VerseId()
-      library.addVerse(getVerse('BG 1.1'))
+      await library.addVerse(getVerse('BG 1.1'))
 
       const result = await library.getById(notFoundId)
       expect(result.isSuccess).toBeFalsy()
@@ -115,9 +115,9 @@ describe('Library', () => {
 
   describe('.find', () => {
     it('should return verses that match the query', async () => {
-      library.addVerse(getVerse('BG 1.1'))
-      library.addVerse(getVerse('BG 2.13'))
-      library.addVerse(getVerse('BG 2.20'))
+      await library.addVerse(getVerse('BG 1.1'))
+      await library.addVerse(getVerse('BG 2.13'))
+      await library.addVerse(getVerse('BG 2.20'))
 
       const result = await library.find(VerseQueries.number('BG 2.13'))
       expect(result.length).toBe(1)
@@ -132,7 +132,7 @@ describe('Library', () => {
   describe('getStatus', () => {
     it('should return the status of the verse', async () => {
       const verse = (await library.addVerse(getVerse('BG 1.1'))).value
-      verseStatusesRepository.save(
+      await verseStatusesRepository.save(
         new VerseStatus(new VerseStatusId(), verse.id, Decks.None)
       )
 
