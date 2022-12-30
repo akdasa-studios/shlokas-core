@@ -74,8 +74,8 @@ export class Library {
    * @param verse Verse to add
    * @returns Result of the operation
    */
-  addVerse(verse: Verse): Result<Verse, string> {
-    this._verses.save(verse)
+  async addVerse(verse: Verse): Promise<Result<Verse, string>> {
+    await this._verses.save(verse)
     return Result.ok(verse)
   }
 
@@ -92,7 +92,7 @@ export class Library {
     const result = (await this._statuses.find(VerseStatusQueries.verseId(verseId))).value
     if (result.length == 0) {
       const verseStatus = new VerseStatus(new VerseStatusId(), verseId)
-      this._statuses.save(verseStatus)
+      await this._statuses.save(verseStatus)
       return Result.ok(verseStatus)
     }
     return Result.ok(result[0])

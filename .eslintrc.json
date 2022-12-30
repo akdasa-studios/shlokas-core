@@ -11,11 +11,15 @@
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
       "ecmaVersion": 12,
-      "sourceType": "module"
+      "sourceType": "module",
+      "project": [
+        "./tsconfig.lint.json"
+      ]
     },
     "plugins": [
       "@typescript-eslint"
     ],
+    "root": true,
     "rules": {
       "indent": [
         "error",
@@ -32,6 +36,9 @@
       "semi": [
         "error",
         "never"
-      ]
+      ],
+      "require-await":"warn",
+      "@typescript-eslint/no-floating-promises": "error",
+      "@typescript-eslint/no-misused-promises": "error"
     }
   }

@@ -22,7 +22,7 @@ export class UpdateVerseStatus implements
     if (inboxCards.length > 0) {
       this._previousDeck = this._status.inDeck
       this._status.movedToDeck(Decks.Inbox)
-      context.repositories.verseStatuses.save(this._status)
+      await context.repositories.verseStatuses.save(this._status)
     } else {
       this._status.movedToDeck(Decks.None)
     }
@@ -30,8 +30,8 @@ export class UpdateVerseStatus implements
     return Result.ok(this._status)
   }
 
-  revert(context: Application): void {
+  async revert(context: Application): Promise<void> {
     this._status.movedToDeck(this._previousDeck)
-    context.repositories.verseStatuses.save(this._status)
+    await context.repositories.verseStatuses.save(this._status)
   }
 }

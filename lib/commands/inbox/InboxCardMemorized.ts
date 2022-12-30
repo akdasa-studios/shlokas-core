@@ -74,7 +74,7 @@ export class InboxCardMemorized implements
     for (const addedCardType of this._addedCardTypes) {
       (await context.reviewDeck.getVerseCards(
         this._inboxCard.verseId, addedCardType
-      )).forEach(async x => await context.reviewDeck.removeCard(x))
+      )).forEach(x => context.reviewDeck.removeCard(x))
     }
   }
 }
