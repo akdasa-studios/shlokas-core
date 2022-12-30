@@ -10,7 +10,7 @@
       "command": [
         "npx",
         "npm-bump",
-        "minor"
+        "patch"
       ]
     }
   ]
