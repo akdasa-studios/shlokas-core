@@ -71,7 +71,8 @@ describe('InboxCardMemorized', () => {
       await command.revert(context)
 
       expect(await context.inboxDeck.cards()).toEqual([
-        verse1InboxCards[1], verse1InboxCards[0]
+        verse1InboxCards[0],
+        verse1InboxCards[1],
       ])
     })
   })
