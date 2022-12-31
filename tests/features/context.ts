@@ -1,6 +1,6 @@
 import { InMemoryRepository } from '@akdasa-studios/framework'
 import { Application, Repositories } from '@lib/app/Application'
-import { Verse, VerseStatus, InboxCard } from '@lib/models'
+import { InboxCard, ReviewCard, Verse, VerseStatus } from '@lib/models'
 
 
 export class Context {
@@ -11,7 +11,8 @@ export class Context {
     this._repositories = new Repositories(
       new InMemoryRepository<Verse>(),
       new InMemoryRepository<VerseStatus>(),
-      new InMemoryRepository<InboxCard>()
+      new InMemoryRepository<InboxCard>(),
+      new InMemoryRepository<ReviewCard>()
     )
     this._app = new Application(this._repositories)
   }

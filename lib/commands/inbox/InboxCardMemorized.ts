@@ -14,8 +14,8 @@ export class InboxCardMemorized implements
   }
 
   async execute(context: Application): Promise<Result<void, string>> {
-    const hasCardsOfThisVerse = context.reviewDeck
-      .getVerseCards(this._inboxCard.verseId).length > 0
+    const hasCardsOfThisVerse = (await context.reviewDeck
+      .getVerseCards(this._inboxCard.verseId)).length > 0
 
     // Step 1: remove card from the Inbox deck
     await context.inboxDeck.cardMemorized(this._inboxCard)

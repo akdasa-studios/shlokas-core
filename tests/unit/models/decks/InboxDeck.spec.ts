@@ -26,11 +26,11 @@ describe('InboxDeck', () => {
       const card3 = b.addedAt(new Date(2020, 1, 1, 1, 1, 3)).build()
       const card4 = b.addedAt(new Date(2020, 1, 2)).build()
       const card5 = b.addedAt(new Date(2020, 1, 3)).build()
-      await deck.addCard(card3),
-      await deck.addCard(card5),
-      await deck.addCard(card4),
-      await deck.addCard(card2),
-      await deck.addCard(card1),
+      await deck.addCard(card3)
+      await deck.addCard(card5)
+      await deck.addCard(card4)
+      await deck.addCard(card2)
+      await deck.addCard(card1)
       expect(await deck.cards()).toEqual([card1, card2, card3, card4, card5])
     })
   })

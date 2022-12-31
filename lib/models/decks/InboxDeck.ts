@@ -31,6 +31,7 @@ export class InboxDeck {
    * @returns True if the deck is empty, otherwise false
    */
   async isEmpty(): Promise<boolean> {
+    // TODO: add count() request via repository
     return (await this.cards()).length === 0
   }
 

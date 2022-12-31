@@ -43,9 +43,9 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
   /* -------------------------------------------------------------------------- */
 
   when(/^I review card "(.*)" "(.*)" with mark "(.*)"$/, async (_verse: string, _type: string, _mark: string) => {
-    const verse = await context.findVerse(_verse)
     const type =  getReviewCardType(_type)
-    const card = context.app.reviewDeck.getVerseCards(verse.id, type)[0]
+    const verse = await context.findVerse(_verse)
+    const card = (await context.app.reviewDeck.getVerseCards(verse.id, type))[0]
     card.review(getMark(_mark))
   })
 
@@ -54,11 +54,11 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
   /* -------------------------------------------------------------------------- */
 
   then('Review deck contains the following cards:', async (cards) => {
-    expect(context.app.reviewDeck.cards.length).toEqual(cards.length)
+    expect((await context.app.reviewDeck.cards()).length).toEqual(cards.length)
 
     for (const card of cards) {
       const verse = await context.findVerse(card['Verse Number'])
-      const f = context.app.reviewDeck.getVerseCards(
+      const f = await context.app.reviewDeck.getVerseCards(
         verse.id, getReviewCardType(card['Card Type'])
       )
       expect(f).toHaveLength(1)
@@ -70,20 +70,20 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
     expect(context.app.reviewDeck.isEmpty).toBeTruthy()
   })
 
-  then(/^I see no cards for review on "(.*)"$/, (date: string) => {
+  then(/^I see no cards for review on "(.*)"$/, async (date: string) => {
     expect(
-      context.app.reviewDeck.dueToCards(new Date(date)).length
+      (await context.app.reviewDeck.dueToCards(new Date(date))).length
     ).toEqual(0)
   })
 
   then(/^I see the following cards for review on "(.*)":$/, async (date: string, cards) => {
     expect(
-      context.app.reviewDeck.dueToCards(new Date(date)).length
+      (await context.app.reviewDeck.dueToCards(new Date(date))).length
     ).toEqual(cards.length)
 
     for (const card of cards) {
       const verse = await context.findVerse(card['Verse'])
-      const f = context.app.reviewDeck.getVerseCards(
+      const f = await context.app.reviewDeck.getVerseCards(
         verse.id,
         getReviewCardType(card['Type']),
         new Date(date)
