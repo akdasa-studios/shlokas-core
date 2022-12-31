@@ -1,4 +1,4 @@
-import { Query, QueryBuilder, Repository } from '@akdasa-studios/framework'
+import { Repository } from '@akdasa-studios/framework'
 import { InboxCard, InboxCardBuilder, InboxCardType, VerseId } from '@lib/models'
 import { InboxCardQueries } from '../cards/queries'
 import { Deck } from './Deck'
@@ -80,27 +80,4 @@ export class InboxDeck extends Deck<InboxCard> {
     }
     return removedCards
   }
-
-  // async findCards(query: Query<InboxCard>): Promise<readonly InboxCard[]> {
-  //   return (await )
-  // }
-
-  // /**
-  //  * Returns all cards for the given verse.
-  //  * @param verseId Verse to get cards for
-  //  * @param cardType Card type to filter by
-  //  * @returns List of cards for the given verse
-  //  */
-  // async getVerseCards(
-  //   verseId: VerseId,
-  //   cardType?: InboxCardType,
-  // ): Promise<readonly InboxCard[]> {
-  //   let query = InboxCardQueries.queries().ofVerse(verseId)
-  //   if (cardType) {
-  //     query = query.ofType(cardType)
-  //   }
-  //   console.log(query.query)
-  //   // InboxCardQueries.queries.ofVerse(verseId).ofType(cardType)
-  //   return (await this.findCards(query.query))
-  // }
 }

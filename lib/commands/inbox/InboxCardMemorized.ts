@@ -75,10 +75,13 @@ export class InboxCardMemorized implements
     const { ofVerseAndType } = ReviewCardQueries
     await context.inboxDeck.addCard(this._inboxCard)
 
+    // TODO: get all cards by multiple cardtypes in one query
     for (const addedCardType of this._addedCardTypes) {
-      (await context.reviewDeck.findCards(ofVerseAndType(
-        this._inboxCard.verseId, addedCardType
-      ))).forEach(x => context.reviewDeck.removeCard(x))
+      const query = ofVerseAndType(this._inboxCard.verseId, addedCardType)
+      const cards = await context.reviewDeck.findCards(query)
+      for (const card of cards) {
+        await context.reviewDeck.removeCard(card)
+      }
     }
   }
 }
