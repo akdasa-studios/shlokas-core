@@ -72,13 +72,20 @@ export class InboxDeck {
    * @returns Created cards
    */
   async addVerse(verseId: VerseId): Promise<readonly InboxCard[]> {
-    const b = new InboxCardBuilder()
+    const now = new Date().getTime()
+    const builder = new InboxCardBuilder()
       .ofVerse(verseId)
-      .addedAt(new Date())
 
     // create two cards for the verse
-    const card1 = b.ofType(InboxCardType.Translation).build()
-    const card2 = b.ofType(InboxCardType.Text).build()
+    const card1 = builder
+      .ofType(InboxCardType.Translation)
+      .addedAt(new Date(now))
+      .build()
+    const card2 = builder
+      .ofType(InboxCardType.Text)
+      .addedAt(new Date(now + 1)) // add extra time to keep sorting stable
+      .build()
+
     await this.addCard(card1)
     await this.addCard(card2)
     return [card1, card2]
