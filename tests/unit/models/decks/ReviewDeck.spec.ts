@@ -1,5 +1,5 @@
 import { InMemoryRepository } from '@akdasa-studios/framework'
-import { ReviewCard, ReviewCardBuilder, ReviewCardType, ReviewDeck, VerseId } from '@lib/models'
+import { ReviewCard, ReviewCardBuilder, ReviewCardQueries, ReviewCardType, ReviewDeck, VerseId } from '@lib/models'
 
 
 describe('ReviewDeck', () => {
@@ -10,6 +10,7 @@ describe('ReviewDeck', () => {
       .ofVerse(new VerseId())
       .ofType(ReviewCardType.NumberToText)
   )
+  const { ofVerse, dueTo, queryBuilder } = ReviewCardQueries
 
   beforeEach(() => {
     deck = new ReviewDeck(new InMemoryRepository<ReviewCard>())
@@ -93,7 +94,11 @@ describe('ReviewDeck', () => {
       await deck.addCard(card1)
       await deck.addCard(card2)
       await deck.addCard(card3)
-      const verseCards = await deck.getVerseCards(verse1Id, undefined, new Date(2020, 1, 1))
+      const verseCards = await deck.findCards(queryBuilder.and(
+        ofVerse(verse1Id),
+        dueTo(new Date(2020, 1, 1))
+      ))
+
       expect(verseCards).toEqual([card1])
     })
   })

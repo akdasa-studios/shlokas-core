@@ -1,5 +1,5 @@
 import { AddVerseToInboxDeck, InboxCardMemorized, RemoveVerseFromInboxDeck, UpdateVerseStatus } from '@lib/commands'
-import { InboxCardBuilder, InboxCardType } from '@lib/models'
+import { InboxCardBuilder, InboxCardQueries, InboxCardType } from '@lib/models'
 import { StepDefinitions } from 'jest-cucumber'
 
 import { Transaction } from '@akdasa-studios/framework'
@@ -7,6 +7,7 @@ import { context } from '@tests/features/context'
 
 
 export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
+  const { ofVerseAndType } = InboxCardQueries
 
   /* -------------------------------------------------------------------------- */
   /*                                   Given                                    */
@@ -43,7 +44,7 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
   when(/^I mark the "(.*)" card of the "(.*)" type as memorized$/, async (verseNumber: string, cardType: string) => {
     const verse = await context.findVerse(verseNumber)
-    const cards = await context.app.inboxDeck.getVerseCards(verse.id, InboxCardType[cardType])
+    const cards = await context.app.inboxDeck.findCards(ofVerseAndType(verse.id, InboxCardType[cardType]))
     await context.app.processor.execute(new InboxCardMemorized(cards[0]))
   })
 
@@ -57,9 +58,9 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
     for (const card of cards) {
       const verse = await context.findVerse(card['Verse Number'])
-      const f = await context.app.inboxDeck.getVerseCards(
+      const f = await context.app.inboxDeck.findCards(ofVerseAndType(
         verse.id, InboxCardType[card['Card Type']]
-      )
+      ))
       expect(f).toHaveLength(1)
     }
   })

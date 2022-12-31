@@ -1,10 +1,12 @@
-import { ReviewCardBuilder, ReviewCardType, ReviewGrade } from '@lib/models'
+import { ReviewCardBuilder, ReviewCardQueries, ReviewCardType, ReviewGrade } from '@lib/models'
 import { StepDefinitions } from 'jest-cucumber'
 
 import { context } from '@tests/features/context'
 
 
 export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
+
+  const { ofVerseAndType, ofVerse, ofType, dueTo, queryBuilder } = ReviewCardQueries
 
   function getReviewCardType(name: string): ReviewCardType {
     return ReviewCardType[
@@ -45,7 +47,7 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
   when(/^I review card "(.*)" "(.*)" with mark "(.*)"$/, async (_verse: string, _type: string, _mark: string) => {
     const type =  getReviewCardType(_type)
     const verse = await context.findVerse(_verse)
-    const card = (await context.app.reviewDeck.getVerseCards(verse.id, type))[0]
+    const card = (await context.app.reviewDeck.findCards(ofVerseAndType(verse.id, type)))[0]
     card.review(getMark(_mark))
   })
 
@@ -58,9 +60,9 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
     for (const card of cards) {
       const verse = await context.findVerse(card['Verse Number'])
-      const f = await context.app.reviewDeck.getVerseCards(
+      const f = await context.app.reviewDeck.findCards(ofVerseAndType(
         verse.id, getReviewCardType(card['Card Type'])
-      )
+      ))
       expect(f).toHaveLength(1)
       expect(f[0].dueTo.toLocaleDateString('en-ZA')).toEqual(card['Due To'])
     }
@@ -83,11 +85,11 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
     for (const card of cards) {
       const verse = await context.findVerse(card['Verse'])
-      const f = await context.app.reviewDeck.getVerseCards(
-        verse.id,
-        getReviewCardType(card['Type']),
-        new Date(date)
-      )
+      const f = await context.app.reviewDeck.findCards(queryBuilder.and(
+        ofVerse(verse.id),
+        ofType(getReviewCardType(card['Type'])),
+        dueTo(new Date(date))
+      ))
       expect(f).toHaveLength(1)
     }
   })

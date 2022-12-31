@@ -1,6 +1,6 @@
 import { Command, Result } from '@akdasa-studios/framework'
 import { Application } from '@lib/app/Application'
-import { InboxCard, InboxCardType, ReviewCardBuilder, ReviewCardType } from '@lib/models/cards'
+import { InboxCard, InboxCardType, ReviewCardBuilder, ReviewCardQueries, ReviewCardType } from '@lib/models/cards'
 
 
 export class InboxCardMemorized implements
@@ -14,8 +14,10 @@ export class InboxCardMemorized implements
   }
 
   async execute(context: Application): Promise<Result<void, string>> {
-    const hasCardsOfThisVerse = (await context.reviewDeck
-      .getVerseCards(this._inboxCard.verseId)).length > 0
+    const { ofVerse } = ReviewCardQueries
+    const hasCardsOfThisVerse = (
+      await context.reviewDeck.findCards(ofVerse(this._inboxCard.verseId))
+    ).length > 0
 
     // Step 1: remove card from the Inbox deck
     await context.inboxDeck.cardMemorized(this._inboxCard)
@@ -46,8 +48,9 @@ export class InboxCardMemorized implements
 
     for (const cardTypeToCreate of this._addedCardTypes) {
       let lastDate = new Date(context.timeMachine.now)
+      const { ofVerse } = ReviewCardQueries
       const anyCards = await context.reviewDeck
-        .getVerseCards(this._inboxCard.verseId)
+        .findCards(ofVerse(this._inboxCard.verseId))
 
       if (anyCards.length > 0) {
         // Stryker disable next-line all
@@ -69,12 +72,13 @@ export class InboxCardMemorized implements
 
   async revert(context: Application): Promise<void> {
     // TODO: doesn't restore to the same position
+    const { ofVerseAndType } = ReviewCardQueries
     await context.inboxDeck.addCard(this._inboxCard)
 
     for (const addedCardType of this._addedCardTypes) {
-      (await context.reviewDeck.getVerseCards(
+      (await context.reviewDeck.findCards(ofVerseAndType(
         this._inboxCard.verseId, addedCardType
-      )).forEach(x => context.reviewDeck.removeCard(x))
+      ))).forEach(x => context.reviewDeck.removeCard(x))
     }
   }
 }
