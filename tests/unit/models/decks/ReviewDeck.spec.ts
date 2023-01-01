@@ -84,7 +84,7 @@ describe('ReviewDeck', () => {
   /*                                getVerseCards                               */
   /* -------------------------------------------------------------------------- */
 
-  describe('.getVerseCards', () => {
+  describe('.findCards', () => {
     it('returns all cards for a verse', async () => {
       const verse1Id = new VerseId()
       const verse2Id = new VerseId()
@@ -94,10 +94,10 @@ describe('ReviewDeck', () => {
       await deck.addCard(card1)
       await deck.addCard(card2)
       await deck.addCard(card3)
-      const verseCards = await deck.findCards(queryBuilder.and(
+      const verseCards = await deck.findCards(
         ofVerse(verse1Id),
         dueTo(new Date(2020, 1, 1))
-      ))
+      )
 
       expect(verseCards).toEqual([card1])
     })

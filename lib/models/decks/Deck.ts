@@ -44,7 +44,9 @@ export class Deck<TCardType extends Card> {
    * @param query Query. Uses the AND operator if multiple queries are passed.
    * @returns List of queries
    */
-  async findCards(...query: Query<TCardType>[]): Promise<readonly TCardType[]> {
+  async findCards(
+    ...query: Query<TCardType>[]
+  ): Promise<readonly TCardType[]> {
     if (query.length === 1) {
       return (await this._cards.find(query[0])).value
     } else {
