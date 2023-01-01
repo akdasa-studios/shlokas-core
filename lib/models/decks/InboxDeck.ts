@@ -1,13 +1,13 @@
 import { Repository } from '@akdasa-studios/framework'
 import { InboxCard, InboxCardBuilder, InboxCardType, VerseId } from '@lib/models'
+import { InboxCardQueries } from '../cards/queries'
+import { Deck } from './Deck'
 
 
 /**
  * Inbox deck.
  */
-export class InboxDeck {
-  private _cards: Repository<InboxCard>
-
+export class InboxDeck extends Deck<InboxCard> {
   /**
    * Initializes a new instance of InboxDeck class.
    * @param cards Initial cards
@@ -15,7 +15,7 @@ export class InboxDeck {
   constructor(
     cards: Repository<InboxCard>,
   ) {
-    this._cards = cards
+    super(cards)
   }
 
   /**
@@ -26,33 +26,9 @@ export class InboxDeck {
     return cards.slice().sort((x, y) => x.addedAt.getTime() - y.addedAt.getTime())
   }
 
-  /**
-   * Returns true if the deck is empty, otherwise false.
-   * @returns True if the deck is empty, otherwise false
-   */
-  async isEmpty(): Promise<boolean> {
-    return (await this.cards()).length === 0
-  }
-
   /* -------------------------------------------------------------------------- */
   /*                                    Cards                                   */
   /* -------------------------------------------------------------------------- */
-
-  /**
-   * Adds the given card to the deck.
-   * @param card Card to add to the deck
-   */
-  async addCard(card: InboxCard) {
-    await this._cards.save(card)
-  }
-
-  /**
-   * Removes the given card from the deck.
-   * @param card Card to remove from the deck
-   */
-  async removeCard(card: InboxCard) {
-    await this._cards.delete(card.id)
-  }
 
   /**
    * Marks card as memorized.
@@ -97,24 +73,11 @@ export class InboxDeck {
    * @returns Removed cards
    */
   async removeVerse(verseId: VerseId): Promise<readonly InboxCard[]> {
-    const removedCards = await this.getVerseCards(verseId)
+    const { ofVerse } = InboxCardQueries
+    const removedCards = await this.findCards(ofVerse(verseId))
     for(const card of removedCards) {
       await this.removeCard(card)
     }
     return removedCards
-  }
-
-  /**
-   * Returns all cards for the given verse.
-   * @param verseId Verse to get cards for
-   * @param cardType Card type to filter by
-   * @returns List of cards for the given verse
-   */
-  async getVerseCards(
-    verseId: VerseId,
-    cardType?: InboxCardType,
-  ): Promise<readonly InboxCard[]> {
-    return (await this.cards())
-      .filter(x => x.verseId.equals(verseId) && (cardType ? x.type === cardType : true))
   }
 }

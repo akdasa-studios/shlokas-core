@@ -1,7 +1,7 @@
 import { Text, Translation, VerseBuilder, VerseNumber } from '@lib/models'
 import { StepDefinitions } from 'jest-cucumber'
 
-import { context } from '@tests/features/context'
+import { context as $c } from '@tests/features/context'
 
 
 export const librarySteps: StepDefinitions = ({ given }) => {
@@ -16,9 +16,9 @@ export const librarySteps: StepDefinitions = ({ given }) => {
         .withNumber(new VerseNumber(verseListLine['Verse Number']))
         .withText(new Text([verseListLine['Text']]))
         .withTranslation(new Translation(verseListLine['Translation']))
-        .ofLanguage(context.app.settings.language)
+        .ofLanguage($c.settings.language)
         .build()
-      await context.app.library.addVerse(verse.value)
+      await $c.library.addVerse(verse.value)
     }
   })
 

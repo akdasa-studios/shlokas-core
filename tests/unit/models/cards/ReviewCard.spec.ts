@@ -8,7 +8,6 @@ describe('ReviewCard', () => {
   const today = new Date('2020-01-01T00:00')
   const tomorrow = new Date('2020-01-02T00:00')
   const in2days = new Date('2020-01-03T00:00')
-  // const in2days = new Date('2020-01-02T00:00')
 
   beforeEach(() => {
     TimeMachine.set(today)

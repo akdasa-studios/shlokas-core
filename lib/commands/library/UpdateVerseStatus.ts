@@ -1,7 +1,7 @@
 import { Command, Result } from '@akdasa-studios/framework'
 import { Application } from '@lib/app/Application'
 
-import { Decks, VerseId, VerseStatus } from '@lib/models'
+import { Decks, InboxCardQueries, VerseId, VerseStatus } from '@lib/models'
 
 
 export class UpdateVerseStatus implements
@@ -16,8 +16,9 @@ export class UpdateVerseStatus implements
   }
 
   async execute(context: Application): Promise<Result<VerseStatus, string>> {
+    const { ofVerse } = InboxCardQueries
     this._status = (await context.library.getStatus(this._verseId)).value
-    const inboxCards = await context.inboxDeck.getVerseCards(this._verseId)
+    const inboxCards = await context.inboxDeck.findCards(ofVerse(this._verseId))
 
     if (inboxCards.length > 0) {
       this._previousDeck = this._status.inDeck

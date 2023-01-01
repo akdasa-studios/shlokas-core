@@ -2,7 +2,7 @@ import { Application } from '@lib/app/Application'
 import { InboxCardMemorized } from '@lib/commands/inbox'
 import { InboxCard, ReviewCardType } from '@lib/models/cards'
 import { VerseId } from '@lib/models/verse'
-import { createApplication } from '../env'
+import { createApplication } from '@tests/env'
 
 
 describe('InboxCardMemorized', () => {
@@ -42,8 +42,8 @@ describe('InboxCardMemorized', () => {
       const result = await command.execute(context)
 
       expect(result.isSuccess).toBe(true)
-      expect(context.reviewDeck.cards).toHaveLength(2)
-      expect(context.reviewDeck.cards.map(c => c.type)).toEqual([
+      expect(await context.reviewDeck.cards()).toHaveLength(2)
+      expect((await context.reviewDeck.cards()).map(c => c.type)).toEqual([
         ReviewCardType.NumberToTranslation,
         ReviewCardType.TranslationToNumber
       ])
@@ -54,7 +54,7 @@ describe('InboxCardMemorized', () => {
       const command2 = new InboxCardMemorized(verse1InboxCards[0])
       await command1.execute(context)
       await command2.execute(context)
-      expect(context.reviewDeck.cards).toHaveLength(6)
+      expect(await context.reviewDeck.cards()).toHaveLength(6)
     })
 
   })

@@ -2,7 +2,7 @@ import { Application } from '@lib/app/Application'
 import { RemoveVerseFromInboxDeck } from '@lib/commands/inbox'
 import { InboxCardType } from '@lib/models/cards'
 import { VerseId } from '@lib/models/verse'
-import { createApplication } from '../env'
+import { createApplication } from '@tests/env'
 
 
 describe('RemoveVerseFromInboxDeck', () => {
