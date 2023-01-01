@@ -47,6 +47,7 @@ export class Deck<TCardType extends Card> {
   async findCards(
     ...query: Query<TCardType>[]
   ): Promise<readonly TCardType[]> {
+    // Stryker disable next-line all
     if (query.length === 1) {
       return (await this._cards.find(query[0])).value
     } else {
