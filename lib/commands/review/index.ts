@@ -1,0 +1,1 @@
+export { ReviewCardReviewed } from './ReviewCardReviewed'

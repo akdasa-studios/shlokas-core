@@ -1,3 +1,4 @@
+import { ReviewCardReviewed } from './../../../../lib/commands/review/ReviewCardReviewed'
 import { ReviewCardBuilder, ReviewCardQueries, ReviewCardType, ReviewGrade } from '@lib/models'
 import { StepDefinitions } from 'jest-cucumber'
 import { context as $c } from '@tests/features/context'
@@ -48,7 +49,7 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
     const type =  getReviewCardType(_type)
     const verse = await findVerse(_verse)
     const card = (await $c.reviewDeck.findCards(ofVerse(verse.id), ofType(type)))[0]
-    card.review(getMark(_mark))
+    await $c.processor.execute(new ReviewCardReviewed(card, getMark(_mark)))
   })
 
   /* -------------------------------------------------------------------------- */
@@ -65,7 +66,7 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
         ofType(getReviewCardType(card['Card Type']))
       )
       expect(f).toHaveLength(1)
-      expect(f[0].dueTo.toLocaleDateString('en-ZA')).toEqual(card['Due To'])
+      expect(f[0].dueTo).toEqual(new Date(card['Due To']))
     }
   })
 
