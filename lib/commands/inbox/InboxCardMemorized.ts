@@ -72,13 +72,14 @@ export class InboxCardMemorized implements
 
   async revert(context: Application): Promise<void> {
     // TODO: doesn't restore to the same position
-    const { ofVerseAndType } = ReviewCardQueries
+    const { ofVerse, ofType } = ReviewCardQueries
     await context.inboxDeck.addCard(this._inboxCard)
 
     // TODO: get all cards by multiple cardtypes in one query
     for (const addedCardType of this._addedCardTypes) {
-      const query = ofVerseAndType(this._inboxCard.verseId, addedCardType)
-      const cards = await context.reviewDeck.findCards(query)
+      const cards = await context.reviewDeck.findCards(
+        ofVerse(this._inboxCard.verseId), ofType(addedCardType)
+      )
       for (const card of cards) {
         await context.reviewDeck.removeCard(card)
       }

@@ -2,7 +2,7 @@ import { Application } from '@lib/app/Application'
 import { InboxCardMemorized } from '@lib/commands/inbox'
 import { InboxCard, ReviewCardType } from '@lib/models/cards'
 import { VerseId } from '@lib/models/verse'
-import { createApplication } from '../env'
+import { createApplication } from '@tests/env'
 
 
 describe('InboxCardMemorized', () => {

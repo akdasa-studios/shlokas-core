@@ -1,6 +1,11 @@
 import { InMemoryRepository, Repository } from '@akdasa-studios/framework'
 import { Library } from '@lib/app/Library'
-import { Decks, Verse, VerseBuilder, VerseId, VerseNumber, VerseQueries, VerseStatus, VerseStatusId, Language } from '@lib/models'
+import {
+  Decks, Language, Verse, VerseId, VerseQueries,
+  VerseStatus, VerseStatusId
+} from '@lib/models'
+import { createVerse, createVerseNumber } from '@tests/env'
+
 
 describe('Library', () => {
   const english = new Language('en', 'EN')
@@ -8,19 +13,6 @@ describe('Library', () => {
   let versesRepository: Repository<Verse>
   let verseStatusesRepository: Repository<VerseStatus>
   let library: Library
-
-  function getVerseNumber(verseNumberStr: string): VerseNumber {
-    return new VerseNumber(verseNumberStr)
-  }
-
-  function getVerse(verseNumberStr: string): Verse {
-    const verseNumber = getVerseNumber(verseNumberStr)
-    return new VerseBuilder()
-      .ofLanguage(english)
-      .withNumber(verseNumber)
-      .withSynonym('word', 'translation')
-      .build().value
-  }
 
   beforeEach(() => {
     versesRepository = new InMemoryRepository<Verse>()
@@ -38,10 +30,14 @@ describe('Library', () => {
     })
 
     it('returns all the verses of the specific language', async () => {
-      await library.addVerse(getVerse('BG 1.1'))
-      expect(await library.all(english)).toHaveLength(1)
-      expect((await library.all(english))[0].number.toString()).toEqual('BG 1.1')
-      expect(await library.all(serbian)).toHaveLength(0)
+      await library.addVerse(createVerse('BG 1.1', english.code))
+
+      const englishVerses = await library.all(english)
+      const serbianVerses = await library.all(serbian)
+
+      expect(englishVerses).toHaveLength(1)
+      expect(serbianVerses).toHaveLength(0)
+      expect(englishVerses[0].number.toString()).toEqual('BG 1.1')
     })
   })
 
@@ -51,14 +47,15 @@ describe('Library', () => {
 
   describe('addVerse', () => {
     it('should add a verse to the library', async () => {
-      const verseNumber = getVerseNumber('BG 1.1')
-      const verse = getVerse('BG 1.1')
-      const result = await library.addVerse(verse)
+      const verse = createVerse('BG 1.1')
+      const verseNumber = createVerseNumber('BG 1.1')
 
-      expect(result.isSuccess).toBeTruthy()
-      expect(
-        (await library.getByNumber(english, verseNumber)).isSuccess
-      ).toBeTruthy()
+      const addVerse = await library.addVerse(verse)
+      const getVerse = await library.getByNumber(english, verseNumber)
+
+      expect(addVerse.isSuccess).toBeTruthy()
+      expect(getVerse.isSuccess).toBeTruthy()
+      expect(getVerse.value.number.toString()).toEqual('BG 1.1')
     })
   })
 
@@ -68,16 +65,17 @@ describe('Library', () => {
 
   describe('getByNumber', () => {
     it('should return a failure if the verse is not found', async () => {
-      const verseNumber = getVerseNumber('BG 1.1')
+      const verseNumber = createVerseNumber('BG 1.1')
       const result = await library.getByNumber(english, verseNumber)
+
       expect(result.isFailure).toBeTruthy()
       expect(result.error).toBe('Verse not found: ' + verseNumber.value)
     })
 
     it('should return a success if the verse is found', async () => {
-      await library.addVerse(getVerse('BG 1.1'))
-      await library.addVerse(getVerse('BG 2.13'))
-      await library.addVerse(getVerse('BG 2.20'))
+      await library.addVerse(createVerse('BG 1.1'))
+      await library.addVerse(createVerse('BG 2.13'))
+      await library.addVerse(createVerse('BG 2.20'))
 
       const result = await library.getByNumber(english, 'BG 2.13')
       expect(result.isSuccess).toBeTruthy()
@@ -91,7 +89,7 @@ describe('Library', () => {
 
   describe('getById', () => {
     it('should return the verse if it is found', async () => {
-      const verse = getVerse('BG 1.1')
+      const verse = createVerse('BG 1.1')
       await library.addVerse(verse)
 
       const result = await library.getById(verse.id)
@@ -101,7 +99,7 @@ describe('Library', () => {
 
     it('should return error if the verse is not found', async () => {
       const notFoundId = new VerseId()
-      await library.addVerse(getVerse('BG 1.1'))
+      await library.addVerse(createVerse('BG 1.1'))
 
       const result = await library.getById(notFoundId)
       expect(result.isSuccess).toBeFalsy()
@@ -115,9 +113,9 @@ describe('Library', () => {
 
   describe('.find', () => {
     it('should return verses that match the query', async () => {
-      await library.addVerse(getVerse('BG 1.1'))
-      await library.addVerse(getVerse('BG 2.13'))
-      await library.addVerse(getVerse('BG 2.20'))
+      await library.addVerse(createVerse('BG 1.1'))
+      await library.addVerse(createVerse('BG 2.13'))
+      await library.addVerse(createVerse('BG 2.20'))
 
       const result = await library.find(VerseQueries.number('BG 2.13'))
       expect(result.length).toBe(1)
@@ -131,7 +129,7 @@ describe('Library', () => {
 
   describe('getStatus', () => {
     it('should return the status of the verse', async () => {
-      const verse = (await library.addVerse(getVerse('BG 1.1'))).value
+      const verse = (await library.addVerse(createVerse('BG 1.1'))).value
       await verseStatusesRepository.save(
         new VerseStatus(new VerseStatusId(), verse.id, Decks.None)
       )
@@ -142,7 +140,7 @@ describe('Library', () => {
     })
 
     it('should create a new status if it does not exist', async () => {
-      const verse = getVerse('BG 1.1')
+      const verse = createVerse('BG 1.1')
       await library.addVerse(verse)
 
       const result = await library.getStatus(verse.id)

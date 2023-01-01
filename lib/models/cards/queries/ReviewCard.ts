@@ -14,12 +14,3 @@ export function ofType(type: ReviewCardType): Query<ReviewCard>  {
 export function dueTo(date: Date): Query<ReviewCard>  {
   return queryBuilder.lte('dueTo', date)
 }
-
-export function ofVerseAndType(
-  id: VerseId, type: ReviewCardType
-): Query<ReviewCard>  {
-  return queryBuilder.and(
-    ofVerse(id),
-    ofType(type)
-  )
-}

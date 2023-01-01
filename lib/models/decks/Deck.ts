@@ -1,4 +1,4 @@
-import { Query, Repository } from '@akdasa-studios/framework'
+import { Query, QueryBuilder, Repository } from '@akdasa-studios/framework'
 import { Card } from '@lib/models'
 
 export class Deck<TCardType extends Card> {
@@ -8,6 +8,10 @@ export class Deck<TCardType extends Card> {
     cards: Repository<TCardType>,
   ) {
     this._cards = cards
+  }
+
+  async cardsCount(): Promise<number> {
+    return (await this._cards.all()).value.length
   }
 
   /**
@@ -37,10 +41,16 @@ export class Deck<TCardType extends Card> {
 
   /**
    * Returns list of cards.
-   * @param query Query
+   * @param query Query. Uses the AND operator if multiple queries are passed.
    * @returns List of queries
    */
-  async findCards(query: Query<TCardType>): Promise<readonly TCardType[]> {
-    return (await this._cards.find(query)).value
+  async findCards(...query: Query<TCardType>[]): Promise<readonly TCardType[]> {
+    if (query.length === 1) {
+      return (await this._cards.find(query[0])).value
+    } else {
+      const qb = new QueryBuilder<TCardType>()
+      const result = await this._cards.find(qb.and(...query))
+      return result.value
+    }
   }
 }

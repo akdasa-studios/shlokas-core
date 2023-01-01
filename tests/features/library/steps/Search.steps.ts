@@ -1,7 +1,7 @@
 import { StepDefinitions } from 'jest-cucumber'
 
 import { Verse } from '@lib/models'
-import { context } from '@tests/features/context'
+import { context as $c } from '@tests/features/context'
 
 
 export const librarySearchSteps: StepDefinitions = ({ when, then }) => {
@@ -13,7 +13,7 @@ export const librarySearchSteps: StepDefinitions = ({ when, then }) => {
   /* -------------------------------------------------------------------------- */
 
   when(/^I search for verse in the library by "(.*)"$/, async (queryString: string) => {
-    lastSearch = await context.app.library.findByContent(context.app.settings.language, queryString)
+    lastSearch = await $c.library.findByContent($c.settings.language, queryString)
   })
 
   /* -------------------------------------------------------------------------- */

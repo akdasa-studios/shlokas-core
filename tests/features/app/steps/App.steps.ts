@@ -1,6 +1,5 @@
 import { StepDefinitions } from 'jest-cucumber'
-
-import { context } from '@tests/features/context'
+import { context as $c } from '@tests/features/context'
 
 
 export const appSteps: StepDefinitions = ({ given, when }) => {
@@ -10,7 +9,7 @@ export const appSteps: StepDefinitions = ({ given, when }) => {
   /* -------------------------------------------------------------------------- */
 
   given(/^Now is "(.*)"$/, (date: string) => {
-    context.app.timeMachine.set(new Date(date)) // ? T00:00
+    $c.timeMachine.set(new Date(date)) // ? T00:00
   })
 
   /* -------------------------------------------------------------------------- */
@@ -18,7 +17,7 @@ export const appSteps: StepDefinitions = ({ given, when }) => {
   /* -------------------------------------------------------------------------- */
 
   when('I revert the last action', async () => {
-    await context.app.processor.revert()
+    await $c.processor.revert()
   })
 
 }
