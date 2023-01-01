@@ -1,5 +1,6 @@
 import { InMemoryRepository } from '@akdasa-studios/framework'
 import { InboxCard, InboxCardBuilder, InboxCardQueries, InboxCardType, InboxDeck, VerseId } from '@lib/models'
+import { ofType } from '@lib/models/cards/queries/InboxCard'
 
 
 describe('InboxDeck', () => {
@@ -128,19 +129,25 @@ describe('InboxDeck', () => {
     })
   })
 
-  describe('.getVerseCards', () => {
+  describe('.findCards', () => {
     it('returns all cards for a verse', async () => {
       const { ofVerse } = InboxCardQueries
       const verse1Id = new VerseId()
       const verse2Id = new VerseId()
-      const card1 = b.ofVerse(verse1Id).build()
-      const card2 = b.ofVerse(verse1Id).build()
+      const card1 = b.ofVerse(verse1Id).ofType(InboxCardType.Text).build()
+      const card2 = b.ofVerse(verse1Id).ofType(InboxCardType.Translation).build()
       const card3 = b.ofVerse(verse2Id).build()
       await deck.addCard(card1)
       await deck.addCard(card2)
       await deck.addCard(card3)
+
       const verseCards = await deck.findCards(ofVerse(verse1Id))
       expect(verseCards).toEqual([card1, card2])
+
+      const verseCardsOfType = await deck.findCards(
+        ofVerse(verse1Id), ofType(InboxCardType.Translation)
+      )
+      expect(verseCardsOfType).toEqual([card2])
     })
   })
 })
