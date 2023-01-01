@@ -18,10 +18,10 @@ export enum ReviewCardType {
  */
 export class ReviewCard extends Card {
   private _dueTo: Date
-  private _interval = 0 /* 24 hours * 60 minutes */
+  private _interval = 0
   private _ease = 250
   private _lapses = 0
-  private _lastDifficultyDecreasedAt: Date
+  private _difficultyChangedAt: Date
 
   /**
    * Initialize a new instance of ReviewCard class with the given parameters.
@@ -58,15 +58,33 @@ export class ReviewCard extends Card {
     return this._interval
   }
 
+  get difficultyChangedAt(): Date {
+    return this._difficultyChangedAt
+  }
+
+  setStats(
+    dueTo: Date,
+    interval: number,
+    ease: number,
+    lapses: number,
+    difficultyChangedAt: Date
+  ) {
+    this._dueTo = dueTo
+    this._interval = interval
+    this._ease = ease
+    this._lapses = lapses
+    this._difficultyChangedAt = difficultyChangedAt
+  }
+
   review(grade: ReviewGrade) {
     // Decrease card difficulty
-    const isCardDifficultyDecreasedToday = (
-      this._lastDifficultyDecreasedAt?.getTime() === TimeMachine.today.getTime()
+    const isCardDifficultyChangedToday = (
+      this._difficultyChangedAt?.getTime() === TimeMachine.today.getTime()
     )
-    if (grade === ReviewGrade.Forgot && !isCardDifficultyDecreasedToday) {
+    if (grade === ReviewGrade.Forgot && !isCardDifficultyChangedToday) {
       this._lapses += 1
       this._ease = Math.max(this._ease - 20, 130)
-      this._lastDifficultyDecreasedAt = TimeMachine.today
+      this._difficultyChangedAt = TimeMachine.today
     }
 
     // Calculate new interval

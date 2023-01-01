@@ -51,7 +51,7 @@ Feature: Decks / Review Deck
 
 
 
-  Rule: User can mark cards as reviewd in thr Review deck
+  Rule: User can mark cards as reviewd in the Review deck
     I, as a user, want to view my cards in the review deck. I want to rate a
     card according to how easy or difficult it was for me to remember it. If I
     remembered the card easily, it will be shown later. If I marked a card as
@@ -81,3 +81,13 @@ Feature: Decks / Review Deck
         | BG 1.1 | Number -> Text |
         | BG 1.2 | Number -> Text |
         | BG 1.3 | Number -> Text |
+
+
+    Scenario: User can revert reviewing card
+      When I review card "BG 1.1" "Number -> Text" with mark "Good"
+      And I revert the last action
+      Then Review deck contains the following cards:
+        | Verse Number | Card Type      | Due To     |
+        | BG 1.1       | Number -> Text | 2022-01-02 |
+        | BG 1.2       | Number -> Text | 2022-01-02 |
+        | BG 1.3       | Number -> Text | 2022-01-03 |
