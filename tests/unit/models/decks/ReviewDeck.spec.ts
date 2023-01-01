@@ -10,7 +10,7 @@ describe('ReviewDeck', () => {
       .ofVerse(new VerseId())
       .ofType(ReviewCardType.NumberToText)
   )
-  const { ofVerse, dueTo, queryBuilder } = ReviewCardQueries
+  const { ofVerse, dueTo } = ReviewCardQueries
 
   beforeEach(() => {
     deck = new ReviewDeck(new InMemoryRepository<ReviewCard>())
