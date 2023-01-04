@@ -99,7 +99,7 @@ export class Library {
 
     const result = {}
     for (const vid of versesId) {
-      result[vid.value] = verses.value.find(x => x.verseId == vid) || NoStatus
+      result[vid.value] = verses.value.find(x => x.verseId.equals(vid)) || NoStatus
     }
     return result
   }
