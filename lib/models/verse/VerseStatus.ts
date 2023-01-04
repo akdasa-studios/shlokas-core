@@ -43,3 +43,9 @@ export class VerseStatus extends Aggregate<VerseStatusId> {
     this._deck = deck
   }
 }
+
+export const NoStatus = new VerseStatus(
+  new VerseStatusId('00000000-0000-0000-0000-000000000000'),
+  new VerseId('00000000-0000-0000-0000-000000000000'),
+  Decks.None
+)
