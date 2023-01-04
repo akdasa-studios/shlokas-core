@@ -1,9 +1,8 @@
 import { Query, Repository, Result } from '@akdasa-studios/framework'
 import {
   Language, NoStatus, Verse, VerseId, VerseNumber, VerseQueries,
-  VerseStatus, VerseStatusId, VerseStatusQueries
+  VerseStatus, VerseStatusQueries
 } from '@lib/models'
-import { versesId } from '@lib/models/verse/queries/VerseStatus'
 
 /**
  * Verses library
