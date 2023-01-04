@@ -12,7 +12,7 @@ export const libraryStatusSteps: StepDefinitions = ({ when }) => {
   when(/^Status of the verse "(.*)" is "(.*)"$/, async (verseNumber: string, status: string) => {
     const verse = await $c.library.getByNumber($c.settings.language, verseNumber)
     const verseStatus = await $c.library.getStatus(verse.value.id)
-    expect(verseStatus.value.inDeck).toEqual(status)
+    expect(verseStatus.inDeck).toEqual(status)
   })
 
 }

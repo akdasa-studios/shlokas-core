@@ -1,7 +1,7 @@
 import { Query, Repository, Result } from '@akdasa-studios/framework'
 import {
-  Language, Verse, VerseId, VerseNumber, VerseQueries,
-  VerseStatus, VerseStatusId, VerseStatusQueries
+  Language, NoStatus, Verse, VerseId, VerseNumber, VerseQueries,
+  VerseStatus, VerseStatusQueries
 } from '@lib/models'
 
 /**
@@ -88,13 +88,19 @@ export class Library {
    * @param verseId Id of the verse
    * @returns Result of the operation
    */
-  async getStatus(verseId: VerseId): Promise<Result<VerseStatus, string>> {
-    const result = (await this._statuses.find(VerseStatusQueries.verseId(verseId))).value
-    if (result.length == 0) {
-      const verseStatus = new VerseStatus(new VerseStatusId(), verseId)
-      await this._statuses.save(verseStatus)
-      return Result.ok(verseStatus)
+  async getStatus(verseId: VerseId): Promise<VerseStatus> {
+    const result = await this.getStatuses([verseId])
+    return result[verseId.value]
+  }
+
+  async getStatuses(versesId: VerseId[]): Promise<{[verseId:VerseId['value']]: VerseStatus}> {
+    const query = VerseStatusQueries.versesId(versesId)
+    const verses = await this._statuses.find(query)
+
+    const result = {}
+    for (const vid of versesId) {
+      result[vid.value] = verses.value.find(x => x.verseId == vid) || NoStatus
     }
-    return Result.ok(result[0])
+    return result
   }
 }
