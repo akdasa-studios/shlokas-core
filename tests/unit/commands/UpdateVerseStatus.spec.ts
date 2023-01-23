@@ -1,6 +1,7 @@
 import { Application } from '@lib/app/Application'
 import { UpdateVerseStatus } from '@lib/commands'
-import { Decks, NoStatus, VerseId, VerseStatus, VerseStatusId } from '@lib/models'
+import { Decks, NoStatus, VerseId } from '@lib/models'
+import { ReviewCardBuilder, ReviewCardType } from '@lib/models/cards/ReviewCard'
 import { createApplication } from '@tests/env'
 
 
@@ -30,18 +31,33 @@ describe('UpdateVerseStatus', () => {
 
       const newStatus = await context.library.getStatus(verse1Id)
       expect(newStatus.equals(NoStatus)).toBeFalsy()
+      expect(newStatus.verseId.value).toEqual(verse1Id.value)
     })
 
-    it('updates status', async () => {
-      const status = new VerseStatus(new VerseStatusId(), verse1Id, Decks.Inbox)
-      await context.repositories.verseStatuses.save(status)
+    describe('updates inDeck', () => {
+      it('updates status for inbox deck', async () => {
+        await context.inboxDeck.addVerse(verse1Id)
+        const command = new UpdateVerseStatus(verse1Id)
+        await command.execute(context)
 
-      const command = new UpdateVerseStatus(verse1Id)
-      await command.execute(context)
+        const newStatus = await context.library.getStatus(verse1Id)
+        expect(newStatus.inDeck).toEqual(Decks.Inbox)
+      })
 
-      const newStatus = await context.library.getStatus(verse1Id)
-      expect(newStatus.equals(NoStatus)).toBeFalsy()
-      expect(newStatus.verseId.value).toEqual(verse1Id.value)
+      it('updates status for review deck', async () => {
+        console.log(ReviewCardBuilder)
+        const reviewCard = (
+          new ReviewCardBuilder()
+            .ofVerse(verse1Id)
+            .ofType(ReviewCardType.NumberToText)
+            .build())
+        await context.reviewDeck.addCard(reviewCard)
+        const command = new UpdateVerseStatus(verse1Id)
+        await command.execute(context)
+
+        const newStatus = await context.library.getStatus(verse1Id)
+        expect(newStatus.inDeck).toEqual(Decks.Review)
+      })
     })
   })
 
