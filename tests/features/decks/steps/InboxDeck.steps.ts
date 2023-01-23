@@ -50,7 +50,10 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
   when(/^I mark the "(.*)" card of the "(.*)" type as memorized$/, async (verseNumber: string, cardType: string) => {
     const verse = await findVerse(verseNumber)
     const cards = await $c.inboxDeck.findCards(ofVerse(verse.id), ofType(InboxCardType[cardType]))
-    await $c.processor.execute(new InboxCardMemorized(cards[0]))
+
+    const transaction = new Transaction()
+    await $c.processor.execute(new InboxCardMemorized(cards[0]), transaction)
+    await $c.processor.execute(new UpdateVerseStatus(cards[0].verseId), transaction)
   })
 
 
