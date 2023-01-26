@@ -6,21 +6,19 @@ import { InboxCard, InboxCardType, ReviewCardBuilder, ReviewCardQueries, ReviewC
 export class InboxCardMemorized implements
   Command<Application, Result<void, string>>
 {
-  private _inboxCard: InboxCard
   private _addedCardTypes: ReviewCardType[] = []
 
-  constructor(inboxCard: InboxCard) {
-    this._inboxCard = inboxCard
+  constructor(public readonly inboxCard: InboxCard) {
   }
 
   async execute(context: Application): Promise<Result<void, string>> {
     const { ofVerse } = ReviewCardQueries
     const hasCardsOfThisVerse = (
-      await context.reviewDeck.findCards(ofVerse(this._inboxCard.verseId))
+      await context.reviewDeck.findCards(ofVerse(this.inboxCard.verseId))
     ).length > 0
 
     // Step 1: remove card from the Inbox deck
-    await context.inboxDeck.cardMemorized(this._inboxCard)
+    await context.inboxDeck.cardMemorized(this.inboxCard)
     const cardTypes = {
       [InboxCardType.Text]: [
         ReviewCardType.NumberToText,
@@ -31,7 +29,7 @@ export class InboxCardMemorized implements
         ReviewCardType.TranslationToNumber
       ]
     }
-    this._addedCardTypes.push(...cardTypes[this._inboxCard.type])
+    this._addedCardTypes.push(...cardTypes[this.inboxCard.type])
 
     // Step 3: add all the rest card if required
     if (hasCardsOfThisVerse) {
@@ -43,14 +41,14 @@ export class InboxCardMemorized implements
 
     // Step 4: create cards and add to the Review deck
     const builder = new ReviewCardBuilder()
-      .ofVerse(this._inboxCard.verseId)
+      .ofVerse(this.inboxCard.verseId)
       .dueTo(context.timeMachine.now)
 
     for (const cardTypeToCreate of this._addedCardTypes) {
       let lastDate = new Date(context.timeMachine.now)
       const { ofVerse } = ReviewCardQueries
       const anyCards = await context.reviewDeck
-        .findCards(ofVerse(this._inboxCard.verseId))
+        .findCards(ofVerse(this.inboxCard.verseId))
 
       if (anyCards.length > 0) {
         // Stryker disable next-line all
@@ -73,12 +71,12 @@ export class InboxCardMemorized implements
   async revert(context: Application): Promise<void> {
     // TODO: doesn't restore to the same position
     const { ofVerse, ofType } = ReviewCardQueries
-    await context.inboxDeck.addCard(this._inboxCard)
+    await context.inboxDeck.addCard(this.inboxCard)
 
     // TODO: get all cards by multiple cardtypes in one query
     for (const addedCardType of this._addedCardTypes) {
       const cards = await context.reviewDeck.findCards(
-        ofVerse(this._inboxCard.verseId), ofType(addedCardType)
+        ofVerse(this.inboxCard.verseId), ofType(addedCardType)
       )
       for (const card of cards) {
         await context.reviewDeck.removeCard(card)

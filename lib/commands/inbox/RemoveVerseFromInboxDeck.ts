@@ -7,15 +7,13 @@ import { InboxCard } from '@lib/models/cards'
 export class RemoveVerseFromInboxDeck implements
   Command<Application, Result<readonly InboxCard[], string>>
 {
-  private _verseId: VerseId
   private _removedCards: readonly InboxCard[] = []
 
-  constructor(verseId: VerseId) {
-    this._verseId = verseId
+  constructor(public readonly verseId: VerseId) {
   }
 
   async execute(context: Application): Promise<Result<readonly InboxCard[], string>> {
-    this._removedCards = await context.inboxDeck.removeVerse(this._verseId)
+    this._removedCards = await context.inboxDeck.removeVerse(this.verseId)
     return Result.ok(this._removedCards)
   }
 
