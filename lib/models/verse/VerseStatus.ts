@@ -30,6 +30,11 @@ export class VerseStatus extends Aggregate<VerseStatusId> {
     this._deck = deck
   }
 
+  equals(other: VerseStatus): boolean {
+    return this.verseId.equals(other.verseId) && this.inDeck == other.inDeck
+  }
+
+
   get verseId() : VerseId {
     return this._verseId
   }

@@ -130,12 +130,11 @@ describe('Library', () => {
   describe('getStatus', () => {
     it('should return the status of the verse', async () => {
       const verse = (await library.addVerse(createVerse('BG 1.1'))).value
-      await verseStatusesRepository.save(
-        new VerseStatus(verse.id, Decks.None)
-      )
+      await verseStatusesRepository.save(new VerseStatus(verse.id, Decks.Inbox))
 
       const result = await library.getStatus(verse.id)
       expect(result.verseId).toBe(verse.id)
+      expect(result.inDeck).toBe(Decks.Inbox)
     })
 
     it('should not create a new status if it does not exist', async () => {

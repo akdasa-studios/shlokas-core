@@ -18,21 +18,16 @@ export class UpdateVerseStatus implements
 
   async execute(context: Application): Promise<Result<VerseStatus, string>> {
     const { ofVerse } = InboxCardQueries
-    this._status = await context.library.getStatus(this.verseId)
     const inboxCards = await context.inboxDeck.findCards(ofVerse(this.verseId))
     const reviewCards = await context.reviewDeck.findCards(ofVerse(this.verseId))
 
-    if (this._status.equals(NoStatus)) {
-      this._status = new VerseStatus(this.verseId)
-    }
+    this._status = new VerseStatus(this.verseId)
 
     this._previousDeck = this._status.inDeck
     if (reviewCards.length > 0) {
       this._status.movedToDeck(Decks.Review)
     } else if (inboxCards.length > 0) {
       this._status.movedToDeck(Decks.Inbox)
-    } else {
-      this._status.movedToDeck(Decks.None)
     }
 
     await context.repositories.verseStatuses.save(this._status)
