@@ -51,7 +51,7 @@ describe('InboxCardMemorized', () => {
 
     it('adds six cards to the review deck if all cards from inbox deck were memorized', async () => {
       const command1 = new InboxCardMemorized(verse1InboxCards[0])
-      const command2 = new InboxCardMemorized(verse1InboxCards[0])
+      const command2 = new InboxCardMemorized(verse1InboxCards[1])
       await command1.execute(context)
       await command2.execute(context)
       expect(await context.reviewDeck.cards()).toHaveLength(6)

@@ -22,11 +22,11 @@ describe('ReviewDeck', () => {
 
   describe('.cards', () => {
     it('sorts cards by addedAt', async () => {
-      const card1 = b.addedAt(new Date(2020, 1, 1)).build()
-      const card2 = b.addedAt(new Date(2020, 1, 1, 1, 1, 2)).build()
-      const card3 = b.addedAt(new Date(2020, 1, 1, 1, 1, 3)).build()
-      const card4 = b.addedAt(new Date(2020, 1, 2)).build()
-      const card5 = b.addedAt(new Date(2020, 1, 3)).build()
+      const card1 = b.ofVerse(new VerseId()).addedAt(new Date(2020, 1, 1)).build()
+      const card2 = b.ofVerse(new VerseId()).addedAt(new Date(2020, 1, 1, 1, 1, 2)).build()
+      const card3 = b.ofVerse(new VerseId()).addedAt(new Date(2020, 1, 1, 1, 1, 3)).build()
+      const card4 = b.ofVerse(new VerseId()).addedAt(new Date(2020, 1, 2)).build()
+      const card5 = b.ofVerse(new VerseId()).addedAt(new Date(2020, 1, 3)).build()
       await deck.addCard(card3)
       await deck.addCard(card5)
       await deck.addCard(card4)
@@ -71,8 +71,8 @@ describe('ReviewDeck', () => {
 
   describe('.removeCard', () => {
     it('removes cards from the deck', async () => {
-      const card1 = b.addedAt(new Date(2020, 1, 1)).build()
-      const card2 = b.addedAt(new Date(2020, 1, 2)).build()
+      const card1 = b.ofVerse(new VerseId()).addedAt(new Date(2020, 1, 1)).build()
+      const card2 = b.ofVerse(new VerseId()).addedAt(new Date(2020, 1, 2)).build()
       await deck.addCard(card1),
       await deck.addCard(card2),
       await deck.removeCard(card1),
@@ -88,8 +88,8 @@ describe('ReviewDeck', () => {
     it('returns all cards for a verse', async () => {
       const verse1Id = new VerseId()
       const verse2Id = new VerseId()
-      const card1 = b.dueTo(new Date(2020, 1, 1)).ofVerse(verse1Id).build()
-      const card2 = b.dueTo(new Date(2020, 1, 2)).ofVerse(verse1Id).build()
+      const card1 = b.dueTo(new Date(2020, 1, 1)).ofVerse(verse1Id).ofType(ReviewCardType.NumberToText).build()
+      const card2 = b.dueTo(new Date(2020, 1, 2)).ofVerse(verse1Id).ofType(ReviewCardType.NumberToTranslation).build()
       const card3 = b.dueTo(new Date(2020, 1, 3)).ofVerse(verse2Id).build()
       await deck.addCard(card1)
       await deck.addCard(card2)
@@ -110,9 +110,9 @@ describe('ReviewDeck', () => {
 
   describe('.dueToCards', () => {
     it('returns cards due to the given date', async () => {
-      const card1 = b.dueTo(new Date(2020, 1, 1)).build()
-      const card2 = b.dueTo(new Date(2020, 1, 2)).build()
-      const card3 = b.dueTo(new Date(2020, 1, 3)).build()
+      const card1 = b.ofVerse(new VerseId()).dueTo(new Date(2020, 1, 1)).build()
+      const card2 = b.ofVerse(new VerseId()).dueTo(new Date(2020, 1, 2)).build()
+      const card3 = b.ofVerse(new VerseId()).dueTo(new Date(2020, 1, 3)).build()
       await deck.addCard(card1)
       await deck.addCard(card2)
       await deck.addCard(card3)

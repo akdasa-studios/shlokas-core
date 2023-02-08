@@ -45,7 +45,6 @@ describe('UpdateVerseStatus', () => {
       })
 
       it('updates status for review deck', async () => {
-        console.log(ReviewCardBuilder)
         const reviewCard = (
           new ReviewCardBuilder()
             .ofVerse(verse1Id)

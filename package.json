@@ -1,6 +1,6 @@
 {
   "name": "@akdasa-studios/shlokas-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Core library for the Shlokas app",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -35,7 +35,8 @@
   "homepage": "https://github.com/akdasa-studios/shlokas-core#readme",
   "dependencies": {
     "@akdasa-studios/framework": "0.2.8",
-    "dayjs": "^1.11.7"
+    "dayjs": "^1.11.7",
+    "uuid-by-string": "^4.0.0"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.33.6",

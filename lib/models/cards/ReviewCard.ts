@@ -2,6 +2,7 @@ import { Scheduler } from '@lib/app/Scheduler'
 import { TimeMachine } from '@lib/app/TimeMachine'
 import { ReviewGrade, VerseId } from '@lib/models'
 import { Card, CardId } from './Card'
+import * as getUuidByString from 'uuid-by-string'
 
 
 export enum ReviewCardType {
@@ -32,13 +33,14 @@ export class ReviewCard extends Card {
    * @param dueTo Due to date
    */
   constructor(
-    id: CardId,
     verseId: VerseId,
     public readonly type: ReviewCardType,
     public readonly addedAt: Date,
     dueTo: Date,
   ) {
-    super(id, verseId)
+    // Generate ID based on its data, to make ID the same
+    // in different devices
+    super(new CardId(getUuidByString(verseId.value + type)), verseId)
     this._dueTo = new Date(dueTo)
   }
 
@@ -153,7 +155,6 @@ export class ReviewCardBuilder {
    */
   build(): ReviewCard {
     return new ReviewCard(
-      this._id || new CardId(),
       this._verseId as VerseId,
       this._cardType as ReviewCardType,
       this._addedAt as Date || new Date(),

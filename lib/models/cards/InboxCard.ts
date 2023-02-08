@@ -1,5 +1,6 @@
 import { VerseId } from '@lib/models/verse'
 import { Card, CardId } from './Card'
+import * as getUuidByString from 'uuid-by-string'
 
 
 export enum InboxCardType {
@@ -19,12 +20,13 @@ export class InboxCard extends Card {
    * @param addedAt Added at
    */
   constructor(
-    id: CardId,
     verseId: VerseId,
     public readonly type: InboxCardType,
     public readonly addedAt: Date,
   ) {
-    super(id, verseId)
+    // Generate ID based on its data, to make ID the same
+    // in different devices
+    super(new CardId(getUuidByString(verseId.value + type)), verseId)
   }
 }
 
@@ -32,7 +34,6 @@ export class InboxCard extends Card {
  * A builder for the inbox card.
  */
 export class InboxCardBuilder {
-  private _id?: CardId
   private _verseId?: VerseId
   private _inboxCardType?: InboxCardType
   private _addedAt?: Date
@@ -70,7 +71,6 @@ export class InboxCardBuilder {
    */
   build(): InboxCard {
     return new InboxCard(
-      this._id || new CardId(),
       this._verseId as VerseId,
       this._inboxCardType as InboxCardType,
       this._addedAt as Date || new Date()

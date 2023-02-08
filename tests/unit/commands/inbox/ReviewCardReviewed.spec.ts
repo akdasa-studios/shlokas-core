@@ -20,7 +20,7 @@ describe('ReviewCardReviewed', () => {
     now = new Date()
     context = createApplication()
     reviewCard = new ReviewCard(
-      new CardId(), new VerseId(),
+      new VerseId(),
       ReviewCardType.NumberToText,
       new Date(now), new Date(now)
     )
