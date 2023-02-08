@@ -23,7 +23,7 @@ export class UpdateVerseStatus implements
     const reviewCards = await context.reviewDeck.findCards(ofVerse(this.verseId))
 
     if (this._status.equals(NoStatus)) {
-      this._status = new VerseStatus(new VerseStatusId(), this.verseId)
+      this._status = new VerseStatus(this.verseId)
     }
 
     this._previousDeck = this._status.inDeck

@@ -131,7 +131,7 @@ describe('Library', () => {
     it('should return the status of the verse', async () => {
       const verse = (await library.addVerse(createVerse('BG 1.1'))).value
       await verseStatusesRepository.save(
-        new VerseStatus(new VerseStatusId(), verse.id, Decks.None)
+        new VerseStatus(verse.id, Decks.None)
       )
 
       const result = await library.getStatus(verse.id)
@@ -152,8 +152,8 @@ describe('Library', () => {
       const verse0 = new VerseId('faa712ed-a789-4ad4-b150-8ca712914781')
       const verse1 = (await library.addVerse(createVerse('BG 1.1'))).value
       const verse2 = (await library.addVerse(createVerse('BG 1.2'))).value
-      const verseStatus1 = new VerseStatus(new VerseStatusId(), verse1.id, Decks.None)
-      const verseStatus2 = new VerseStatus(new VerseStatusId(), verse2.id, Decks.None)
+      const verseStatus1 = new VerseStatus(verse1.id, Decks.None)
+      const verseStatus2 = new VerseStatus(verse2.id, Decks.None)
       await verseStatusesRepository.save(verseStatus1)
       await verseStatusesRepository.save(verseStatus2)
 
