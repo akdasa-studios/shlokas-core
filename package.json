@@ -35,7 +35,8 @@
   "homepage": "https://github.com/akdasa-studios/shlokas-core#readme",
   "dependencies": {
     "@akdasa-studios/framework": "0.2.8",
-    "dayjs": "^1.11.7"
+    "dayjs": "^1.11.7",
+    "uuid-by-string": "^4.0.0"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.33.6",

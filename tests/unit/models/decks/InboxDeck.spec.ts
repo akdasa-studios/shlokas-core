@@ -8,7 +8,6 @@ describe('InboxDeck', () => {
   let deck: InboxDeck
   const b = (
     new InboxCardBuilder()
-      .ofVerse(new VerseId())
       .ofType(InboxCardType.Text)
   )
 
@@ -22,11 +21,11 @@ describe('InboxDeck', () => {
 
   describe('.cards', () => {
     it('sorts cards by addedAt', async () => {
-      const card1 = b.addedAt(new Date(2020, 1, 1)).build()
-      const card2 = b.addedAt(new Date(2020, 1, 1, 1, 1, 2)).build()
-      const card3 = b.addedAt(new Date(2020, 1, 1, 1, 1, 3)).build()
-      const card4 = b.addedAt(new Date(2020, 1, 2)).build()
-      const card5 = b.addedAt(new Date(2020, 1, 3)).build()
+      const card1 = b.ofVerse(new VerseId()).addedAt(new Date(2020, 1, 1)).build()
+      const card2 = b.ofVerse(new VerseId()).addedAt(new Date(2020, 1, 1, 1, 1, 2)).build()
+      const card3 = b.ofVerse(new VerseId()).addedAt(new Date(2020, 1, 1, 1, 1, 3)).build()
+      const card4 = b.ofVerse(new VerseId()).addedAt(new Date(2020, 1, 2)).build()
+      const card5 = b.ofVerse(new VerseId()).addedAt(new Date(2020, 1, 3)).build()
       await deck.addCard(card3)
       await deck.addCard(card5)
       await deck.addCard(card4)
@@ -71,8 +70,8 @@ describe('InboxDeck', () => {
 
   describe('.removeCard', () => {
     it('removes cards from the deck', async () => {
-      const card1 = b.addedAt(new Date(2020, 1, 1)).build()
-      const card2 = b.addedAt(new Date(2020, 1, 2)).build()
+      const card1 = b.ofVerse(new VerseId()).addedAt(new Date(2020, 1, 1)).build()
+      const card2 = b.ofVerse(new VerseId()).addedAt(new Date(2020, 1, 2)).build()
       await deck.addCard(card1),
       await deck.addCard(card2),
       await deck.removeCard(card1),
@@ -102,8 +101,8 @@ describe('InboxDeck', () => {
     it('removes all cards for a verse from the deck', async () => {
       const verse1Id = new VerseId()
       const verse2Id = new VerseId()
-      const card1 = b.ofVerse(verse1Id).build()
-      const card2 = b.ofVerse(verse1Id).build()
+      const card1 = b.ofVerse(verse1Id).ofType(InboxCardType.Text).build()
+      const card2 = b.ofVerse(verse1Id).ofType(InboxCardType.Translation).build()
       const card3 = b.ofVerse(verse2Id).build()
       await deck.addCard(card1)
       await deck.addCard(card2)
@@ -120,8 +119,8 @@ describe('InboxDeck', () => {
 
   describe('.cardMemorized', () => {
     it('removes the card from the deck', async () => {
-      const card1 = b.build()
-      const card2 = b.build()
+      const card1 = b.ofVerse(new VerseId()).build()
+      const card2 = b.ofVerse(new VerseId()).build()
       await deck.addCard(card1)
       await deck.addCard(card2)
       await deck.cardMemorized(card1)
