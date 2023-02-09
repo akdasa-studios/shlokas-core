@@ -22,14 +22,18 @@ export class VerseStatus extends Aggregate<VerseStatusId> {
   private _deck: Decks = Decks.None
 
   constructor(
-    id: VerseStatusId,
     verseId: VerseId,
     deck: Decks = Decks.None
   ) {
-    super(id)
+    super(new VerseStatusId(verseId.value))
     this._verseId = verseId
     this._deck = deck
   }
+
+  equals(other: VerseStatus): boolean {
+    return this.verseId.equals(other.verseId) && this.inDeck == other.inDeck
+  }
+
 
   get verseId() : VerseId {
     return this._verseId
@@ -45,7 +49,6 @@ export class VerseStatus extends Aggregate<VerseStatusId> {
 }
 
 export const NoStatus = new VerseStatus(
-  new VerseStatusId('00000000-0000-0000-0000-000000000000'),
   new VerseId('00000000-0000-0000-0000-000000000000'),
   Decks.None
 )

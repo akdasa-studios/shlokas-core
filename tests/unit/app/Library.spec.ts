@@ -1,8 +1,7 @@
 import { InMemoryRepository, Repository } from '@akdasa-studios/framework'
 import { Library } from '@lib/app/Library'
 import {
-  Decks, Language, NoStatus, Verse, VerseId, VerseQueries,
-  VerseStatus, VerseStatusId
+  Decks, Language, NoStatus, Verse, VerseId, VerseQueries, VerseStatus
 } from '@lib/models'
 import { createVerse, createVerseNumber } from '@tests/env'
 
@@ -130,12 +129,11 @@ describe('Library', () => {
   describe('getStatus', () => {
     it('should return the status of the verse', async () => {
       const verse = (await library.addVerse(createVerse('BG 1.1'))).value
-      await verseStatusesRepository.save(
-        new VerseStatus(new VerseStatusId(), verse.id, Decks.None)
-      )
+      await verseStatusesRepository.save(new VerseStatus(verse.id, Decks.Inbox))
 
       const result = await library.getStatus(verse.id)
       expect(result.verseId).toBe(verse.id)
+      expect(result.inDeck).toBe(Decks.Inbox)
     })
 
     it('should not create a new status if it does not exist', async () => {
@@ -152,8 +150,8 @@ describe('Library', () => {
       const verse0 = new VerseId('faa712ed-a789-4ad4-b150-8ca712914781')
       const verse1 = (await library.addVerse(createVerse('BG 1.1'))).value
       const verse2 = (await library.addVerse(createVerse('BG 1.2'))).value
-      const verseStatus1 = new VerseStatus(new VerseStatusId(), verse1.id, Decks.None)
-      const verseStatus2 = new VerseStatus(new VerseStatusId(), verse2.id, Decks.None)
+      const verseStatus1 = new VerseStatus(verse1.id, Decks.None)
+      const verseStatus2 = new VerseStatus(verse2.id, Decks.None)
       await verseStatusesRepository.save(verseStatus1)
       await verseStatusesRepository.save(verseStatus2)
 

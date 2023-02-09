@@ -1,7 +1,7 @@
 import { Application } from '@lib/app/Application'
 import { ReviewCardReviewed } from '@lib/commands'
 import { ReviewGrade } from '@lib/models'
-import { CardId, ReviewCard, ReviewCardType } from '@lib/models/cards'
+import { ReviewCard, ReviewCardType } from '@lib/models/cards'
 import { VerseId } from '@lib/models/verse'
 import { createApplication } from '@tests/env'
 

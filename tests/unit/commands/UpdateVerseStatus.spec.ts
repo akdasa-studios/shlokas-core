@@ -1,6 +1,6 @@
 import { Application } from '@lib/app/Application'
 import { UpdateVerseStatus } from '@lib/commands'
-import { Decks, NoStatus, VerseId } from '@lib/models'
+import { Decks, InboxCard, InboxCardType, NoStatus, VerseId, VerseStatus } from '@lib/models'
 import { ReviewCardBuilder, ReviewCardType } from '@lib/models/cards/ReviewCard'
 import { createApplication } from '@tests/env'
 
@@ -32,6 +32,21 @@ describe('UpdateVerseStatus', () => {
       const newStatus = await context.library.getStatus(verse1Id)
       expect(newStatus.equals(NoStatus)).toBeFalsy()
       expect(newStatus.verseId.value).toEqual(verse1Id.value)
+    })
+
+    it('should not create status if one already exist', async () => {
+      await context.repositories.verseStatuses.save(new VerseStatus(verse1Id, Decks.Inbox))
+      await context.repositories.inboxCards.save(new InboxCard(verse1Id, InboxCardType.Text, new Date()))
+      const command = new UpdateVerseStatus(verse1Id)
+      await command.execute(context)
+
+      const newStatus = await context.library.getStatus(verse1Id)
+      const count     = (await context.repositories.verseStatuses.all()).value.length
+
+      expect(count).toBe(1)
+      expect(newStatus.equals(NoStatus)).toBeFalsy()
+      expect(newStatus.verseId.value).toEqual(verse1Id.value)
+      expect(newStatus.inDeck).toEqual(Decks.Inbox)
     })
 
     describe('updates inDeck', () => {
