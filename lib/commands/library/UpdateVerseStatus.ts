@@ -1,10 +1,7 @@
 import { Command, Result } from '@akdasa-studios/framework'
 import { Application } from '@lib/app/Application'
+import { Decks, VerseId, VerseStatus } from '@lib/models'
 import * as InboxCardQueries from '@lib/models/cards/queries/InboxCard'
-import {
-  Decks, VerseId, VerseStatus,
-  VerseStatusId, NoStatus
-} from '@lib/models'
 
 
 export class UpdateVerseStatus implements
