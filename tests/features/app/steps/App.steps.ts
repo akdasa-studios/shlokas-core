@@ -3,7 +3,6 @@ import { contexts } from '@tests/features/context'
 
 
 export const appSteps: StepDefinitions = ({ given, when }) => {
-  const $c = contexts.getContext('default')
 
   /* -------------------------------------------------------------------------- */
   /*                                    Given                                   */

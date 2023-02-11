@@ -1,10 +1,8 @@
-import { StepDefinitions } from 'jest-cucumber'
-
 import { contexts } from '@tests/features/context'
+import { StepDefinitions } from 'jest-cucumber'
 
 
 export const libraryStatusSteps: StepDefinitions = ({ when }) => {
-  const $c = contexts.getContext('default')
 
   /* -------------------------------------------------------------------------- */
   /*                                    Then                                    */

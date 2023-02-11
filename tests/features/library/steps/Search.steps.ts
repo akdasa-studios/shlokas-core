@@ -1,11 +1,9 @@
-import { StepDefinitions } from 'jest-cucumber'
-
 import { Verse } from '@lib/models'
 import { contexts } from '@tests/features/context'
+import { StepDefinitions } from 'jest-cucumber'
 
 
 export const librarySearchSteps: StepDefinitions = ({ when, then }) => {
-  const $c = contexts.getContext('default')
   let lastSearch: readonly Verse[] = []
 
   /* -------------------------------------------------------------------------- */
