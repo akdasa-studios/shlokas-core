@@ -1,4 +1,5 @@
-import { Processor, Repository } from '@akdasa-studios/framework'
+import { Aggregate, AnyIdentity, Processor, Repository } from '@akdasa-studios/framework'
+import { ConflictSolver, SyncRepository, SyncService } from '@akdasa-studios/framework-sync'
 import { TimeController, TimeMachine } from '@lib/app/TimeMachine'
 import { InboxCard, InboxDeck, ReviewCard, ReviewDeck, Verse, VerseStatus } from '@lib/models'
 import { Library } from './Library'
@@ -8,7 +9,7 @@ export class Repositories {
   constructor(
     public readonly verses: Repository<Verse>,
     public readonly verseStatuses: Repository<VerseStatus>,
-    public readonly inboxCards: Repository<InboxCard>,
+    public readonly inboxCards: SyncRepository<InboxCard>,
     public readonly reviewCards: Repository<ReviewCard>
   ) {}
 }
@@ -78,5 +79,18 @@ export class Application {
   get settings() : Settings {
     return this._settings
   }
+
+  async sync(remoteReposiories: Repositories) {
+
+    await new SyncService(new InboxCardConflictSolver())
+      .sync(this.repositories.inboxCards, remoteReposiories.inboxCards)
+  }
 }
 
+class InboxCardConflictSolver implements ConflictSolver<InboxCard> {
+  solve(object1: InboxCard, object2: InboxCard): Aggregate<AnyIdentity> {
+    return object1 || object2
+    // throw new Error('Method not implemented.')
+  }
+
+}

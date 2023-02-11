@@ -1,4 +1,5 @@
 import { InMemoryRepository } from '@akdasa-studios/framework'
+import { SyncRepository } from '@akdasa-studios/framework-sync'
 import { Application, Repositories } from '@lib/app/Application'
 import { InboxCard, ReviewCard, Verse, VerseStatus } from '@lib/models'
 
@@ -11,7 +12,7 @@ export class Context {
     this._repositories = new Repositories(
       new InMemoryRepository<Verse>(),
       new InMemoryRepository<VerseStatus>(),
-      new InMemoryRepository<InboxCard>(),
+      new SyncRepository(new InMemoryRepository<InboxCard>()),
       new InMemoryRepository<ReviewCard>()
     )
     this._app = new Application(this._repositories)
@@ -29,13 +30,37 @@ export class Context {
   get reviewDeck() { return this._app.reviewDeck }
 
   async findVerse(verseNumber: string) {
-    const verse = await this._app.library.getByNumber(context.app.settings.language, verseNumber)
+    const verse = await this._app.library.getByNumber(this._app.settings.language, verseNumber)
     if (verse.isFailure) { throw new Error(verse.error) }
     return verse.value
   }
 }
 
-export let context: Context = new Context()
+export class ContextManagement {
+  private _contexts: { [key: string]: Context } = {}
+  private _active = 'default'
+
+  getContext(name: string) : Context {
+    if (this._contexts[name] === undefined) {
+      this._contexts[name] = new Context()
+    }
+    return this._contexts[name]
+  }
+
+  switchTo(name: string) {
+    this._active = name
+  }
+
+  get allContextNames() : string[] {
+    return Object.keys(this._contexts)
+  }
+
+  get $() : Context {
+    return this.getContext(this._active)
+  }
+}
+
+export let contexts: ContextManagement = new ContextManagement()
 export function newContext() {
-  context = new Context()
+  contexts = new ContextManagement()
 }

@@ -1,24 +1,24 @@
-import { StepDefinitions } from 'jest-cucumber'
 import { contexts } from '@tests/features/context'
+import { StepDefinitions } from 'jest-cucumber'
 
 
-export const appSteps: StepDefinitions = ({ given, when }) => {
-  const $c = contexts.getContext('default')
+export const contextSteps: StepDefinitions = ({ given, when }) => {
 
   /* -------------------------------------------------------------------------- */
   /*                                    Given                                   */
   /* -------------------------------------------------------------------------- */
 
-  given(/^Now is "(.*)"$/, (date: string) => {
-    contexts.$.timeMachine.set(new Date(date)) // ? T00:00
+  given(/^I have the following devices:$/, (devices: Record<string, string>[]) => {
+    devices.forEach(device => { contexts.getContext(device['Device Name']) })
   })
 
   /* -------------------------------------------------------------------------- */
   /*                                    When                                    */
   /* -------------------------------------------------------------------------- */
 
-  when('I revert the last action', async () => {
-    await contexts.$.processor.revert()
+  when(/^I sync data between "(.*)" and "(.*)"$/, async (source: string, target: string) => {
+    const app1 = contexts.getContext(source).app
+    const app2 = contexts.getContext(target).app
+    await app1.sync(app2.repositories)
   })
-
 }
