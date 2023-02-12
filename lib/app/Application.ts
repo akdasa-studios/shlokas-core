@@ -1,9 +1,10 @@
-import { Aggregate, AnyIdentity, Processor, Repository } from '@akdasa-studios/framework'
-import { ConflictSolver, SyncRepository, SyncService } from '@akdasa-studios/framework-sync'
+import { Processor, Repository } from '@akdasa-studios/framework'
+import { SyncRepository, SyncService } from '@akdasa-studios/framework-sync'
 import { TimeController, TimeMachine } from '@lib/app/TimeMachine'
-import { Decks, InboxCard, InboxDeck, ReviewCard, ReviewDeck, Verse, VerseStatus } from '@lib/models'
+import { InboxCard, InboxDeck, ReviewCard, ReviewDeck, Verse, VerseStatus } from '@lib/models'
 import { Library } from './Library'
 import { Settings } from './Settings'
+import { InboxCardConflictSolver, ReviewCardConflictSolver, VerseStatusConflictSolver } from './sync'
 
 export class Repositories {
   constructor(
@@ -80,6 +81,10 @@ export class Application {
     return this._settings
   }
 
+  /**
+   * Syncs the application with remote repositories.
+   * @param remoteReposiories Remote repositories to sync with
+   */
   async sync(remoteReposiories: Repositories) {
     await new SyncService(new InboxCardConflictSolver())
       .sync(this.repositories.inboxCards, remoteReposiories.inboxCards)
@@ -87,30 +92,5 @@ export class Application {
       .sync(this.repositories.reviewCards, remoteReposiories.reviewCards)
     await new SyncService(new VerseStatusConflictSolver())
       .sync(this.repositories.verseStatuses, remoteReposiories.verseStatuses)
-  }
-}
-
-class InboxCardConflictSolver implements ConflictSolver<InboxCard> {
-  solve(object1: InboxCard, object2: InboxCard): Aggregate<AnyIdentity> {
-    // Stryker disable next-line all
-    return object1 || object2
-  }
-}
-class ReviewCardConflictSolver implements ConflictSolver<ReviewCard> {
-  solve(object1: ReviewCard, object2: ReviewCard): Aggregate<AnyIdentity> {
-    // Stryker disable next-line all
-    return object1.lapses > object2.lapses ? object1 : object2
-  }
-}
-
-class VerseStatusConflictSolver implements ConflictSolver<VerseStatus> {
-  solve(object1: VerseStatus, object2: VerseStatus): Aggregate<AnyIdentity> {
-    if (object1.inDeck !== object2.inDeck) {
-      const object1Progress = Object.keys(Decks).indexOf(object1.inDeck)
-      const object2Progress = Object.keys(Decks).indexOf(object2.inDeck)
-      // Stryker disable next-line all
-      return (object1Progress >= object2Progress) ? object1 : object2
-    }
-    return object1
   }
 }
