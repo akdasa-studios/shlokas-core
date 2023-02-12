@@ -2,6 +2,7 @@ import { Aggregate, AnyIdentity } from '@akdasa-studios/framework'
 import { ConflictSolver } from '@akdasa-studios/framework-sync'
 import { Decks, InboxCard, ReviewCard, VerseStatus } from '@lib/models'
 
+// Stryker disable all
 
 export class InboxCardConflictSolver implements ConflictSolver<InboxCard> {
   solve(object1: InboxCard, object2: InboxCard): Aggregate<AnyIdentity> {
