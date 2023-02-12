@@ -5,8 +5,7 @@ import { Decks, InboxCard, ReviewCard, VerseStatus } from '@lib/models'
 
 export class InboxCardConflictSolver implements ConflictSolver<InboxCard> {
   solve(object1: InboxCard, object2: InboxCard): Aggregate<AnyIdentity> {
-    // Stryker disable next-line all
-    return object1 || object2
+    return object1.isMemorized ? object1 : object2
   }
 }
 
