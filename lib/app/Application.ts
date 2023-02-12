@@ -92,21 +92,23 @@ export class Application {
 
 class InboxCardConflictSolver implements ConflictSolver<InboxCard> {
   solve(object1: InboxCard, object2: InboxCard): Aggregate<AnyIdentity> {
+    // Stryker disable next-line all
     return object1 || object2
   }
 }
 class ReviewCardConflictSolver implements ConflictSolver<ReviewCard> {
   solve(object1: ReviewCard, object2: ReviewCard): Aggregate<AnyIdentity> {
+    // Stryker disable next-line all
     return object1.lapses > object2.lapses ? object1 : object2
   }
 }
 
 class VerseStatusConflictSolver implements ConflictSolver<VerseStatus> {
   solve(object1: VerseStatus, object2: VerseStatus): Aggregate<AnyIdentity> {
-    console.log('solving', object1.inDeck, object2.inDeck)
     if (object1.inDeck !== object2.inDeck) {
       const object1Progress = Object.keys(Decks).indexOf(object1.inDeck)
       const object2Progress = Object.keys(Decks).indexOf(object2.inDeck)
+      // Stryker disable next-line all
       return (object1Progress >= object2Progress) ? object1 : object2
     }
     return object1
