@@ -25,10 +25,12 @@ export class InboxCard extends Card {
     verseId: VerseId,
     public readonly type: InboxCardType,
     public readonly addedAt: Date,
+    memorizedAt?: Date,
   ) {
     // Generate ID based on its data, to make ID the same
     // in different devices
     super(new CardId(getUuidByString(verseId.value + type)), verseId)
+    this._memorizedAt = memorizedAt
   }
 
   /**

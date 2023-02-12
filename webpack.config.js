@@ -34,6 +34,12 @@ module.exports = {
       amd: '@akdasa-studios/framework',
       root: '@akdasa-studios/framework',
     },
+    '@akdasa-studios/framework-sync': {
+      commonjs: '@akdasa-studios/framework-sync',
+      commonjs2: '@akdasa-studios/framework-sync',
+      amd: '@akdasa-studios/framework-sync',
+      root: '@akdasa-studios/framework-sync',
+    },
     uuid: {
       commonjs: 'uuid',
       commonjs2: 'uuid',
