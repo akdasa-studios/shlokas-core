@@ -1,7 +1,7 @@
 import { ReviewCardReviewed } from './../../../../lib/commands/review/ReviewCardReviewed'
 import { ReviewCardBuilder, ReviewCardQueries, ReviewCardType, ReviewGrade } from '@lib/models'
 import { StepDefinitions } from 'jest-cucumber'
-import { contexts } from '@tests/features/context'
+import { contexts, getContext } from '@tests/features/context'
 
 
 export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
@@ -56,19 +56,35 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
   /*                                    Then                                    */
   /* -------------------------------------------------------------------------- */
 
-  then('Review deck contains the following cards:', async (cards) => {
-    expect(await contexts.$.reviewDeck.cardsCount()).toEqual(cards.length)
+  /**
+   * Check that the review deck contains the expected cards
+   * @param device Device name (optional)
+   * @param cards List of cards
+   * @example Review deck contains the following cards:
+   *          | Verse Number | Card Type      | Due To     |
+   *          | BG 1.1       | Number -> Text | 2020-01-01 |
+   *          | BG 1.2       | Text -> Number | 2020-01-02 |
+   */
+  then(
+    /^Review deck contains the following cards(?: on "(.*)")?:$/,
+    async (device, cards) =>
+    {
+      const ctx = getContext(device)
+      expect(await ctx.reviewDeck.cardsCount()).toEqual(cards.length)
 
-    for (const card of cards) {
-      const verse = await findVerse(card['Verse Number'])
-      const f = await contexts.$.reviewDeck.findCards(
-        ofVerse(verse.id),
-        ofType(getReviewCardType(card['Card Type']))
-      )
-      expect(f).toHaveLength(1)
-      expect(f[0].dueTo).toEqual(new Date(card['Due To']))
-    }
-  })
+      for (const card of cards) {
+        const verse = await findVerse(card['Verse Number'])
+        const f = await ctx.reviewDeck.findCards(
+          ofVerse(verse.id),
+          ofType(getReviewCardType(card['Card Type']))
+        )
+        expect(f).toHaveLength(1)
+
+        if (card['Due To']) {
+          expect(f[0].dueTo).toEqual(new Date(card['Due To']))
+        }
+      }
+    })
 
   then('Review deck contains no cards', () => {
     expect(contexts.$.reviewDeck.isEmpty).toBeTruthy()

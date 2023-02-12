@@ -115,13 +115,16 @@ Feature: Sync / Cards Flow
       | BG 1.1       | Translation |
       | BG 1.1       | Text        |
     When I mark the "BG 1.1" card of the "Text" type as memorized on "iPhone"
-    And Status of the verse "BG 1.1" is "Review" on "iPhone"
     And I sync data between "iPhone" and "iPad"
-    And Inbox deck contains the following cards on "iPhone":
+    Then Inbox deck contains the following cards on "iPhone":
       | Verse Number | Card Type   |
       | BG 1.1       | Translation |
-    Then Inbox deck contains the following cards on "iPad":
+    And Inbox deck contains the following cards on "iPad":
       | Verse Number | Card Type   |
       | BG 1.1       | Translation |
+    And Review deck contains the following cards on "iPad":
+      | Verse Number | Card Type      |
+      | BG 1.1       | Number -> Text |
+      | BG 1.1       | Text -> Number |
     And Status of the verse "BG 1.1" is "Review" on "iPad"
     And Status of the verse "BG 1.1" is "Review" on "iPhone"

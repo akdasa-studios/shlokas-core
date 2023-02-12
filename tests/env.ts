@@ -38,6 +38,6 @@ export function createApplication() {
     new InMemoryRepository<Verse>(),
     new SyncRepository(new InMemoryRepository<VerseStatus>()),
     new SyncRepository(new InMemoryRepository<InboxCard>()),
-    new InMemoryRepository<ReviewCard>()
+    new SyncRepository(new InMemoryRepository<ReviewCard>())
   ))
 }

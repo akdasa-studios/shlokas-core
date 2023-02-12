@@ -10,7 +10,7 @@ export class Repositories {
     public readonly verses: Repository<Verse>,
     public readonly verseStatuses: SyncRepository<VerseStatus>,
     public readonly inboxCards: SyncRepository<InboxCard>,
-    public readonly reviewCards: Repository<ReviewCard>
+    public readonly reviewCards: SyncRepository<ReviewCard>
   ) {}
 }
 
@@ -81,9 +81,10 @@ export class Application {
   }
 
   async sync(remoteReposiories: Repositories) {
-
     await new SyncService(new InboxCardConflictSolver())
       .sync(this.repositories.inboxCards, remoteReposiories.inboxCards)
+    await new SyncService(new ReviewCardConflictSolver())
+      .sync(this.repositories.reviewCards, remoteReposiories.reviewCards)
     await new SyncService(new VerseStatusConflictSolver())
       .sync(this.repositories.verseStatuses, remoteReposiories.verseStatuses)
   }
@@ -92,7 +93,11 @@ export class Application {
 class InboxCardConflictSolver implements ConflictSolver<InboxCard> {
   solve(object1: InboxCard, object2: InboxCard): Aggregate<AnyIdentity> {
     return object1 || object2
-    // throw new Error('Method not implemented.')
+  }
+}
+class ReviewCardConflictSolver implements ConflictSolver<ReviewCard> {
+  solve(object1: ReviewCard, object2: ReviewCard): Aggregate<AnyIdentity> {
+    return object1.lapses > object2.lapses ? object1 : object2
   }
 }
 
