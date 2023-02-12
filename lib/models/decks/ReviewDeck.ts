@@ -1,7 +1,7 @@
 import { Repository } from '@akdasa-studios/framework'
-import { ReviewCard, ReviewCardQueries } from '@lib/models'
+import { ReviewCard } from '@lib/models'
+import { active, dueTo } from '@lib/models/cards/queries/ReviewCard'
 import { Deck } from './Deck'
-
 
 /**
  * Inbox deck.
@@ -14,7 +14,7 @@ export class ReviewDeck extends Deck<ReviewCard> {
   constructor(
     cards: Repository<ReviewCard>,
   ) {
-    super(cards)
+    super(cards, active())
   }
 
   /**
@@ -26,7 +26,6 @@ export class ReviewDeck extends Deck<ReviewCard> {
   }
 
   async dueToCards(date: Date): Promise<readonly ReviewCard[]> {
-    const { dueTo } = ReviewCardQueries
     return (await this.findCards(dueTo(date)))
   }
 }

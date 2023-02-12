@@ -12,6 +12,8 @@ export enum InboxCardType {
  * An inbox card.
  */
 export class InboxCard extends Card {
+  private _memorizedAt?: Date
+
   /**
    * Initialize a new instance of InboxCard class with the given parameters.
    * @param id Identity of the card
@@ -28,6 +30,29 @@ export class InboxCard extends Card {
     // in different devices
     super(new CardId(getUuidByString(verseId.value + type)), verseId)
   }
+
+  /**
+   * Marks the card as memorized and sets the memorized date.
+   */
+  memorized() { this._memorizedAt = new Date() }
+
+  /**
+   * Is the card memorized?
+   * @returns True if the card is memorized, false otherwise.
+   */
+  get isMemorized(): boolean { return !!this._memorizedAt }
+
+  /**
+   * Gets the date when the card was memorized.
+   * @returns Date when the card was memorized or
+   *          undefined if the card is not memorized.
+   */
+  get memorizedAt(): Date | undefined { return this._memorizedAt }
+
+  /**
+   * Forgets the card.
+   */
+  forget() { this._memorizedAt = undefined }
 }
 
 /**

@@ -80,12 +80,14 @@ export const inboxDeckSteps: StepDefinitions = ({ given, when, then }) => {
    * Mark a card as memorized
    * @param verseNumber Verse number
    * @param cardType Card type
+   * @param device Device name (optional)
    * @example I mark the "BG 1.1" card of the "Review" type as memorized
+   * @example I mark the "BG 1.1" card of the "Review" type as memorized on "device1"
    */
   when(
-    /^I mark the "(.*)" card of the "(.*)" type as memorized$/,
-    async (verseNumber: string, cardType: string) => {
-      const ctx   = getContext()
+    /^I mark the "(.*)" card of the "(.*)" type as memorized(?: on "(.*)")?$/,
+    async (verseNumber: string, cardType: string, device: string) => {
+      const ctx   = getContext(device)
       const verse = await ctx.findVerse(verseNumber)
       const cards = await ctx.inboxDeck.findCards(ofVerse(verse.id), ofType(InboxCardType[cardType]))
 

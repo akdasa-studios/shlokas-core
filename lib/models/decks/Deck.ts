@@ -6,12 +6,13 @@ export class Deck<TCardType extends Card> {
 
   constructor(
     cards: Repository<TCardType>,
+    private readonly activeCards: Query<TCardType>
   ) {
     this._cards = cards
   }
 
   async cardsCount(): Promise<number> {
-    return (await this._cards.all()).value.length
+    return (await this.findCards(this.activeCards)).length
   }
 
   /**
@@ -19,8 +20,8 @@ export class Deck<TCardType extends Card> {
    * @returns True if the deck is empty, otherwise false
    */
   async isEmpty(): Promise<boolean> {
-    const items = await this._cards.all() // TODO: add count() request via repository
-    return items.value.length === 0
+    const items = await this.findCards(this.activeCards)
+    return items.length === 0
   }
 
   /**
@@ -47,13 +48,11 @@ export class Deck<TCardType extends Card> {
   async findCards(
     ...query: Query<TCardType>[]
   ): Promise<readonly TCardType[]> {
-    // Stryker disable next-line all
-    if (query.length === 1) {
-      return (await this._cards.find(query[0])).value
-    } else {
-      const qb = new QueryBuilder<TCardType>()
-      const result = await this._cards.find(qb.and(...query))
-      return result.value
-    }
+    const qb = new QueryBuilder<TCardType>()
+    const result = await this._cards.find(qb.and(
+      this.activeCards,
+      ...query
+    ))
+    return result.value
   }
 }

@@ -18,7 +18,7 @@ Feature: Sync / Cards Flow
     I, as a user, want to be able to sync my inbox cards from one device to
     another. But the inbox stays empty until I sync.
 
-    And Inbox deck has the following cards on "iPhone":
+    Given Inbox deck has the following cards on "iPhone":
       | Verse Number | Card Type   |
       | BG 1.1       | Translation |
       | BG 1.1       | Text        |
@@ -72,7 +72,7 @@ Feature: Sync / Cards Flow
       | BG 1.1       | Translation |
     And I sync data between "iPhone" and "iPad"
     And I add a verse "SB 1.1.1" to the Inbox deck on "iPhone"
-    And I sync data between "iPhone" and "iPad"
+    When I sync data between "iPhone" and "iPad"
     Then Inbox deck contains the following cards on "iPad":
       | Verse Number | Card Type   |
       | BG 1.1       | Translation |
@@ -81,7 +81,7 @@ Feature: Sync / Cards Flow
     And Status of the verse "SB 1.1.1" is "Inbox" on "iPad"
 
 
-  Scenario: I sync simillar cards
+  Scenario: I sync similar cards
     If I have simillar cards on both devices, they should not be duplicated
     after syncing.
 
@@ -91,7 +91,7 @@ Feature: Sync / Cards Flow
     And Inbox deck has the following cards on "iPad":
       | Verse Number | Card Type   |
       | BG 1.1       | Translation |
-    And I sync data between "iPhone" and "iPad"
+    When I sync data between "iPhone" and "iPad"
     Then Inbox deck contains the following cards on "iPad":
       | Verse Number | Card Type   |
       | BG 1.1       | Translation |
@@ -100,3 +100,28 @@ Feature: Sync / Cards Flow
       | BG 1.1       | Translation |
     And Status of the verse "BG 1.1" is "Inbox" on "iPad"
     And Status of the verse "BG 1.1" is "Inbox" on "iPhone"
+
+
+  Scenario: Inbox cards synced after I mark one as memorized
+    If I have simillar cards on both devices, they should not be duplicated
+    after syncing.
+
+    Given Inbox deck has the following cards on "iPhone":
+      | Verse Number | Card Type   |
+      | BG 1.1       | Translation |
+      | BG 1.1       | Text        |
+    And Inbox deck has the following cards on "iPad":
+      | Verse Number | Card Type   |
+      | BG 1.1       | Translation |
+      | BG 1.1       | Text        |
+    When I mark the "BG 1.1" card of the "Text" type as memorized on "iPhone"
+    And Status of the verse "BG 1.1" is "Review" on "iPhone"
+    And I sync data between "iPhone" and "iPad"
+    And Inbox deck contains the following cards on "iPhone":
+      | Verse Number | Card Type   |
+      | BG 1.1       | Translation |
+    Then Inbox deck contains the following cards on "iPad":
+      | Verse Number | Card Type   |
+      | BG 1.1       | Translation |
+    And Status of the verse "BG 1.1" is "Review" on "iPad"
+    And Status of the verse "BG 1.1" is "Review" on "iPhone"

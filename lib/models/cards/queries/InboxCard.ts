@@ -10,3 +10,7 @@ export function ofVerse(id: VerseId): Query<InboxCard> {
 export function ofType(type: InboxCardType): Query<InboxCard>  {
   return queryBuilder.eq('type', type)
 }
+
+export function active(): Query<InboxCard> {
+  return queryBuilder.eq('memorizedAt', undefined)
+}

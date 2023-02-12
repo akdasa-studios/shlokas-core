@@ -1,7 +1,7 @@
 import { Aggregate, AnyIdentity, Processor, Repository } from '@akdasa-studios/framework'
 import { ConflictSolver, SyncRepository, SyncService } from '@akdasa-studios/framework-sync'
 import { TimeController, TimeMachine } from '@lib/app/TimeMachine'
-import { InboxCard, InboxDeck, ReviewCard, ReviewDeck, Verse, VerseStatus } from '@lib/models'
+import { Decks, InboxCard, InboxDeck, ReviewCard, ReviewDeck, Verse, VerseStatus } from '@lib/models'
 import { Library } from './Library'
 import { Settings } from './Settings'
 
@@ -98,7 +98,12 @@ class InboxCardConflictSolver implements ConflictSolver<InboxCard> {
 
 class VerseStatusConflictSolver implements ConflictSolver<VerseStatus> {
   solve(object1: VerseStatus, object2: VerseStatus): Aggregate<AnyIdentity> {
-    console.log('VSCS')
-    return object1 || object2
+    console.log('solving', object1.inDeck, object2.inDeck)
+    if (object1.inDeck !== object2.inDeck) {
+      const object1Progress = Object.keys(Decks).indexOf(object1.inDeck)
+      const object2Progress = Object.keys(Decks).indexOf(object2.inDeck)
+      return (object1Progress >= object2Progress) ? object1 : object2
+    }
+    return object1
   }
 }
