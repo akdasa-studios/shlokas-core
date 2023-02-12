@@ -12,7 +12,6 @@ export class InboxCardConflictSolver implements ConflictSolver<InboxCard> {
 
 export class ReviewCardConflictSolver implements ConflictSolver<ReviewCard> {
   solve(object1: ReviewCard, object2: ReviewCard): Aggregate<AnyIdentity> {
-    // Stryker disable next-line all
     return object1.lapses > object2.lapses ? object1 : object2
   }
 }
@@ -22,7 +21,6 @@ export class VerseStatusConflictSolver implements ConflictSolver<VerseStatus> {
     if (object1.inDeck !== object2.inDeck) {
       const object1Progress = Object.keys(Decks).indexOf(object1.inDeck)
       const object2Progress = Object.keys(Decks).indexOf(object2.inDeck)
-      // Stryker disable next-line all
       return (object1Progress >= object2Progress) ? object1 : object2
     }
     return object1
