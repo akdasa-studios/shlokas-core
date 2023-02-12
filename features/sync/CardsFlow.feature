@@ -38,6 +38,7 @@ Feature: Sync / Cards Flow
       | Verse Number | Card Type   |
       | BG 1.1       | Translation |
       | BG 1.1       | Text        |
+    And Status of the verse "BG 1.1" is "Inbox" on "iPad"
 
 
   Scenario: I sync inbox cards from both devices
@@ -60,6 +61,8 @@ Feature: Sync / Cards Flow
       | Verse Number | Card Type   |
       | BG 1.1       | Translation |
       | BG 1.2       | Text        |
+    And Status of the verse "BG 1.1" is "Inbox" on "iPad"
+    And Status of the verse "BG 1.2" is "Inbox" on "iPhone"
 
 
   Scenario: I add new card to Inbox and sync
@@ -75,6 +78,7 @@ Feature: Sync / Cards Flow
       | BG 1.1       | Translation |
       | SB 1.1.1     | Translation |
       | SB 1.1.1     | Text        |
+    And Status of the verse "SB 1.1.1" is "Inbox" on "iPad"
 
 
   Scenario: I sync simillar cards
@@ -94,3 +98,5 @@ Feature: Sync / Cards Flow
     And Inbox deck contains the following cards on "iPhone":
       | Verse Number | Card Type   |
       | BG 1.1       | Translation |
+    And Status of the verse "BG 1.1" is "Inbox" on "iPad"
+    And Status of the verse "BG 1.1" is "Inbox" on "iPhone"

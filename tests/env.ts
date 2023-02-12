@@ -36,7 +36,7 @@ export function createReviewCard(
 export function createApplication() {
   return new Application(new Repositories(
     new InMemoryRepository<Verse>(),
-    new InMemoryRepository<VerseStatus>(),
+    new SyncRepository(new InMemoryRepository<VerseStatus>()),
     new SyncRepository(new InMemoryRepository<InboxCard>()),
     new InMemoryRepository<ReviewCard>()
   ))

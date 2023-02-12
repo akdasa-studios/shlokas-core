@@ -8,7 +8,7 @@ import { Settings } from './Settings'
 export class Repositories {
   constructor(
     public readonly verses: Repository<Verse>,
-    public readonly verseStatuses: Repository<VerseStatus>,
+    public readonly verseStatuses: SyncRepository<VerseStatus>,
     public readonly inboxCards: SyncRepository<InboxCard>,
     public readonly reviewCards: Repository<ReviewCard>
   ) {}
@@ -84,6 +84,8 @@ export class Application {
 
     await new SyncService(new InboxCardConflictSolver())
       .sync(this.repositories.inboxCards, remoteReposiories.inboxCards)
+    await new SyncService(new VerseStatusConflictSolver())
+      .sync(this.repositories.verseStatuses, remoteReposiories.verseStatuses)
   }
 }
 
@@ -92,5 +94,11 @@ class InboxCardConflictSolver implements ConflictSolver<InboxCard> {
     return object1 || object2
     // throw new Error('Method not implemented.')
   }
+}
 
+class VerseStatusConflictSolver implements ConflictSolver<VerseStatus> {
+  solve(object1: VerseStatus, object2: VerseStatus): Aggregate<AnyIdentity> {
+    console.log('VSCS')
+    return object1 || object2
+  }
 }
