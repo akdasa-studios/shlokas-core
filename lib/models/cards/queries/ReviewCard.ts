@@ -14,3 +14,10 @@ export function ofType(type: ReviewCardType): Query<ReviewCard>  {
 export function dueTo(date: Date): Query<ReviewCard>  {
   return queryBuilder.lte('dueTo', date)
 }
+
+export function active(): Query<ReviewCard> {
+  // NOTE: just dunny query, should be replaced
+  return queryBuilder.not(
+    queryBuilder.eq('addedAt', undefined)
+  )
+}

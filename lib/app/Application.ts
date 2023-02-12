@@ -1,15 +1,17 @@
 import { Processor, Repository } from '@akdasa-studios/framework'
+import { SyncRepository, SyncService } from '@akdasa-studios/framework-sync'
 import { TimeController, TimeMachine } from '@lib/app/TimeMachine'
 import { InboxCard, InboxDeck, ReviewCard, ReviewDeck, Verse, VerseStatus } from '@lib/models'
 import { Library } from './Library'
 import { Settings } from './Settings'
+import { InboxCardConflictSolver, ReviewCardConflictSolver, VerseStatusConflictSolver } from './sync'
 
 export class Repositories {
   constructor(
     public readonly verses: Repository<Verse>,
-    public readonly verseStatuses: Repository<VerseStatus>,
-    public readonly inboxCards: Repository<InboxCard>,
-    public readonly reviewCards: Repository<ReviewCard>
+    public readonly verseStatuses: SyncRepository<VerseStatus>,
+    public readonly inboxCards: SyncRepository<InboxCard>,
+    public readonly reviewCards: SyncRepository<ReviewCard>
   ) {}
 }
 
@@ -78,5 +80,17 @@ export class Application {
   get settings() : Settings {
     return this._settings
   }
-}
 
+  /**
+   * Syncs the application with remote repositories.
+   * @param remoteReposiories Remote repositories to sync with
+   */
+  async sync(remoteReposiories: Repositories) {
+    await new SyncService(new InboxCardConflictSolver())
+      .sync(this.repositories.inboxCards, remoteReposiories.inboxCards)
+    await new SyncService(new ReviewCardConflictSolver())
+      .sync(this.repositories.reviewCards, remoteReposiories.reviewCards)
+    await new SyncService(new VerseStatusConflictSolver())
+      .sync(this.repositories.verseStatuses, remoteReposiories.verseStatuses)
+  }
+}

@@ -1,18 +1,24 @@
+import { getContext } from '@tests/features/context'
 import { StepDefinitions } from 'jest-cucumber'
-
-import { context as $c } from '@tests/features/context'
 
 
 export const libraryStatusSteps: StepDefinitions = ({ when }) => {
 
-  /* -------------------------------------------------------------------------- */
-  /*                                    Then                                    */
-  /* -------------------------------------------------------------------------- */
-
-  when(/^Status of the verse "(.*)" is "(.*)"$/, async (verseNumber: string, status: string) => {
-    const verse = await $c.library.getByNumber($c.settings.language, verseNumber)
-    const verseStatus = await $c.library.getStatus(verse.value.id)
-    expect(verseStatus.inDeck).toEqual(status)
-  })
-
+  /**
+   * Check the status of a verse on a device
+   * @param verseNumber Verse number
+   * @param status Status of the verse
+   * @param device Device name (optional)
+   * @example Then Status of the verse "BG 1.1" is "Inbox"
+   * @example Then Status of the verse "BG 1.1" is "Review" on "device1"
+   */
+  when(
+    /^Status of the verse "(.*)" is "(\w*)"(?: on "(.*)")?$/,
+    async (verseNumber: string, status: string, device: string) =>
+    {
+      const ctx         = getContext(device)
+      const verse       = await ctx.library.getByNumber(ctx.settings.language, verseNumber)
+      const verseStatus = await ctx.library.getStatus(verse.value.id)
+      expect(verseStatus.inDeck).toEqual(status)
+    })
 }

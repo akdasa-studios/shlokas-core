@@ -1,14 +1,14 @@
 import { ReviewCardReviewed } from './../../../../lib/commands/review/ReviewCardReviewed'
 import { ReviewCardBuilder, ReviewCardQueries, ReviewCardType, ReviewGrade } from '@lib/models'
 import { StepDefinitions } from 'jest-cucumber'
-import { context as $c } from '@tests/features/context'
+import { contexts, getContext } from '@tests/features/context'
 
 
 export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
   const { ofVerse, ofType, dueTo, queryBuilder } = ReviewCardQueries
   async function findVerse(verseNumber: string) {
-    const verse = await $c.library.getByNumber(
-      $c.settings.language, verseNumber
+    const verse = await contexts.$.library.getByNumber(
+      contexts.$.settings.language, verseNumber
     )
     return verse.value
   }
@@ -37,7 +37,7 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
         .ofVerse(verse.id)
         .dueTo(new Date(cardLine['Due To']))
         .build()
-      await $c.reviewDeck.addCard(card)
+      await contexts.$.reviewDeck.addCard(card)
     }
   })
 
@@ -48,46 +48,62 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
   when(/^I review card "(.*)" "(.*)" with mark "(.*)"$/, async (_verse: string, _type: string, _mark: string) => {
     const type =  getReviewCardType(_type)
     const verse = await findVerse(_verse)
-    const card = (await $c.reviewDeck.findCards(ofVerse(verse.id), ofType(type)))[0]
-    await $c.processor.execute(new ReviewCardReviewed(card, getMark(_mark)))
+    const card = (await contexts.$.reviewDeck.findCards(ofVerse(verse.id), ofType(type)))[0]
+    await contexts.$.processor.execute(new ReviewCardReviewed(card, getMark(_mark)))
   })
 
   /* -------------------------------------------------------------------------- */
   /*                                    Then                                    */
   /* -------------------------------------------------------------------------- */
 
-  then('Review deck contains the following cards:', async (cards) => {
-    expect(await $c.reviewDeck.cardsCount()).toEqual(cards.length)
+  /**
+   * Check that the review deck contains the expected cards
+   * @param device Device name (optional)
+   * @param cards List of cards
+   * @example Review deck contains the following cards:
+   *          | Verse Number | Card Type      | Due To     |
+   *          | BG 1.1       | Number -> Text | 2020-01-01 |
+   *          | BG 1.2       | Text -> Number | 2020-01-02 |
+   */
+  then(
+    /^Review deck contains the following cards(?: on "(.*)")?:$/,
+    async (device, cards) =>
+    {
+      const ctx = getContext(device)
+      expect(await ctx.reviewDeck.cardsCount()).toEqual(cards.length)
 
-    for (const card of cards) {
-      const verse = await findVerse(card['Verse Number'])
-      const f = await $c.reviewDeck.findCards(
-        ofVerse(verse.id),
-        ofType(getReviewCardType(card['Card Type']))
-      )
-      expect(f).toHaveLength(1)
-      expect(f[0].dueTo).toEqual(new Date(card['Due To']))
-    }
-  })
+      for (const card of cards) {
+        const verse = await findVerse(card['Verse Number'])
+        const f = await ctx.reviewDeck.findCards(
+          ofVerse(verse.id),
+          ofType(getReviewCardType(card['Card Type']))
+        )
+        expect(f).toHaveLength(1)
+
+        if (card['Due To']) {
+          expect(f[0].dueTo).toEqual(new Date(card['Due To']))
+        }
+      }
+    })
 
   then('Review deck contains no cards', () => {
-    expect($c.reviewDeck.isEmpty).toBeTruthy()
+    expect(contexts.$.reviewDeck.isEmpty).toBeTruthy()
   })
 
   then(/^I see no cards for review on "(.*)"$/, async (date: string) => {
     expect(
-      (await $c.reviewDeck.dueToCards(new Date(date))).length
+      (await contexts.$.reviewDeck.dueToCards(new Date(date))).length
     ).toEqual(0)
   })
 
   then(/^I see the following cards for review on "(.*)":$/, async (date: string, cards) => {
     expect(
-      (await $c.reviewDeck.dueToCards(new Date(date))).length
+      (await contexts.$.reviewDeck.dueToCards(new Date(date))).length
     ).toEqual(cards.length)
 
     for (const card of cards) {
       const verse = await findVerse(card['Verse'])
-      const f = await $c.reviewDeck.findCards(queryBuilder.and(
+      const f = await contexts.$.reviewDeck.findCards(queryBuilder.and(
         ofVerse(verse.id),
         ofType(getReviewCardType(card['Type'])),
         dueTo(new Date(date))

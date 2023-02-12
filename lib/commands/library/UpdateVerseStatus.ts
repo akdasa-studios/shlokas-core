@@ -2,6 +2,7 @@ import { Command, Result } from '@akdasa-studios/framework'
 import { Application } from '@lib/app/Application'
 import { Decks, VerseId, VerseStatus } from '@lib/models'
 import * as InboxCardQueries from '@lib/models/cards/queries/InboxCard'
+import * as ReviewCardQueries from '@lib/models/cards/queries/ReviewCard'
 
 
 export class UpdateVerseStatus implements
@@ -15,8 +16,9 @@ export class UpdateVerseStatus implements
 
   async execute(context: Application): Promise<Result<VerseStatus, string>> {
     const { ofVerse } = InboxCardQueries
+    const { ofVerse: ofVerse2 } = ReviewCardQueries
     const inboxCards = await context.inboxDeck.findCards(ofVerse(this.verseId))
-    const reviewCards = await context.reviewDeck.findCards(ofVerse(this.verseId))
+    const reviewCards = await context.reviewDeck.findCards(ofVerse2(this.verseId))
 
     this._status = new VerseStatus(this.verseId)
 

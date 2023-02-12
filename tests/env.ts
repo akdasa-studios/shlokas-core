@@ -1,4 +1,5 @@
 import { InMemoryRepository } from '@akdasa-studios/framework'
+import { SyncRepository } from '@akdasa-studios/framework-sync'
 import { Application, Repositories } from '@lib/app/Application'
 import {
   InboxCard, Language,
@@ -35,8 +36,8 @@ export function createReviewCard(
 export function createApplication() {
   return new Application(new Repositories(
     new InMemoryRepository<Verse>(),
-    new InMemoryRepository<VerseStatus>(),
-    new InMemoryRepository<InboxCard>(),
-    new InMemoryRepository<ReviewCard>()
+    new SyncRepository(new InMemoryRepository<VerseStatus>()),
+    new SyncRepository(new InMemoryRepository<InboxCard>()),
+    new SyncRepository(new InMemoryRepository<ReviewCard>())
   ))
 }

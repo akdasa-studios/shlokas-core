@@ -1,6 +1,6 @@
 import { Repository } from '@akdasa-studios/framework'
 import { InboxCard, InboxCardBuilder, InboxCardType, VerseId } from '@lib/models'
-import { InboxCardQueries } from '../cards/queries'
+import { active, ofVerse } from '@lib/models/cards/queries/InboxCard'
 import { Deck } from './Deck'
 
 
@@ -10,19 +10,19 @@ import { Deck } from './Deck'
 export class InboxDeck extends Deck<InboxCard> {
   /**
    * Initializes a new instance of InboxDeck class.
-   * @param cards Initial cards
+   * @param cards Cards repository
    */
   constructor(
     cards: Repository<InboxCard>,
   ) {
-    super(cards)
+    super(cards, active())
   }
 
   /**
    * Returns the cards in the deck in the order they were added.
    */
   async cards(): Promise<readonly InboxCard[]> {
-    const cards = (await this._cards.all()).value
+    const cards = await this.findCards(active())
     return cards.slice().sort((x, y) => x.addedAt.getTime() - y.addedAt.getTime())
   }
 
@@ -35,7 +35,8 @@ export class InboxDeck extends Deck<InboxCard> {
    * @param card Card to mark as memorized
    */
   async cardMemorized(card: InboxCard) {
-    await this.removeCard(card)
+    card.memorized()
+    await this._cards.save(card)
   }
 
   /* -------------------------------------------------------------------------- */
@@ -73,7 +74,6 @@ export class InboxDeck extends Deck<InboxCard> {
    * @returns Removed cards
    */
   async removeVerse(verseId: VerseId): Promise<readonly InboxCard[]> {
-    const { ofVerse } = InboxCardQueries
     const removedCards = await this.findCards(ofVerse(verseId))
     for(const card of removedCards) {
       await this.removeCard(card)
