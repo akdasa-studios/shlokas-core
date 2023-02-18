@@ -8,11 +8,17 @@ const syncLogger = new Logger('Sync')
 export class InboxCardConflictSolver implements ConflictSolver<InboxCard> {
   solve(object1: InboxCard, object2: InboxCard): Aggregate<AnyIdentity> {
     syncLogger.debug('Inbox card conflict', {
-      object1: JSON.stringify(object1),
-      object2: JSON.stringify(object2),
+      object1: object1,
+      object2: object2,
       winner: object1.isMemorized ? 'object1' : 'object2',
       winner2: object1.isMemorized != undefined ? 'object1' : 'object2',
       winner3: object1.memorizedAt ? 'object1' : 'object2',
+      test: {
+        object1m: object1.memorizedAt,
+        object2m: object2.memorizedAt,
+        object1im: object1.isMemorized,
+        object2im: object2.isMemorized,
+      }
     })
     return object1.memorizedAt ? object1 : object2
   }
