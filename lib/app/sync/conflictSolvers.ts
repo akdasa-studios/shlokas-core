@@ -1,11 +1,17 @@
-import { Aggregate, AnyIdentity } from '@akdasa-studios/framework'
+import { Aggregate, AnyIdentity, Logger } from '@akdasa-studios/framework'
 import { ConflictSolver } from '@akdasa-studios/framework-sync'
 import { Decks, InboxCard, ReviewCard, VerseStatus } from '@lib/models'
 
+const syncLogger = new Logger('Sync')
 // Stryker disable all
 
 export class InboxCardConflictSolver implements ConflictSolver<InboxCard> {
   solve(object1: InboxCard, object2: InboxCard): Aggregate<AnyIdentity> {
+    syncLogger.debug('Inbox card conflict', {
+      object1: JSON.stringify(object1),
+      object2: JSON.stringify(object2),
+      winner: object1.isMemorized ? 'object1' : 'object2'
+    })
     return object1.isMemorized ? object1 : object2
   }
 }
