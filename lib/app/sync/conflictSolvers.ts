@@ -11,7 +11,8 @@ export class InboxCardConflictSolver implements ConflictSolver<InboxCard> {
       object1: object1,
       object2: object2,
       winner: object1.isMemorized ? 'object1' : 'object2',
-      winner2: object1.isMemorized != undefined ? 'object1' : 'object2',
+      winner2: object1.memorizedAt != undefined ? 'object1' : 'object2',
+      winner2a: object1.memorizedAt !== undefined ? 'object1' : 'object2',
       winner3: object1.memorizedAt ? 'object1' : 'object2',
       test: {
         object1m: object1.memorizedAt,
