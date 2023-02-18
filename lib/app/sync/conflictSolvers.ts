@@ -10,9 +10,11 @@ export class InboxCardConflictSolver implements ConflictSolver<InboxCard> {
     syncLogger.debug('Inbox card conflict', {
       object1: JSON.stringify(object1),
       object2: JSON.stringify(object2),
-      winner: object1.isMemorized ? 'object1' : 'object2'
+      winner: object1.isMemorized ? 'object1' : 'object2',
+      winner2: object1.isMemorized != undefined ? 'object1' : 'object2',
+      winner3: object1.memorizedAt ? 'object1' : 'object2',
     })
-    return object1.isMemorized ? object1 : object2
+    return object1.memorizedAt ? object1 : object2
   }
 }
 
