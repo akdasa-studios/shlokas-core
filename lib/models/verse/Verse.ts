@@ -21,6 +21,7 @@ export class Verse extends Aggregate<VerseId> {
     public readonly text: Text,
     public readonly translation: Translation,
     public readonly synonyms: Synonym[],
+    public readonly textAudioUri?: string,
   ) {
     super(id)
   }
@@ -33,6 +34,7 @@ export class VerseBuilder {
   private _text: Text = NoText
   private _translation: Translation = NoTranslation
   private _synonyms: Synonym[] = []
+  private _textAudioUri: string
 
   withId(id: VerseId): VerseBuilder {
     this._id = id
@@ -66,6 +68,11 @@ export class VerseBuilder {
     return this
   }
 
+  withTextAudioUri(uri: string) {
+    this._textAudioUri = uri
+    return this
+  }
+
   build(): Result<Verse, string> {
     const verse = new Verse(
       this._id || new VerseId(),
@@ -73,7 +80,8 @@ export class VerseBuilder {
       this._language,
       this._text,
       this._translation,
-      this._synonyms
+      this._synonyms,
+      this._textAudioUri
     )
     return Result.ok(verse)
   }
