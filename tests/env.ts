@@ -18,6 +18,7 @@ export function createVerse(verseNumberStr: string, lang = 'en'): Verse {
   return new VerseBuilder()
     .withNumber(verseNumber)
     .ofLanguage(new Language(lang, lang))
+    .withTextAudioUri('1.mp3')
     .build().value
 }
 
