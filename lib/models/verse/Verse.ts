@@ -68,7 +68,7 @@ export class VerseBuilder {
     return this
   }
 
-  withTextAudioUri(uri: string) {
+  withTextAudioUri(uri: string): VerseBuilder {
     this._textAudioUri = uri
     return this
   }
