@@ -41,7 +41,7 @@ describe('UpdateVerseStatus', () => {
       await command.execute(context)
 
       const newStatus = await context.library.getStatus(verse1Id)
-      const count     = (await context.repositories.verseStatuses.all()).value.length
+      const count     = (await context.repositories.verseStatuses.all()).length
 
       expect(count).toBe(1)
       expect(newStatus.equals(NoStatus)).toBeFalsy()

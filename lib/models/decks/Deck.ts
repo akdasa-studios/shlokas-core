@@ -53,6 +53,6 @@ export class Deck<TCardType extends Card> {
       this.activeCards,
       ...query
     ))
-    return result.value
+    return result
   }
 }

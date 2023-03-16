@@ -31,8 +31,8 @@ export class Context {
 
   async findVerse(verseNumber: string) {
     const verse = await this._app.library.getByNumber(this._app.settings.language, verseNumber)
-    if (verse.isFailure) { throw new Error(verse.error) }
-    return verse.value
+    if (!verse) { throw new Error('Not found') }
+    return verse
   }
 }
 
