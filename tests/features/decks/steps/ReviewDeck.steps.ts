@@ -10,7 +10,7 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
     const verse = await contexts.$.library.getByNumber(
       contexts.$.settings.language, verseNumber
     )
-    return verse.value
+    return verse
   }
   function getReviewCardType(name: string): ReviewCardType {
     return ReviewCardType[name.replace(' -> ', 'To')]

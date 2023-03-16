@@ -1,4 +1,4 @@
-import { Query, Repository, Result } from '@akdasa-studios/framework'
+import { Query, Repository } from '@akdasa-studios/framework'
 import {
   Language, NoStatus, Verse, VerseId, VerseNumber, VerseQueries,
   VerseStatus, VerseStatusQueries
@@ -25,7 +25,7 @@ export class Library {
   }
 
   async find(query: Query<Verse>): Promise<readonly Verse[]> {
-    return (await this._verses.find(query)).value
+    return await this._verses.find(query)
   }
 
   /**
@@ -33,7 +33,7 @@ export class Library {
    * @returns List of all verses in the library
    */
   async all(lang: Language): Promise<readonly Verse[]> {
-    return (await this._verses.find(VerseQueries.language(lang))).value
+    return await this._verses.find(VerseQueries.language(lang))
   }
 
   /**
@@ -41,7 +41,7 @@ export class Library {
    * @param id Id of a verse
    * @returns Result of operation
    */
-  async getById(id: VerseId): Promise<Result<Verse, string>> {
+  async getById(id: VerseId): Promise<Verse> {
     return await this._verses.get(id)
   }
 
@@ -51,22 +51,21 @@ export class Library {
    * @returns Result of the operation
    * @remarks If the verse is not found, the result will be a failure.
    */
-  async getByNumber(lang: Language, verseNumber: VerseNumber | string): Promise<Result<Verse, string>> {
-    const result = (await this._verses.find(VerseQueries.queryBuilder.and(
+  async getByNumber(lang: Language, verseNumber: VerseNumber | string): Promise<Verse> {
+    const query = VerseQueries.queryBuilder.and(
       VerseQueries.language(lang),
       VerseQueries.number(verseNumber)
-    ))).value
-    if (result.length === 0) {
-      return Result.fail('Verse not found: ' + verseNumber.toString())
-    }
-    return Result.ok(result[0])
+    )
+    const result = await this._verses.find(query)
+    if (result.length === 0) { throw new Error(`Verse not found by ${lang.code} and ${verseNumber}`) }
+    return result[0]
   }
 
   async findByContent(lang: Language, queryString: string): Promise<readonly Verse[]> {
-    return (await this._verses.find(VerseQueries.queryBuilder.and(
+    return await this._verses.find(VerseQueries.queryBuilder.and(
       VerseQueries.language(lang),
       VerseQueries.content(queryString)
-    ))).value
+    ))
   }
 
   /**
@@ -74,9 +73,8 @@ export class Library {
    * @param verse Verse to add
    * @returns Result of the operation
    */
-  async addVerse(verse: Verse): Promise<Result<Verse, string>> {
+  async addVerse(verse: Verse) {
     await this._verses.save(verse)
-    return Result.ok(verse)
   }
 
   /* -------------------------------------------------------------------------- */
@@ -99,7 +97,7 @@ export class Library {
 
     const result = {}
     for (const vid of versesId) {
-      result[vid.value] = verses.value.find(x => x.verseId.equals(vid)) || NoStatus
+      result[vid.value] = verses.find(x => x.verseId.equals(vid)) || NoStatus
     }
     return result
   }

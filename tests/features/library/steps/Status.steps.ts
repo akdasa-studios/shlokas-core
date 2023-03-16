@@ -18,7 +18,7 @@ export const libraryStatusSteps: StepDefinitions = ({ when }) => {
     {
       const ctx         = getContext(device)
       const verse       = await ctx.library.getByNumber(ctx.settings.language, verseNumber)
-      const verseStatus = await ctx.library.getStatus(verse.value.id)
+      const verseStatus = await ctx.library.getStatus(verse.id)
       expect(verseStatus.inDeck).toEqual(status)
     })
 }
