@@ -1,7 +1,7 @@
 import { Processor, Repository } from '@akdasa-studios/framework'
 import { SyncRepository, SyncService } from '@akdasa-studios/framework-sync'
 import { TimeController, TimeMachine } from '@lib/app/TimeMachine'
-import { InboxCard, InboxDeck, ReviewCard, ReviewDeck, Verse, VerseStatus } from '@lib/models'
+import { Declamation, InboxCard, InboxDeck, ReviewCard, ReviewDeck, Verse, VerseImage, VerseStatus } from '@lib/models'
 import { Library } from './Library'
 import { Settings } from './Settings'
 import { InboxCardConflictSolver, ReviewCardConflictSolver, VerseStatusConflictSolver } from './sync'
@@ -9,6 +9,8 @@ import { InboxCardConflictSolver, ReviewCardConflictSolver, VerseStatusConflictS
 export class Repositories {
   constructor(
     public readonly verses: Repository<Verse>,
+    public readonly verseImages: Repository<VerseImage>,
+    public readonly declamations: Repository<Declamation>,
     public readonly verseStatuses: SyncRepository<VerseStatus>,
     public readonly inboxCards: SyncRepository<InboxCard>,
     public readonly reviewCards: SyncRepository<ReviewCard>
@@ -31,7 +33,9 @@ export class Application {
   ) {
     this._library = new Library(
       repositories.verses,
-      repositories.verseStatuses
+      repositories.verseStatuses,
+      repositories.verseImages,
+      repositories.declamations
     )
     this._inboxDeck = new InboxDeck(repositories.inboxCards)
     this._reviewDeck = new ReviewDeck(repositories.reviewCards)

@@ -1,9 +1,9 @@
 import { InMemoryRepository, Repository } from '@akdasa-studios/framework'
 import { Library } from '@lib/app/Library'
 import {
-  Decks, Language, NoStatus, Verse, VerseId, VerseQueries, VerseStatus
+  Decks, Declamation, Language, NoStatus, Verse, VerseId, VerseImage, VerseQueries, VerseStatus
 } from '@lib/models'
-import { createVerse, createVerseNumber } from '@tests/env'
+import { createVerse, createVerseImage, createVerseNumber, createDeclamation } from '@tests/env'
 
 
 describe('Library', () => {
@@ -11,12 +11,19 @@ describe('Library', () => {
   const serbian = new Language('rs', 'RS')
   let versesRepository: Repository<Verse>
   let verseStatusesRepository: Repository<VerseStatus>
+  let verseImagesRepository: Repository<VerseImage>
+  let declamationsRepository: Repository<Declamation>
   let library: Library
 
   beforeEach(() => {
     versesRepository = new InMemoryRepository<Verse>()
     verseStatusesRepository = new InMemoryRepository<VerseStatus>()
-    library = new Library(versesRepository, verseStatusesRepository)
+    verseImagesRepository = new InMemoryRepository<VerseImage>()
+    declamationsRepository = new InMemoryRepository<Declamation>()
+    library = new Library(
+      versesRepository, verseStatusesRepository,
+      verseImagesRepository, declamationsRepository
+    )
   })
 
   /* -------------------------------------------------------------------------- */
@@ -120,7 +127,7 @@ describe('Library', () => {
   /*                                    getStatus                              */
   /* -------------------------------------------------------------------------- */
 
-  describe('getStatus', () => {
+  describe('.getStatus', () => {
     it('should return the status of the verse', async () => {
       const verse = createVerse('BG 1.1')
       await library.addVerse(verse)
@@ -140,7 +147,7 @@ describe('Library', () => {
     })
   })
 
-  describe('getStatuses', () => {
+  describe('.getStatuses', () => {
     it('should return the statuses of the verse', async () => {
       const verse0 = new VerseId('faa712ed-a789-4ad4-b150-8ca712914781')
       const verse1 = createVerse('BG 1.1')
@@ -156,6 +163,81 @@ describe('Library', () => {
       expect(result[verse1.id.value]).toEqual(verseStatus1)
       expect(result[verse2.id.value]).toEqual(verseStatus2)
       expect(result[verse0.value]).toEqual(NoStatus)
+    })
+  })
+
+
+  /* -------------------------------------------------------------------------- */
+  /*                                getVerseImage                               */
+  /* -------------------------------------------------------------------------- */
+
+  describe('.getVerseImage', () => {
+    it('should return the image of the verse', async () => {
+      const verse1 = createVerse('BG 1.1')
+      const verse2 = createVerse('BG 1.2')
+      const image1 = createVerseImage(verse1.id)
+      const image2 = createVerseImage(verse2.id)
+
+      await verseImagesRepository.save(image1)
+      await verseImagesRepository.save(image2)
+
+      // act
+      const result = await library.getImages(verse1.id)
+
+      // assert
+      expect(result).toHaveLength(1)
+      expect(result[0].verseId).toBe(verse1.id)
+    })
+
+    it('should return empty array if nothing found', async () => {
+      const notFoundId = new VerseId()
+      const result = await library.getImages(notFoundId)
+      expect(result).toHaveLength(0)
+    })
+  })
+
+  /* -------------------------------------------------------------------------- */
+  /*                               getDeclamations                              */
+  /* -------------------------------------------------------------------------- */
+
+  describe('.getDeclamations', () => {
+    it('should return the declamations of the verse', async () => {
+      const verse1 = createVerse('BG 1.1')
+      const verse2 = createVerse('BG 1.2')
+      const declamation1 = createDeclamation(verse1.id)
+      const declamation2 = createDeclamation(verse2.id)
+
+      await declamationsRepository.save(declamation1)
+      await declamationsRepository.save(declamation2)
+
+      // act
+      const result = await library.getDeclamations(verse1.id)
+
+      // assert
+      expect(result).toHaveLength(1)
+      expect(result[0].verseReference).toBe(verse1.id)
+    })
+
+    it('should return empty array if nothing found', async () => {
+      const notFoundId = new VerseId()
+      const result = await library.getDeclamations(notFoundId)
+      expect(result).toHaveLength(0)
+    })
+
+    it('should return the declamations of the verse by reference', async () => {
+      const declamation1 = createDeclamation('BG 1.1')
+      const declamation2 = createDeclamation('BG 1.1')
+
+      await declamationsRepository.save(declamation1)
+      await declamationsRepository.save(declamation2)
+
+      // act
+      const result = await library.getDeclamations('BG 1.1')
+
+      // assert
+      expect(result).toHaveLength(2)
+      expect(result[0].verseReference).toBe('BG 1.1')
+      expect(result[1].verseReference).toBe('BG 1.1')
     })
   })
 })

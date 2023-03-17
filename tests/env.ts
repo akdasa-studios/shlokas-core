@@ -4,7 +4,8 @@ import { Application, Repositories } from '@lib/app/Application'
 import {
   InboxCard, Language,
   ReviewCard, ReviewCardBuilder, ReviewCardType, Verse,
-  VerseBuilder, VerseNumber, VerseStatus
+  VerseBuilder, VerseId, VerseImage, VerseImageId, VerseNumber,
+  VerseStatus, Declamation, DeclamationId, VerseReference, DeclamationType
 } from '@lib/models'
 
 
@@ -19,6 +20,29 @@ export function createVerse(verseNumberStr: string, lang = 'en'): Verse {
     .withNumber(verseNumber)
     .ofLanguage(new Language(lang, lang))
     .build().value
+}
+
+export function createVerseImage(verseId: VerseId, theme='default'): VerseImage {
+  return new VerseImage(
+    new VerseImageId(),
+    verseId,
+    theme,
+    'url',
+  )
+}
+
+export function createDeclamation(
+  verseReference: VerseReference,
+  type: DeclamationType='verse'
+): Declamation {
+  return new Declamation(
+    new DeclamationId(),
+    verseReference,
+    type,
+    'default',
+    'url',
+    []
+  )
 }
 
 export function createReviewCard(
@@ -36,6 +60,8 @@ export function createReviewCard(
 export function createApplication() {
   return new Application(new Repositories(
     new InMemoryRepository<Verse>(),
+    new InMemoryRepository<VerseImage>(),
+    new InMemoryRepository<Declamation>(),
     new SyncRepository(new InMemoryRepository<VerseStatus>()),
     new SyncRepository(new InMemoryRepository<InboxCard>()),
     new SyncRepository(new InMemoryRepository<ReviewCard>())
