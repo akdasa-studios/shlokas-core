@@ -1,7 +1,7 @@
 import { InMemoryRepository } from '@akdasa-studios/framework'
 import { SyncRepository } from '@akdasa-studios/framework-sync'
 import { Application, Repositories } from '@lib/app/Application'
-import { InboxCard, ReviewCard, Verse, VerseStatus } from '@lib/models'
+import { InboxCard, ReviewCard, Verse, VerseStatus, Declamation, VerseImage } from '@lib/models'
 
 
 export class Context {
@@ -11,6 +11,8 @@ export class Context {
   constructor() {
     this._repositories = new Repositories(
       new InMemoryRepository<Verse>(),
+      new InMemoryRepository<VerseImage>(),
+      new InMemoryRepository<Declamation>(),
       new SyncRepository(new InMemoryRepository<VerseStatus>()),
       new SyncRepository(new InMemoryRepository<InboxCard>()),
       new SyncRepository(new InMemoryRepository<ReviewCard>())

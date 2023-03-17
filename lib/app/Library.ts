@@ -1,7 +1,9 @@
+import { VerseReference } from './../models/verse/VerseReference'
 import { Query, Repository } from '@akdasa-studios/framework'
 import {
   Language, NoStatus, Verse, VerseId, VerseNumber, VerseQueries,
-  VerseStatus, VerseStatusQueries
+  VerseStatus, VerseStatusQueries, VerseImage, Declamation, VerseImageQueries,
+  DeclamationQueries
 } from '@lib/models'
 
 /**
@@ -10,6 +12,8 @@ import {
 export class Library {
   private _verses: Repository<Verse>
   private _statuses: Repository<VerseStatus>
+  private _images: Repository<VerseImage>
+  private _declamations: Repository<Declamation>
 
   /**
    * Initialize a new instance of Library class with the given parameters.
@@ -18,10 +22,14 @@ export class Library {
    */
   constructor(
     verses: Repository<Verse>,
-    verseStatuses: Repository<VerseStatus>
+    verseStatuses: Repository<VerseStatus>,
+    verseImages: Repository<VerseImage>,
+    declamations: Repository<Declamation>
   ) {
     this._verses = verses
     this._statuses = verseStatuses
+    this._images = verseImages
+    this._declamations = declamations
   }
 
   async find(query: Query<Verse>): Promise<readonly Verse[]> {
@@ -100,5 +108,18 @@ export class Library {
       result[vid.value] = verses.find(x => x.verseId.equals(vid)) || NoStatus
     }
     return result
+  }
+
+
+  /* -------------------------------------------------------------------------- */
+  /*                                    Media                                   */
+  /* -------------------------------------------------------------------------- */
+
+  async getImages(verseId: VerseId): Promise<readonly VerseImage[]> {
+    return await this._images.find(VerseImageQueries.verseId(verseId))
+  }
+
+  async getDeclamations(verseReference: VerseReference): Promise<readonly Declamation[]> {
+    return await this._declamations.find(DeclamationQueries.verseReference(verseReference))
   }
 }
