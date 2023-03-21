@@ -15,5 +15,3 @@ export class Text extends Value<'Text'> {
     if (lines.some((line) => !line)) { throw new Error('lines must not contain empty values') }
   }
 }
-
-export const NoText = new Text(['No Text', 'No Text'])

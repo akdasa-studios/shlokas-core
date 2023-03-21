@@ -22,5 +22,3 @@ export class VerseNumber extends Value<'VerseNumber'> {
     return this.value
   }
 }
-
-export const UnknownVerseNumber = new VerseNumber('???')
