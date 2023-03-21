@@ -14,7 +14,7 @@ export class Verse extends Aggregate<VerseId> {
   constructor(
     id: VerseId,
     public readonly number: VerseNumber,
-    public readonly verseReference: string,
+    public readonly reference: string,
     public readonly language: Language,
     public readonly text: Text,
     public readonly translation: Translation,
