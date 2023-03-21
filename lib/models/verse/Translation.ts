@@ -15,5 +15,3 @@ export class Translation extends Value<'Translation'> {
     if (!text.trim()) { throw new Error('text must not be empty') }
   }
 }
-
-export const NoTranslation = new Translation('No Translation')

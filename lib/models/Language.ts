@@ -23,5 +23,3 @@ export class Language extends Value<'Language'> {
     return this.code === value.code
   }
 }
-
-export const UnknownLanguage = new Language('??', 'Unknown')

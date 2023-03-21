@@ -7,6 +7,7 @@ describe('Verse', () => {
       expect(new Verse(
         new VerseId(),
         new VerseNumber('BG 1.1'),
+        'BG 1.1',
         new Language('EN', 'English'),
         new Text([
           'dehino `smin yathā dehe',

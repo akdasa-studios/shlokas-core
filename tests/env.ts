@@ -4,9 +4,11 @@ import { Application, Repositories } from '@lib/app/Application'
 import {
   InboxCard, Language,
   ReviewCard, ReviewCardBuilder, ReviewCardType, Verse,
-  VerseBuilder, VerseId, VerseImage, VerseImageId, VerseNumber,
-  VerseStatus, Declamation, DeclamationId, VerseReference, DeclamationType
+  VerseId, VerseImage, VerseImageId, VerseNumber,
+  VerseStatus, Declamation, DeclamationId, VerseReference,
+  DeclamationType, Translation, Text
 } from '@lib/models'
+import * as getUuid from 'uuid-by-string'
 
 
 
@@ -15,11 +17,15 @@ export function createVerseNumber(verseNumberStr: string): VerseNumber {
 }
 
 export function createVerse(verseNumberStr: string, lang = 'en'): Verse {
-  const verseNumber = createVerseNumber(verseNumberStr)
-  return new VerseBuilder()
-    .withNumber(verseNumber)
-    .ofLanguage(new Language(lang, lang))
-    .build().value
+  return new Verse(
+    new VerseId(getUuid(verseNumberStr)),
+    createVerseNumber(verseNumberStr),
+    verseNumberStr,
+    new Language(lang, lang),
+    new Text(['text']),
+    new Translation('translation'),
+    []
+  )
 }
 
 export function createVerseImage(verseId: VerseId, theme='default'): VerseImage {
