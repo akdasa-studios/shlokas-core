@@ -10,6 +10,7 @@ export class Synonym extends Value<'Synonym'> {
   constructor (
     public readonly word: string,
     public readonly translation: string,
+    public readonly lineNumber?: number
   ) {
     super()
     if (!word) { throw new Error('word is required') }
