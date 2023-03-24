@@ -26,6 +26,7 @@ export class ReviewDeck extends Deck<ReviewCard> {
   }
 
   async dueToCards(date: Date): Promise<readonly ReviewCard[]> {
-    return (await this.findCards(dueTo(date)))
+    const cards = await this.findCards(dueTo(date))
+    return cards.slice().sort((x, y) => x.addedAt.getTime() - y.addedAt.getTime())
   }
 }

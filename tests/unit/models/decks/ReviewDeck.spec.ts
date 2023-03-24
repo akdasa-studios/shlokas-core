@@ -120,6 +120,17 @@ describe('ReviewDeck', () => {
       expect(dueToCards).toEqual([card1, card2])
     })
 
+    it('returns sorted by addedAt field', async () => {
+      const card1 = b.ofVerse(new VerseId()).addedAt(new Date(2020, 1, 1, 1, 1, 1, 1)).dueTo(new Date(2020, 1, 2)).build()
+      const card2 = b.ofVerse(new VerseId()).addedAt(new Date(2020, 1, 1, 2, 2, 2, 2)).dueTo(new Date(2020, 1, 2)).build()
+      const card3 = b.ofVerse(new VerseId()).addedAt(new Date(2020, 1, 1, 3, 3, 3, 3)).dueTo(new Date(2020, 1, 2)).build()
+      await deck.addCard(card3)
+      await deck.addCard(card1)
+      await deck.addCard(card2)
+      const dueToCards = await deck.dueToCards(new Date(2020, 1, 2))
+      expect(dueToCards).toEqual([card1, card2, card3])
+    })
+
     it('does not return cards if there is no due to cards', async () => {
       const card1 = b.dueTo(new Date(2020, 1, 1)).build()
       const card2 = b.dueTo(new Date(2020, 1, 2)).build()
