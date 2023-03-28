@@ -45,7 +45,7 @@ export class InboxCardMemorized implements
       .dueTo(context.timeMachine.now)
 
     for (const cardTypeToCreate of this._addedCardTypes) {
-      let lastDate = new Date(context.timeMachine.now)
+      let lastDate = nextDaysFrom(context.timeMachine.now, 1)
       const { ofVerse } = ReviewCardQueries
       const anyCards = await context.reviewDeck
         .findCards(ofVerse(this.inboxCard.verseId))
@@ -85,4 +85,11 @@ export class InboxCardMemorized implements
       }
     }
   }
+}
+
+
+function nextDaysFrom(date: Date, days: number) {
+  const result = new Date(date)
+  result.setDate(result.getDate()+days)
+  return result
 }
