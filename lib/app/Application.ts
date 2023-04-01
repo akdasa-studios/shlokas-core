@@ -1,4 +1,4 @@
-import { AnyResult, Command, Processor, ProcessorResult, Result, Transaction, Event } from '@akdasa-studios/framework'
+import { AnyResult, Command, Processor, Transaction, Event, AnyCommand } from '@akdasa-studios/framework'
 import { SyncService } from '@akdasa-studios/framework-sync'
 import { TimeMachine } from '@lib/app'
 import { InboxDeck, ReviewDeck } from '@lib/models'
@@ -10,6 +10,8 @@ import { InboxCardConflictSolver, ReviewCardConflictSolver, VerseStatusConflictS
 export class Application {
   private _context: Context
   public readonly contextChanged = new Event<Context>()
+  public readonly commandExecuted = new Event<Command<Context, AnyResult>>()
+  public readonly commandReverted = new Event<Command<Context, AnyResult>>()
 
   /**
    * Initializes a new instance of Application class.
@@ -56,12 +58,18 @@ export class Application {
     return this._context.library
   }
 
-  async execute<T extends AnyResult>(command: Command<Context, T>, transaction?: Transaction): Promise<ProcessorResult<T>> {
-    return await this._context.processor.execute(command, transaction)
+  async execute<T extends AnyResult>(command: Command<Context, T>, transaction?: Transaction): Promise<T> {
+    const res = await this._context.processor.execute(command, transaction)
+    this.commandExecuted.notify(command)
+    return res
   }
 
-  async revert(): Promise<ProcessorResult<Result<void, string>>> {
-    return await this._context.processor.revert()
+  async revert(): Promise<readonly AnyCommand[]> {
+    const revertedCommands = await this._context.processor.revert()
+    for (const command of revertedCommands) {
+      this.commandReverted.notify(command)
+    }
+    return revertedCommands
   }
 
   get repositories(): Repositories {

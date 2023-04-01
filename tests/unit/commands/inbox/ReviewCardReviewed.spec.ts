@@ -37,7 +37,7 @@ describe('ReviewCardReviewed', () => {
       const command = new ReviewCardReviewed(reviewCard, ReviewGrade.Good)
       const result = await app.execute(command)
 
-      expect(result.commandResult.isSuccess).toBe(true)
+      expect(result.isSuccess).toBe(true)
       expect(reviewCard.interval).not.toEqual(0)
       expect(reviewCard.dueTo.getTime()).toBeGreaterThan(now.getTime())
     })
