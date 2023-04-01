@@ -11,16 +11,16 @@ describe('RemoveVerseFromInboxDeck', () => {
   /*                                   Context                                  */
   /* -------------------------------------------------------------------------- */
 
-  let context: Application
+  let app: Application
   let verse1Id: VerseId
   let verse2Id: VerseId
 
   beforeEach(async () => {
-    context = createApplication()
+    app = createApplication()
     verse1Id = new VerseId()
     verse2Id = new VerseId()
-    await context.inboxDeck.addVerse(verse1Id)
-    await context.inboxDeck.addVerse(verse2Id)
+    await app.inboxDeck.addVerse(verse1Id)
+    await app.inboxDeck.addVerse(verse2Id)
   })
 
 
@@ -31,16 +31,16 @@ describe('RemoveVerseFromInboxDeck', () => {
   describe('.execute', () => {
     it('removes translation and text cards from the inbox deck', async () => {
       const command = new RemoveVerseFromInboxDeck(verse2Id)
-      const result = await command.execute(context)
+      const result = await app.execute(command)
 
-      expect(result.isSuccess).toBe(true)
-      expect(result.value).toHaveLength(2)
-      expect(result.value.map(x => x.type)).toEqual([
+      expect(result.commandResult.isSuccess).toBe(true)
+      expect(result.commandResult.value).toHaveLength(2)
+      expect(result.commandResult.value.map(x => x.type)).toEqual([
         InboxCardType.Translation,
         InboxCardType.Text
       ])
 
-      const allCards = await context.inboxDeck.cards()
+      const allCards = await app.inboxDeck.cards()
       expect(allCards).toHaveLength(2)
       expect(allCards.map(x => x.verseId)).toEqual([
         verse1Id, verse1Id
@@ -56,10 +56,10 @@ describe('RemoveVerseFromInboxDeck', () => {
   describe('.revert', () => {
     it('removes added cards', async () => {
       const command = new RemoveVerseFromInboxDeck(verse1Id)
-      await command.execute(context)
-      await command.revert(context)
+      await app.execute(command)
+      await app.revert()
 
-      expect(await context.inboxDeck.cards()).toHaveLength(4)
+      expect(await app.inboxDeck.cards()).toHaveLength(4)
     })
   })
 })

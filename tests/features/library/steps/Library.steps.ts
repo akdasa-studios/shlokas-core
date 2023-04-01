@@ -1,4 +1,4 @@
-import { Text, Translation, Verse, VerseId, VerseNumber } from '@lib/models'
+import { Language, Text, Translation, Verse, VerseId, VerseNumber } from '@lib/models'
 import { StepDefinitions } from 'jest-cucumber'
 import { contexts } from '@tests/features/context'
 import * as getUuid from 'uuid-by-string'
@@ -23,7 +23,7 @@ export const librarySteps: StepDefinitions = ({ given }) => {
         new VerseId(getUuid(verseListLine['Verse Number'])),
         new VerseNumber(verseListLine['Verse Number']),
         verseListLine['Verse Number'],
-        contexts.$.settings.language,
+        new Language('en', 'en'),
         new Text([verseListLine['Text']]),
         new Translation(verseListLine['Translation']),
         []

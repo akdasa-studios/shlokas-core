@@ -1,7 +1,7 @@
 import * as dayjs from 'dayjs'
 
 
-export class TimeController {
+export class TimeMachine {
   private _now: Date | undefined
 
   get now(): Date {
@@ -20,5 +20,3 @@ export class TimeController {
     this._now = to
   }
 }
-
-export const TimeMachine = new TimeController()

@@ -1,10 +1,10 @@
 import { Command, Result } from '@akdasa-studios/framework'
-import { Application } from '@lib/app/Application'
+import { Context } from '@lib/app/Context'
 import { ReviewCard, ReviewGrade } from '@lib/models'
 
 
 export class ReviewCardReviewed implements
-  Command<Application, Result<void, string>>
+  Command<Context, Result<void, string>>
 {
   private _prevDueTo: Date
   private _prevInterval = 0
@@ -17,19 +17,19 @@ export class ReviewCardReviewed implements
     public readonly grade: ReviewGrade
   ) { }
 
-  async execute(context: Application): Promise<Result<void, string>> {
+  async execute(context: Context): Promise<Result<void, string>> {
     this._prevDueTo = this.reviewCard.dueTo
     this._prevInterval = this.reviewCard.interval
     this._prevEase = this.reviewCard.ease
     this._prevLapses = this.reviewCard.lapses
     this._prevDifficultyChangedAt = this.reviewCard.difficultyChangedAt
 
-    this.reviewCard.review(this.grade)
+    this.reviewCard.review(this.grade, context.timeMachine)
     await context.repositories.reviewCards.save(this.reviewCard)
     return Result.ok()
   }
 
-  async revert(context: Application): Promise<void> {
+  async revert(context: Context): Promise<void> {
     this.reviewCard.setStats(
       this._prevDueTo,
       this._prevInterval,

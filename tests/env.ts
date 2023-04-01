@@ -1,6 +1,8 @@
 import { InMemoryRepository } from '@akdasa-studios/framework'
 import { SyncRepository } from '@akdasa-studios/framework-sync'
-import { Application, Repositories } from '@lib/app/Application'
+import { Application } from '@lib/app/Application'
+import { Context, Repositories } from '@lib/app/Context'
+import { TimeMachine } from '@lib/app/TimeMachine'
 import {
   InboxCard, Language,
   ReviewCard, ReviewCardBuilder, ReviewCardType, Verse,
@@ -64,12 +66,22 @@ export function createReviewCard(
 }
 
 export function createApplication() {
-  return new Application(new Repositories(
-    new InMemoryRepository<Verse>(),
-    new InMemoryRepository<VerseImage>(),
-    new InMemoryRepository<Declamation>(),
-    new SyncRepository(new InMemoryRepository<VerseStatus>()),
-    new SyncRepository(new InMemoryRepository<InboxCard>()),
-    new SyncRepository(new InMemoryRepository<ReviewCard>())
-  ))
+  return new Application(
+    createContext('test')
+  )
+}
+
+export function createContext(name: string) {
+  return new Context(
+    name,
+    new TimeMachine(),
+    new Repositories(
+      new InMemoryRepository<Verse>(),
+      new InMemoryRepository<VerseImage>(),
+      new InMemoryRepository<Declamation>(),
+      new SyncRepository(new InMemoryRepository<VerseStatus>()),
+      new SyncRepository(new InMemoryRepository<InboxCard>()),
+      new SyncRepository(new InMemoryRepository<ReviewCard>())
+    )
+  )
 }

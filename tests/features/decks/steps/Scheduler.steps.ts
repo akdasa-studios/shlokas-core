@@ -1,7 +1,7 @@
-import { TimeMachine } from '@lib/app/TimeMachine'
 import { ReviewCard, ReviewCardType, ReviewGrade } from '@lib/models'
 import { createReviewCard, createVerse } from '@tests/env'
 import { StepDefinitions } from 'jest-cucumber'
+import { contexts } from '@tests/features/context'
 
 
 export const schedulerSteps: StepDefinitions = ({ given, when, then }) => {
@@ -25,7 +25,7 @@ export const schedulerSteps: StepDefinitions = ({ given, when, then }) => {
   /* -------------------------------------------------------------------------- */
 
   when(/^I review it with garde "(.*)"$/, (grade: string) => {
-    card.review(ReviewGrade[grade])
+    card.review(ReviewGrade[grade], contexts.$.timeMachine)
   })
 
   /* -------------------------------------------------------------------------- */
@@ -59,9 +59,9 @@ export const schedulerSteps: StepDefinitions = ({ given, when, then }) => {
 
   then('My review table is as follows:', (table) => {
     for (const row of table) {
-      TimeMachine.set(new Date(row['Date']))
+      contexts.$.timeMachine.set(new Date(row['Date']))
 
-      card.review(ReviewGrade[row['Grade'] as string])
+      card.review(ReviewGrade[row['Grade'] as string], contexts.$.timeMachine)
       expect(card.lapses).toEqual(parseInt(row['Lapses']))
       expect(card.ease).toEqual(parseInt(row['Ease']))
       expect(card.interval).toEqual(parseInt(row['Interval']))
