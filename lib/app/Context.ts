@@ -1,7 +1,7 @@
 import { Library } from './Library'
 import { Repository, Processor} from '@akdasa-studios/framework'
 import { SyncRepository } from '@akdasa-studios/framework-sync'
-import { TimeMachine } from '@lib/app/TimeMachine'
+import { TimeMachine } from '@lib/app'
 import { Declamation, InboxCard, InboxDeck, ReviewCard, ReviewDeck, Verse, VerseImage, VerseStatus } from '@lib/models'
 
 

@@ -1,7 +1,6 @@
 import { Command, Result } from '@akdasa-studios/framework'
-import { Context } from '@lib/app/Context'
-import { VerseId } from '@lib/models'
-import { InboxCard } from '@lib/models/cards'
+import { Context } from '@lib/app'
+import { InboxCard, VerseId } from '@lib/models'
 
 
 export class AddVerseToInboxDeck implements

@@ -1,6 +1,6 @@
 import { AnyResult, Command, Processor, ProcessorResult, Result, Transaction, Event } from '@akdasa-studios/framework'
 import { SyncService } from '@akdasa-studios/framework-sync'
-import { TimeMachine } from '@lib/app/TimeMachine'
+import { TimeMachine } from '@lib/app'
 import { InboxDeck, ReviewDeck } from '@lib/models'
 import { Context, Repositories } from './Context'
 import { Library } from './Library'

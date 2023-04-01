@@ -1,5 +1,5 @@
 import { Scheduler } from '@lib/app/Scheduler'
-import { TimeMachine } from '@lib/app/TimeMachine'
+import { TimeMachine } from '@lib/app'
 import { ReviewGrade, VerseId } from '@lib/models'
 import { Card, CardId } from './Card'
 import * as getUuidByString from 'uuid-by-string'

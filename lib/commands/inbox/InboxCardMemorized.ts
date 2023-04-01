@@ -1,6 +1,6 @@
 import { Command, Result } from '@akdasa-studios/framework'
-import { Context } from '@lib/app/Context'
-import { InboxCard, InboxCardType, ReviewCardBuilder, ReviewCardQueries, ReviewCardType } from '@lib/models/cards'
+import { Context } from '@lib/app'
+import { InboxCard, InboxCardType, ReviewCardBuilder, ReviewCardQueries, ReviewCardType } from '@lib/models'
 
 
 export class InboxCardMemorized implements

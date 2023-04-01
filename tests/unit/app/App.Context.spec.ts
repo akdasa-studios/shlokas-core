@@ -1,5 +1,5 @@
 import { Application } from '@lib/app/Application'
-import { Context } from '@lib/app/Context'
+import { Context } from '@lib/app'
 import { createApplication, createContext } from '@tests/env'
 
 

@@ -1,9 +1,8 @@
 import { InMemoryRepository } from '@akdasa-studios/framework'
 import { SyncRepository } from '@akdasa-studios/framework-sync'
+import { Context, Repositories, TimeMachine } from '@lib/app'
 import { Application } from '@lib/app/Application'
-import { Context, Repositories } from '@lib/app/Context'
-import { TimeMachine } from '@lib/app/TimeMachine'
-import { InboxCard, ReviewCard, Verse, VerseStatus, Declamation, VerseImage, Language } from '@lib/models'
+import { Declamation, InboxCard, Language, ReviewCard, Verse, VerseImage, VerseStatus } from '@lib/models'
 
 
 export class TestContext {

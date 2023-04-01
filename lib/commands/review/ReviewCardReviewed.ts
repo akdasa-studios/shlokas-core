@@ -1,5 +1,5 @@
 import { Command, Result } from '@akdasa-studios/framework'
-import { Context } from '@lib/app/Context'
+import { Context } from '@lib/app'
 import { ReviewCard, ReviewGrade } from '@lib/models'
 
 

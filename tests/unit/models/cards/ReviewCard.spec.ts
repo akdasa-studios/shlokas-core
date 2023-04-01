@@ -1,4 +1,4 @@
-import { TimeMachine } from '@lib/app/TimeMachine'
+import { TimeMachine } from '@lib/app'
 import { ReviewCard, ReviewCardType, ReviewGrade } from '@lib/models'
 import { createReviewCard, createVerse } from '@tests/env'
 

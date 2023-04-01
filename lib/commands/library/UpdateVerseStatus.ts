@@ -1,5 +1,5 @@
 import { Command, Result } from '@akdasa-studios/framework'
-import { Context } from '@lib/app/Context'
+import { Context } from '@lib/app'
 import { Decks, VerseId, VerseStatus } from '@lib/models'
 import * as InboxCardQueries from '@lib/models/cards/queries/InboxCard'
 import * as ReviewCardQueries from '@lib/models/cards/queries/ReviewCard'
