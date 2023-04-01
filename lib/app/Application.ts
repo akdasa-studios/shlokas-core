@@ -1,100 +1,92 @@
-import { Processor, Repository } from '@akdasa-studios/framework'
-import { SyncRepository, SyncService } from '@akdasa-studios/framework-sync'
-import { TimeController, TimeMachine } from '@lib/app/TimeMachine'
-import { Declamation, InboxCard, InboxDeck, ReviewCard, ReviewDeck, Verse, VerseImage, VerseStatus } from '@lib/models'
+import { AnyResult, Command, Processor, ProcessorResult, Result, Transaction, Event } from '@akdasa-studios/framework'
+import { SyncService } from '@akdasa-studios/framework-sync'
+import { TimeMachine } from '@lib/app'
+import { InboxDeck, ReviewDeck } from '@lib/models'
+import { Context, Repositories } from './Context'
 import { Library } from './Library'
-import { Settings } from './Settings'
 import { InboxCardConflictSolver, ReviewCardConflictSolver, VerseStatusConflictSolver } from './sync'
 
-export class Repositories {
-  constructor(
-    public readonly verses: Repository<Verse>,
-    public readonly verseImages: Repository<VerseImage>,
-    public readonly declamations: Repository<Declamation>,
-    public readonly verseStatuses: SyncRepository<VerseStatus>,
-    public readonly inboxCards: SyncRepository<InboxCard>,
-    public readonly reviewCards: SyncRepository<ReviewCard>
-  ) {}
-}
 
 export class Application {
-  private _inboxDeck: InboxDeck
-  private _reviewDeck: ReviewDeck
-  private _processor = new Processor<Application>(this)
-  private _library: Library
-  private _settings = new Settings()
+  private _context: Context
+  public readonly contextChanged = new Event<Context>()
 
   /**
    * Initializes a new instance of Application class.
-   * @param versesRepository Repository of verses
    */
   constructor(
-    public readonly repositories: Repositories
+    context: Context
   ) {
-    this._library = new Library(
-      repositories.verses,
-      repositories.verseStatuses,
-      repositories.verseImages,
-      repositories.declamations
-    )
-    this._inboxDeck = new InboxDeck(repositories.inboxCards)
-    this._reviewDeck = new ReviewDeck(repositories.reviewCards)
+    this._context = context
   }
 
-  get timeMachine() : TimeController {
-    return TimeMachine
+  get timeMachine(): TimeMachine {
+    return this._context.timeMachine
   }
 
   /**
    * Returns the processor.
    * @returns Processor
    */
-  get processor() : Processor<Application> {
-    return this._processor
+  get processor(): Processor<Context> {
+    return this._context.processor
   }
 
   /**
    * Returns the inbox deck.
    * @returns Inbox deck
    */
-  get inboxDeck() : InboxDeck {
-    return this._inboxDeck
+  get inboxDeck(): InboxDeck {
+    return this._context.inboxDeck
   }
 
   /**
    * Returns the review deck.
    * @returns Review deck
    */
-  get reviewDeck() : ReviewDeck {
-    return this._reviewDeck
+  get reviewDeck(): ReviewDeck {
+    return this._context.reviewDeck
   }
 
   /**
    * Returns the verses library.
    * @returns Verses library
    */
-  get library() : Library {
-    return this._library
+  get library(): Library {
+    return this._context.library
   }
 
-  /**
-   * Returns the settings.
-   * @returns Settings
-   */
-  get settings() : Settings {
-    return this._settings
+  async execute<T extends AnyResult>(command: Command<Context, T>, transaction?: Transaction): Promise<ProcessorResult<T>> {
+    return await this._context.processor.execute(command, transaction)
+  }
+
+  async revert(): Promise<ProcessorResult<Result<void, string>>> {
+    return await this._context.processor.revert()
+  }
+
+  get repositories(): Repositories {
+    return this._context.repositories
+  }
+
+  get context(): Context {
+    return this._context
+  }
+
+  changeContext(context: Context) {
+    this._context = context
+    this.contextChanged.notify(context)
   }
 
   /**
    * Syncs the application with remote repositories.
-   * @param remoteReposiories Remote repositories to sync with
+   * @param context Remote repositories to sync with
    */
-  async sync(remoteReposiories: Repositories) {
+  async sync(context: Context) {
     await new SyncService(new InboxCardConflictSolver())
-      .sync(this.repositories.inboxCards, remoteReposiories.inboxCards)
+      .sync(this._context.repositories.inboxCards, context.repositories.inboxCards)
     await new SyncService(new ReviewCardConflictSolver())
-      .sync(this.repositories.reviewCards, remoteReposiories.reviewCards)
+      .sync(this._context.repositories.reviewCards, context.repositories.reviewCards)
     await new SyncService(new VerseStatusConflictSolver())
-      .sync(this.repositories.verseStatuses, remoteReposiories.verseStatuses)
+      .sync(this._context.repositories.verseStatuses, context.repositories.verseStatuses)
   }
 }

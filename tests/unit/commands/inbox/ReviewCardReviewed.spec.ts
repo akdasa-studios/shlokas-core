@@ -12,19 +12,19 @@ describe('ReviewCardReviewed', () => {
   /*                                   Context                                  */
   /* -------------------------------------------------------------------------- */
 
-  let context: Application
+  let app: Application
   let reviewCard: ReviewCard
   let now: Date
 
   beforeEach(async () => {
     now = new Date()
-    context = createApplication()
+    app = createApplication()
     reviewCard = new ReviewCard(
       new VerseId(),
       ReviewCardType.NumberToText,
       new Date(now), new Date(now)
     )
-    await context.reviewDeck.addCard(reviewCard)
+    await app.reviewDeck.addCard(reviewCard)
   })
 
 
@@ -35,9 +35,9 @@ describe('ReviewCardReviewed', () => {
   describe('.execute', () => {
     it('changes stats of a card', async () => {
       const command = new ReviewCardReviewed(reviewCard, ReviewGrade.Good)
-      const result = await command.execute(context)
+      const result = await app.execute(command)
 
-      expect(result.isSuccess).toBe(true)
+      expect(result.commandResult.isSuccess).toBe(true)
       expect(reviewCard.interval).not.toEqual(0)
       expect(reviewCard.dueTo.getTime()).toBeGreaterThan(now.getTime())
     })
@@ -51,8 +51,8 @@ describe('ReviewCardReviewed', () => {
   describe('.revert', () => {
     it('restores status of a card', async () => {
       const command = new ReviewCardReviewed(reviewCard, ReviewGrade.Good)
-      await command.execute(context)
-      await command.revert(context)
+      await app.execute(command)
+      await app.revert()
 
       expect(reviewCard.interval).toEqual(0)
       expect(reviewCard.interval).toEqual(0)

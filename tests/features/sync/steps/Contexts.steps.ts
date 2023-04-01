@@ -31,6 +31,6 @@ export const contextSteps: StepDefinitions = ({ given, when }) => {
     {
       const app1 = getContext(source).app
       const app2 = getContext(target).app
-      await app1.sync(app2.repositories)
+      await app1.sync(app2.context)
     })
 }

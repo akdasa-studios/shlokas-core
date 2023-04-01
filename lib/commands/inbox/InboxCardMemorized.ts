@@ -1,17 +1,17 @@
 import { Command, Result } from '@akdasa-studios/framework'
-import { Application } from '@lib/app/Application'
-import { InboxCard, InboxCardType, ReviewCardBuilder, ReviewCardQueries, ReviewCardType } from '@lib/models/cards'
+import { Context } from '@lib/app'
+import { InboxCard, InboxCardType, ReviewCardBuilder, ReviewCardQueries, ReviewCardType } from '@lib/models'
 
 
 export class InboxCardMemorized implements
-  Command<Application, Result<void, string>>
+  Command<Context, Result<void, string>>
 {
   private _addedCardTypes: ReviewCardType[] = []
 
   constructor(public readonly inboxCard: InboxCard) {
   }
 
-  async execute(context: Application): Promise<Result<void, string>> {
+  async execute(context: Context): Promise<Result<void, string>> {
     const { ofVerse } = ReviewCardQueries
     const hasCardsOfThisVerse = (
       await context.reviewDeck.findCards(ofVerse(this.inboxCard.verseId))
@@ -68,7 +68,7 @@ export class InboxCardMemorized implements
     return Result.ok()
   }
 
-  async revert(context: Application): Promise<void> {
+  async revert(context: Context): Promise<void> {
     // TODO: doesn't restore to the same position
     const { ofVerse, ofType } = ReviewCardQueries
     this.inboxCard.forget()

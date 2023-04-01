@@ -1,10 +1,11 @@
 import { InMemoryRepository } from '@akdasa-studios/framework'
 import { SyncRepository } from '@akdasa-studios/framework-sync'
-import { Application, Repositories } from '@lib/app/Application'
-import { InboxCard, ReviewCard, Verse, VerseStatus, Declamation, VerseImage } from '@lib/models'
+import { Context, Repositories, TimeMachine } from '@lib/app'
+import { Application } from '@lib/app/Application'
+import { Declamation, InboxCard, Language, ReviewCard, Verse, VerseImage, VerseStatus } from '@lib/models'
 
 
-export class Context {
+export class TestContext {
   private _repositories: Repositories
   private _app: Application
 
@@ -17,7 +18,9 @@ export class Context {
       new SyncRepository(new InMemoryRepository<InboxCard>()),
       new SyncRepository(new InMemoryRepository<ReviewCard>())
     )
-    this._app = new Application(this._repositories)
+    this._app = new Application(
+      new Context('test', new TimeMachine(), this._repositories)
+    )
   }
 
   get app() : Application {
@@ -27,24 +30,23 @@ export class Context {
   get processor() { return this._app.processor }
   get timeMachine() { return this._app.timeMachine }
   get library() { return this._app.library }
-  get settings() { return this._app.settings }
   get inboxDeck() { return this._app.inboxDeck }
   get reviewDeck() { return this._app.reviewDeck }
 
   async findVerse(verseNumber: string) {
-    const verse = await this._app.library.getByNumber(this._app.settings.language, verseNumber)
+    const verse = await this._app.library.getByNumber(new Language('en', 'en'), verseNumber)
     if (!verse) { throw new Error('Not found') }
     return verse
   }
 }
 
 export class ContextManagement {
-  private _contexts: { [key: string]: Context } = {}
+  private _contexts: { [key: string]: TestContext } = {}
   private _active = 'default'
 
-  getContext(name: string) : Context {
+  getContext(name: string) : TestContext {
     if (this._contexts[name] === undefined) {
-      this._contexts[name] = new Context()
+      this._contexts[name] = new TestContext()
     }
     return this._contexts[name]
   }
@@ -57,7 +59,7 @@ export class ContextManagement {
     return Object.keys(this._contexts)
   }
 
-  get $() : Context {
+  get $() : TestContext {
     return this.getContext(this._active)
   }
 }

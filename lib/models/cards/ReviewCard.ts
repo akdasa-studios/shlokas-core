@@ -1,5 +1,5 @@
 import { Scheduler } from '@lib/app/Scheduler'
-import { TimeMachine } from '@lib/app/TimeMachine'
+import { TimeMachine } from '@lib/app'
 import { ReviewGrade, VerseId } from '@lib/models'
 import { Card, CardId } from './Card'
 import * as getUuidByString from 'uuid-by-string'
@@ -78,15 +78,15 @@ export class ReviewCard extends Card {
     this._difficultyChangedAt = difficultyChangedAt
   }
 
-  review(grade: ReviewGrade) {
+  review(grade: ReviewGrade, timeMachine: TimeMachine) {
     // Decrease card difficulty
     const isCardDifficultyChangedToday = (
-      this._difficultyChangedAt?.getTime() === TimeMachine.today.getTime()
+      this._difficultyChangedAt?.getTime() === timeMachine.today.getTime()
     )
     if (grade === ReviewGrade.Forgot && !isCardDifficultyChangedToday) {
       this._lapses += 1
       this._ease = Math.max(this._ease - 20, 130)
-      this._difficultyChangedAt = TimeMachine.today
+      this._difficultyChangedAt = timeMachine.today
     }
 
     // Calculate new interval
@@ -96,8 +96,8 @@ export class ReviewCard extends Card {
 
     // Set new date
     this._dueTo = new Date(
-      TimeMachine.add(
-        TimeMachine.today, this._interval, 'm'
+      timeMachine.add(
+        timeMachine.today, this._interval, 'm'
       ).setHours(0,0,0,0)
     )
   }

@@ -6,12 +6,6 @@ import { contexts, getContext } from '@tests/features/context'
 
 export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
   const { ofVerse, ofType, dueTo, queryBuilder } = ReviewCardQueries
-  async function findVerse(verseNumber: string) {
-    const verse = await contexts.$.library.getByNumber(
-      contexts.$.settings.language, verseNumber
-    )
-    return verse
-  }
   function getReviewCardType(name: string): ReviewCardType {
     return ReviewCardType[name.replace(' -> ', 'To')]
   }
@@ -31,7 +25,7 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
   given('Review deck has the following cards:', async (cards) => {
     for (const cardLine of cards) {
-      const verse = await findVerse(cardLine['Verse'])
+      const verse = await contexts.$.findVerse(cardLine['Verse'])
       const card = new ReviewCardBuilder()
         .ofType(getReviewCardType(cardLine['Type']))
         .ofVerse(verse.id)
@@ -47,7 +41,7 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
 
   when(/^I review card "(.*)" "(.*)" with mark "(.*)"$/, async (_verse: string, _type: string, _mark: string) => {
     const type =  getReviewCardType(_type)
-    const verse = await findVerse(_verse)
+    const verse = await contexts.$.findVerse(_verse)
     const card = (await contexts.$.reviewDeck.findCards(ofVerse(verse.id), ofType(type)))[0]
     await contexts.$.processor.execute(new ReviewCardReviewed(card, getMark(_mark)))
   })
@@ -73,7 +67,7 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
       expect(await ctx.reviewDeck.cardsCount()).toEqual(cards.length)
 
       for (const card of cards) {
-        const verse = await findVerse(card['Verse Number'])
+        const verse = await contexts.$.findVerse(card['Verse Number'])
         const f = await ctx.reviewDeck.findCards(
           ofVerse(verse.id),
           ofType(getReviewCardType(card['Card Type']))
@@ -102,7 +96,7 @@ export const reviewDeckSteps: StepDefinitions = ({ given, when, then }) => {
     ).toEqual(cards.length)
 
     for (const card of cards) {
-      const verse = await findVerse(card['Verse'])
+      const verse = await contexts.$.findVerse(card['Verse'])
       const f = await contexts.$.reviewDeck.findCards(queryBuilder.and(
         ofVerse(verse.id),
         ofType(getReviewCardType(card['Type'])),

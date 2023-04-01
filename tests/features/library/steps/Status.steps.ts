@@ -1,3 +1,4 @@
+import { Language } from '@lib/models'
 import { getContext } from '@tests/features/context'
 import { StepDefinitions } from 'jest-cucumber'
 
@@ -17,7 +18,7 @@ export const libraryStatusSteps: StepDefinitions = ({ when }) => {
     async (verseNumber: string, status: string, device: string) =>
     {
       const ctx         = getContext(device)
-      const verse       = await ctx.library.getByNumber(ctx.settings.language, verseNumber)
+      const verse       = await ctx.library.getByNumber(new Language('en', 'en'), verseNumber)
       const verseStatus = await ctx.library.getStatus(verse.id)
       expect(verseStatus.inDeck).toEqual(status)
     })

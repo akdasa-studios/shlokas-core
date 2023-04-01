@@ -11,14 +11,14 @@ describe('InboxCardMemorized', () => {
   /*                                   Context                                  */
   /* -------------------------------------------------------------------------- */
 
-  let context: Application
+  let app: Application
   let verse1Id: VerseId
   let verse1InboxCards: readonly InboxCard[]
 
   beforeEach(async () => {
-    context = createApplication()
+    app = createApplication()
     verse1Id = new VerseId()
-    verse1InboxCards = await context.inboxDeck.addVerse(verse1Id)
+    verse1InboxCards = await app.inboxDeck.addVerse(verse1Id)
   })
 
 
@@ -29,21 +29,21 @@ describe('InboxCardMemorized', () => {
   describe('.execute', () => {
     it('removes memorized card from inbox deck', async () => {
       const command = new InboxCardMemorized(verse1InboxCards[0])
-      const result = await command.execute(context)
+      const result = await app.execute(command)
 
-      expect(result.isSuccess).toBe(true)
-      expect(await context.inboxDeck.cards()).toEqual([
+      expect(result.commandResult.isSuccess).toBe(true)
+      expect(await app.inboxDeck.cards()).toEqual([
         verse1InboxCards[1]
       ])
     })
 
     it('adds two cards to the review deck if only one card from inbox deck was memorized', async () => {
       const command = new InboxCardMemorized(verse1InboxCards[0])
-      const result = await command.execute(context)
+      const result = await app.execute(command)
 
-      expect(result.isSuccess).toBe(true)
-      expect(await context.reviewDeck.cards()).toHaveLength(2)
-      expect((await context.reviewDeck.cards()).map(c => c.type)).toEqual([
+      expect(result.commandResult.isSuccess).toBe(true)
+      expect(await app.reviewDeck.cards()).toHaveLength(2)
+      expect((await app.reviewDeck.cards()).map(c => c.type)).toEqual([
         ReviewCardType.NumberToTranslation,
         ReviewCardType.TranslationToNumber
       ])
@@ -52,9 +52,9 @@ describe('InboxCardMemorized', () => {
     it('adds six cards to the review deck if all cards from inbox deck were memorized', async () => {
       const command1 = new InboxCardMemorized(verse1InboxCards[0])
       const command2 = new InboxCardMemorized(verse1InboxCards[1])
-      await command1.execute(context)
-      await command2.execute(context)
-      expect(await context.reviewDeck.cards()).toHaveLength(6)
+      await app.execute(command1)
+      await app.execute(command2)
+      expect(await app.reviewDeck.cards()).toHaveLength(6)
     })
 
   })
@@ -67,10 +67,10 @@ describe('InboxCardMemorized', () => {
   describe('.revert', () => {
     it('adds removed card', async () => {
       const command = new InboxCardMemorized(verse1InboxCards[0])
-      await command.execute(context)
-      await command.revert(context)
+      await app.execute(command)
+      await app.revert()
 
-      expect(await context.inboxDeck.cards()).toEqual([
+      expect(await app.inboxDeck.cards()).toEqual([
         verse1InboxCards[0],
         verse1InboxCards[1],
       ])

@@ -1,12 +1,18 @@
 import { InMemoryRepository } from '@akdasa-studios/framework'
 import { SyncRepository } from '@akdasa-studios/framework-sync'
-import { Application, Repositories } from '@lib/app/Application'
+import { Context, Repositories, TimeMachine } from '@lib/app'
+import { Application } from '@lib/app/Application'
 import {
+  Declamation, DeclamationId,
+  DeclamationType,
   InboxCard, Language,
-  ReviewCard, ReviewCardBuilder, ReviewCardType, Verse,
+  ReviewCard, ReviewCardBuilder, ReviewCardType,
+  Text,
+  Translation,
+  Verse,
   VerseId, VerseImage, VerseImageId, VerseNumber,
-  VerseStatus, Declamation, DeclamationId, VerseReference,
-  DeclamationType, Translation, Text
+  VerseReference,
+  VerseStatus
 } from '@lib/models'
 import * as getUuid from 'uuid-by-string'
 
@@ -64,12 +70,22 @@ export function createReviewCard(
 }
 
 export function createApplication() {
-  return new Application(new Repositories(
-    new InMemoryRepository<Verse>(),
-    new InMemoryRepository<VerseImage>(),
-    new InMemoryRepository<Declamation>(),
-    new SyncRepository(new InMemoryRepository<VerseStatus>()),
-    new SyncRepository(new InMemoryRepository<InboxCard>()),
-    new SyncRepository(new InMemoryRepository<ReviewCard>())
-  ))
+  return new Application(
+    createContext('test')
+  )
+}
+
+export function createContext(name: string) {
+  return new Context(
+    name,
+    new TimeMachine(),
+    new Repositories(
+      new InMemoryRepository<Verse>(),
+      new InMemoryRepository<VerseImage>(),
+      new InMemoryRepository<Declamation>(),
+      new SyncRepository(new InMemoryRepository<VerseStatus>()),
+      new SyncRepository(new InMemoryRepository<InboxCard>()),
+      new SyncRepository(new InMemoryRepository<ReviewCard>())
+    )
+  )
 }

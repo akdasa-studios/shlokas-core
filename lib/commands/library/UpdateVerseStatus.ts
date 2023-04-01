@@ -1,12 +1,12 @@
 import { Command, Result } from '@akdasa-studios/framework'
-import { Application } from '@lib/app/Application'
+import { Context } from '@lib/app'
 import { Decks, VerseId, VerseStatus } from '@lib/models'
 import * as InboxCardQueries from '@lib/models/cards/queries/InboxCard'
 import * as ReviewCardQueries from '@lib/models/cards/queries/ReviewCard'
 
 
 export class UpdateVerseStatus implements
-  Command<Application, Result<VerseStatus, string>>
+  Command<Context, Result<VerseStatus, string>>
 {
   private _previousDeck: Decks = Decks.None
   private _status: VerseStatus
@@ -14,7 +14,7 @@ export class UpdateVerseStatus implements
   constructor(public readonly verseId: VerseId) {
   }
 
-  async execute(context: Application): Promise<Result<VerseStatus, string>> {
+  async execute(context: Context): Promise<Result<VerseStatus, string>> {
     const { ofVerse } = InboxCardQueries
     const { ofVerse: ofVerse2 } = ReviewCardQueries
     const inboxCards = await context.inboxDeck.findCards(ofVerse(this.verseId))
@@ -33,7 +33,7 @@ export class UpdateVerseStatus implements
     return Result.ok(this._status)
   }
 
-  async revert(context: Application): Promise<void> {
+  async revert(context: Context): Promise<void> {
     this._status.movedToDeck(this._previousDeck)
     await context.repositories.verseStatuses.save(this._status)
   }
