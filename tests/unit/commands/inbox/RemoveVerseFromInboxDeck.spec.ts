@@ -33,9 +33,9 @@ describe('RemoveVerseFromInboxDeck', () => {
       const command = new RemoveVerseFromInboxDeck(verse2Id)
       const result = await app.execute(command)
 
-      expect(result.commandResult.isSuccess).toBe(true)
-      expect(result.commandResult.value).toHaveLength(2)
-      expect(result.commandResult.value.map(x => x.type)).toEqual([
+      expect(result.isSuccess).toBe(true)
+      expect(result.value).toHaveLength(2)
+      expect(result.value.map(x => x.type)).toEqual([
         InboxCardType.Translation,
         InboxCardType.Text
       ])

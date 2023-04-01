@@ -31,7 +31,7 @@ describe('InboxCardMemorized', () => {
       const command = new InboxCardMemorized(verse1InboxCards[0])
       const result = await app.execute(command)
 
-      expect(result.commandResult.isSuccess).toBe(true)
+      expect(result.isSuccess).toBe(true)
       expect(await app.inboxDeck.cards()).toEqual([
         verse1InboxCards[1]
       ])
@@ -41,7 +41,7 @@ describe('InboxCardMemorized', () => {
       const command = new InboxCardMemorized(verse1InboxCards[0])
       const result = await app.execute(command)
 
-      expect(result.commandResult.isSuccess).toBe(true)
+      expect(result.isSuccess).toBe(true)
       expect(await app.reviewDeck.cards()).toHaveLength(2)
       expect((await app.reviewDeck.cards()).map(c => c.type)).toEqual([
         ReviewCardType.NumberToTranslation,
