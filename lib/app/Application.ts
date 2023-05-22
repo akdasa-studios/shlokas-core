@@ -1,5 +1,5 @@
-import { AnyResult, Command, Processor, Transaction, Event, AnyCommand } from '@akdasa-studios/framework'
-import { SyncService } from '@akdasa-studios/framework-sync'
+import { AnyCommand, AnyResult, Command, Event, Processor, Transaction } from '@akdasa-studios/framework'
+import { SyncOptions, SyncService } from '@akdasa-studios/framework-sync'
 import { TimeMachine } from '@lib/app'
 import { InboxDeck, ReviewDeck } from '@lib/models'
 import { Context, Repositories } from './Context'
@@ -88,13 +88,17 @@ export class Application {
   /**
    * Syncs the application with remote repositories.
    * @param context Remote repositories to sync with
+   * @param options Sync options
    */
-  async sync(context: Context) {
+  async sync(
+    context: Context,
+    options?: SyncOptions
+  ) {
     await new SyncService(new InboxCardConflictSolver())
-      .sync(this._context.repositories.inboxCards, context.repositories.inboxCards)
+      .sync(this._context.repositories.inboxCards, context.repositories.inboxCards, options)
     await new SyncService(new ReviewCardConflictSolver())
-      .sync(this._context.repositories.reviewCards, context.repositories.reviewCards)
+      .sync(this._context.repositories.reviewCards, context.repositories.reviewCards, options)
     await new SyncService(new VerseStatusConflictSolver())
-      .sync(this._context.repositories.verseStatuses, context.repositories.verseStatuses)
+      .sync(this._context.repositories.verseStatuses, context.repositories.verseStatuses, options)
   }
 }
