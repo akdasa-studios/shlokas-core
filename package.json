@@ -35,7 +35,7 @@
   "homepage": "https://github.com/akdasa-studios/shlokas-core#readme",
   "dependencies": {
     "@akdasa-studios/framework": "0.4.0",
-    "@akdasa-studios/framework-sync": "0.1.1",
+    "@akdasa-studios/framework-sync": "0.2.1",
     "dayjs": "^1.11.7"
   },
   "devDependencies": {
