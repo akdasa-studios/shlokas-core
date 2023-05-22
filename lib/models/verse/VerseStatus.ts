@@ -1,4 +1,4 @@
-import { HasVersion } from '@akdasa-studios/framework-sync'
+import { Syncable } from '@akdasa-studios/framework-sync'
 import { Aggregate, UuidIdentity } from '@akdasa-studios/framework'
 import { VerseId } from './Verse'
 
@@ -18,10 +18,11 @@ export enum Decks {
 /**
  * Verse status
  */
-export class VerseStatus extends Aggregate<VerseStatusId> implements HasVersion {
+export class VerseStatus extends Aggregate<VerseStatusId> implements Syncable {
   private readonly _verseId: VerseId
   private _deck: Decks = Decks.None
   public version: string
+  public syncedAt: number
 
   constructor(
     verseId: VerseId,
