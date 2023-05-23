@@ -49,10 +49,11 @@ export class Deck<TCardType extends Card> {
     ...query: Query<TCardType>[]
   ): Promise<readonly TCardType[]> {
     const qb = new QueryBuilder<TCardType>()
+    // TODO: query repository until all data is fetched
     const result = await this._cards.find(qb.and(
       this.activeCards,
       ...query
     ))
-    return result
+    return result.entities
   }
 }

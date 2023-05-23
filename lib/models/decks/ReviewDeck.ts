@@ -21,7 +21,7 @@ export class ReviewDeck extends Deck<ReviewCard> {
    * Returns the cards in the deck in the order they were added.
    */
   async cards(): Promise<readonly ReviewCard[]> {
-    const cards = await this._cards.all()
+    const cards = (await this._cards.all()).entities
     return cards.slice().sort((x, y) => x.addedAt.getTime() - y.addedAt.getTime())
   }
 

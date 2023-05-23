@@ -33,7 +33,8 @@ export class Library {
   }
 
   async find(query: Query<Verse>): Promise<readonly Verse[]> {
-    return await this._verses.find(query)
+    // TODO: pagination
+    return (await this._verses.find(query)).entities
   }
 
   /**
@@ -41,7 +42,8 @@ export class Library {
    * @returns List of all verses in the library
    */
   async all(lang: Language): Promise<readonly Verse[]> {
-    return await this._verses.find(VerseQueries.language(lang))
+    const result = await this._verses.find(VerseQueries.language(lang))
+    return result.entities
   }
 
   /**
@@ -65,15 +67,17 @@ export class Library {
       VerseQueries.number(verseNumber)
     )
     const result = await this._verses.find(query)
-    if (result.length === 0) { throw new Error(`Verse not found by ${lang.code} and ${verseNumber}`) }
-    return result[0]
+    if (result.entities.length === 0) { throw new Error(`Verse not found by ${lang.code} and ${verseNumber}`) }
+    return result.entities[0]
   }
 
   async findByContent(lang: Language, queryString: string): Promise<readonly Verse[]> {
-    return await this._verses.find(VerseQueries.queryBuilder.and(
+    const result = await this._verses.find(VerseQueries.queryBuilder.and(
       VerseQueries.language(lang),
       VerseQueries.content(queryString)
     ))
+    // TODO: pagination
+    return result.entities
   }
 
   /**
@@ -101,7 +105,7 @@ export class Library {
 
   async getStatuses(versesId: VerseId[]): Promise<{[verseId:VerseId['value']]: VerseStatus}> {
     const query = VerseStatusQueries.versesId(versesId)
-    const verses = await this._statuses.find(query)
+    const verses = (await this._statuses.find(query)).entities
 
     const result = {}
     for (const vid of versesId) {
@@ -116,10 +120,10 @@ export class Library {
   /* -------------------------------------------------------------------------- */
 
   async getImages(verseId: VerseId): Promise<readonly VerseImage[]> {
-    return await this._images.find(VerseImageQueries.verseId(verseId))
+    return (await this._images.find(VerseImageQueries.verseId(verseId))).entities
   }
 
   async getDeclamations(verseReference: VerseReference): Promise<readonly Declamation[]> {
-    return await this._declamations.find(DeclamationQueries.verseReference(verseReference))
+    return (await this._declamations.find(DeclamationQueries.verseReference(verseReference))).entities
   }
 }
