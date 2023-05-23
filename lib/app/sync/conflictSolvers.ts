@@ -12,7 +12,9 @@ export class InboxCardConflictSolver implements SyncConflictSolver<InboxCard> {
 
 export class ReviewCardConflictSolver implements SyncConflictSolver<ReviewCard> {
   solve(object1: ReviewCard, object2: ReviewCard): SyncAggregate<AnyIdentity> {
-    return object1.lapses > object2.lapses ? object1 : object2
+    return object1.lapses >= object2.lapses
+      ? (object1.dueTo.getTime() > object2.dueTo.getTime() ? object1 : object2)
+      : object2
   }
 }
 
