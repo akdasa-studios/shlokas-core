@@ -22,7 +22,7 @@ export class VerseStatus extends Aggregate<VerseStatusId> implements Syncable {
   private readonly _verseId: VerseId
   private _deck: Decks = Decks.None
   public version: string
-  public syncedAt: number
+  public modifiedAt: number
 
   constructor(
     verseId: VerseId,

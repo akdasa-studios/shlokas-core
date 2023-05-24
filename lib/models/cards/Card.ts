@@ -19,7 +19,7 @@ export abstract class Card extends Aggregate<CardId> implements Syncable {
   version: string
 
   /**
-   * Synced at
+   * Modified At
    */
-  syncedAt: number
+  modifiedAt: number
 }
