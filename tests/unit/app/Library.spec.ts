@@ -83,7 +83,30 @@ describe('Library', () => {
       const result = await library.getByNumber('BG 2.13', { lang: english })
       expect(result.number.value).toBe('BG 2.13')
     })
+
+    it('should return a failure if the verse is unpublished', async () => {
+      await library.addVerse(createVerse('BG 1.1', english.code, false))
+      const result = () => library.getByNumber('BG 1.1', { lang: english })
+
+      await expect(result).rejects.toThrowError('Verse not found by en and BG 1.1')
+    })
   })
+
+
+  /* -------------------------------------------------------------------------- */
+  /*                                findByContent                               */
+  /* -------------------------------------------------------------------------- */
+
+  describe('findByContent', () => {
+    it('should return a failure if the verse is unpublished', async () => {
+      const verse = createVerse('BG 1.1', english.code, false)
+      await library.addVerse(verse)
+      const result = await library.findByContent('BG 1.1')
+
+      expect(result).toEqual([])
+    })
+  })
+
 
   /* -------------------------------------------------------------------------- */
   /*                                    getById                                 */

@@ -22,7 +22,7 @@ export function createVerseNumber(verseNumberStr: string): VerseNumber {
   return new VerseNumber(verseNumberStr)
 }
 
-export function createVerse(verseNumberStr: string, lang = 'en'): Verse {
+export function createVerse(verseNumberStr: string, lang = 'en', published = true): Verse {
   const verse = new Verse(
     new VerseId(getUuid(verseNumberStr)),
     createVerseNumber(verseNumberStr),
@@ -32,7 +32,9 @@ export function createVerse(verseNumberStr: string, lang = 'en'): Verse {
     new Translation('translation'),
     []
   )
-  verse.publication.publish()
+  if (published) {
+    verse.publication.publish()
+  }
   return verse
 }
 
