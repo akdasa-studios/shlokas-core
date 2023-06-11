@@ -57,7 +57,7 @@ describe('Library', () => {
       const verseNumber = createVerseNumber('BG 1.1')
 
       await library.addVerse(verse)
-      const getVerse = await library.getByNumber(english, verseNumber)
+      const getVerse = await library.getByNumber(verseNumber, { lang: english })
 
       expect(getVerse.number.toString()).toEqual('BG 1.1')
     })
@@ -70,7 +70,7 @@ describe('Library', () => {
   describe('getByNumber', () => {
     it('should return a failure if the verse is not found', async () => {
       const verseNumber = createVerseNumber('BG 1.1')
-      const result = () => library.getByNumber(english, verseNumber)
+      const result = () => library.getByNumber(verseNumber, { lang: english })
 
       await expect(result).rejects.toThrowError('Verse not found by en and ' + verseNumber.value)
     })
@@ -80,7 +80,7 @@ describe('Library', () => {
       await library.addVerse(createVerse('BG 2.13'))
       await library.addVerse(createVerse('BG 2.20'))
 
-      const result = await library.getByNumber(english, 'BG 2.13')
+      const result = await library.getByNumber('BG 2.13', { lang: english })
       expect(result.number.value).toBe('BG 2.13')
     })
   })
