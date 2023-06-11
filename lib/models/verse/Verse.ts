@@ -1,5 +1,5 @@
 import { Aggregate, UuidIdentity } from '@akdasa-studios/framework'
-import { Language, Synonym, Text, Translation, VerseNumber } from '@lib/models'
+import { Language, Publication, Synonym, Text, Translation, VerseNumber } from '@lib/models'
 
 
 /**
@@ -11,6 +11,8 @@ export class VerseId extends UuidIdentity<'VerseId'> {}
  * Verse
  */
 export class Verse extends Aggregate<VerseId> {
+  public readonly publication = new Publication()
+
   constructor(
     id: VerseId,
     public readonly number: VerseNumber,

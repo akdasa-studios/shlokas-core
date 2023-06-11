@@ -57,7 +57,7 @@ describe('Library', () => {
       const verseNumber = createVerseNumber('BG 1.1')
 
       await library.addVerse(verse)
-      const getVerse = await library.getByNumber(english, verseNumber)
+      const getVerse = await library.getByNumber(verseNumber, { lang: english })
 
       expect(getVerse.number.toString()).toEqual('BG 1.1')
     })
@@ -70,7 +70,7 @@ describe('Library', () => {
   describe('getByNumber', () => {
     it('should return a failure if the verse is not found', async () => {
       const verseNumber = createVerseNumber('BG 1.1')
-      const result = () => library.getByNumber(english, verseNumber)
+      const result = () => library.getByNumber(verseNumber, { lang: english })
 
       await expect(result).rejects.toThrowError('Verse not found by en and ' + verseNumber.value)
     })
@@ -80,10 +80,42 @@ describe('Library', () => {
       await library.addVerse(createVerse('BG 2.13'))
       await library.addVerse(createVerse('BG 2.20'))
 
-      const result = await library.getByNumber(english, 'BG 2.13')
+      const result = await library.getByNumber('BG 2.13', { lang: english })
       expect(result.number.value).toBe('BG 2.13')
     })
+
+    it('should return a failure if the verse is unpublished', async () => {
+      await library.addVerse(createVerse('BG 1.1', english.code, false))
+      const result = () => library.getByNumber('BG 1.1', { lang: english })
+
+      await expect(result).rejects.toThrowError('Verse not found by en and BG 1.1')
+    })
   })
+
+
+  /* -------------------------------------------------------------------------- */
+  /*                                findByContent                               */
+  /* -------------------------------------------------------------------------- */
+
+  describe('findByContent', () => {
+    it('should return published verses only', async () => {
+      const verse1 = createVerse('BG 1.1', english.code, true)
+      const verse2 = createVerse('BG 1.2', english.code, false)
+      await library.addVerse(verse1)
+      await library.addVerse(verse2)
+      const result = await library.findByContent('BG')
+
+      expect(result).toEqual([verse1])
+    })
+    it('should retrun unpublished verses if asked', async () => {
+      const verse = createVerse('BG 1.1', english.code, false)
+      await library.addVerse(verse)
+      const result = await library.findByContent('BG 1.1', { unpublished: true })
+
+      expect(result).toEqual([verse])
+    })
+  })
+
 
   /* -------------------------------------------------------------------------- */
   /*                                    getById                                 */

@@ -6,6 +6,11 @@ import {
   DeclamationQueries
 } from '@lib/models'
 
+export interface SearchOptions {
+  lang?: Language
+  unpublished?: boolean
+}
+
 /**
  * Verses library
  */
@@ -61,21 +66,43 @@ export class Library {
    * @returns Result of the operation
    * @remarks If the verse is not found, the result will be a failure.
    */
-  async getByNumber(lang: Language, verseNumber: VerseNumber | string): Promise<Verse> {
-    const query = VerseQueries.queryBuilder.and(
-      VerseQueries.language(lang),
-      VerseQueries.number(verseNumber)
-    )
+  async getByNumber(
+    verseNumber: VerseNumber | string,
+    options: SearchOptions = {}
+  ): Promise<Verse> {
+    const lang = options.lang || new Language('en', 'en')
+    const conditions = [
+      VerseQueries.number(verseNumber),
+      VerseQueries.language(lang)
+    ]
+    if (options.unpublished !== true) {
+      conditions.push(VerseQueries.published())
+    }
+
+    const query = VerseQueries.queryBuilder.and(...conditions)
     const result = await this._verses.find(query)
-    if (result.entities.length === 0) { throw new Error(`Verse not found by ${lang.code} and ${verseNumber}`) }
+    if (result.entities.length === 0) {
+      throw new Error(`Verse not found by ${lang.code} and ${verseNumber}`)
+    }
     return result.entities[0]
   }
 
-  async findByContent(lang: Language, queryString: string): Promise<readonly Verse[]> {
-    const result = await this._verses.find(VerseQueries.queryBuilder.and(
-      VerseQueries.language(lang),
-      VerseQueries.content(queryString)
-    ))
+  async findByContent(
+    queryString: string,
+    options: SearchOptions = {}
+  ): Promise<readonly Verse[]> {
+    const lang = options.lang || new Language('en', 'en')
+    const conditions = [
+      VerseQueries.content(queryString),
+      VerseQueries.language(lang)
+    ]
+    if (options.unpublished !== true) {
+      conditions.push(VerseQueries.published())
+    }
+
+    const query = VerseQueries.queryBuilder.and(...conditions)
+    const result = await this._verses.find(query)
+
     // TODO: pagination
     return result.entities
   }

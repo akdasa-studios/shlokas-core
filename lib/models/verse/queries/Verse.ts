@@ -21,3 +21,8 @@ export function language(lang: Language) {
   const queryBuilder = new QueryBuilder<Verse>()
   return queryBuilder.eq('language', lang)
 }
+
+export function published() {
+  const queryBuilder = new QueryBuilder<Verse>()
+  return queryBuilder.gt('publication.publishedAt', 0)
+}

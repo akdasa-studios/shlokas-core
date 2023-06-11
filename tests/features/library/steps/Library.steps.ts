@@ -25,9 +25,14 @@ export const librarySteps: StepDefinitions = ({ given }) => {
         verseListLine['Verse Number'],
         new Language('en', 'en'),
         new Text([verseListLine['Text']]),
-        new Translation(verseListLine['Translation']),
+        new Translation(verseListLine['Translation'] || 'default translation'),
         []
       )
+      if (verseListLine['Published At'] !== '') {
+        verse.publication.publish()
+      } else {
+        verse.publication.unpublish()
+      }
 
       for (const device of devicesToAdd) {
         await contexts.getContext(device).library.addVerse(verse)

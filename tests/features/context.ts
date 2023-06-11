@@ -1,3 +1,4 @@
+import { SearchOptions } from './../../lib/app/Library'
 import { InMemoryRepository } from '@akdasa-studios/framework'
 import { SyncRepository } from '@akdasa-studios/framework-sync'
 import { Context, Repositories, TimeMachine } from '@lib/app'
@@ -33,8 +34,8 @@ export class TestContext {
   get inboxDeck() { return this._app.inboxDeck }
   get reviewDeck() { return this._app.reviewDeck }
 
-  async findVerse(verseNumber: string) {
-    const verse = await this._app.library.getByNumber(new Language('en', 'en'), verseNumber)
+  async findVerse(verseNumber: string, options: SearchOptions = {}) {
+    const verse = await this._app.library.getByNumber(verseNumber, options)
     if (!verse) { throw new Error('Not found') }
     return verse
   }

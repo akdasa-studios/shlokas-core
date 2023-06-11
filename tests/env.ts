@@ -22,8 +22,8 @@ export function createVerseNumber(verseNumberStr: string): VerseNumber {
   return new VerseNumber(verseNumberStr)
 }
 
-export function createVerse(verseNumberStr: string, lang = 'en'): Verse {
-  return new Verse(
+export function createVerse(verseNumberStr: string, lang = 'en', published = true): Verse {
+  const verse = new Verse(
     new VerseId(getUuid(verseNumberStr)),
     createVerseNumber(verseNumberStr),
     verseNumberStr,
@@ -32,6 +32,10 @@ export function createVerse(verseNumberStr: string, lang = 'en'): Verse {
     new Translation('translation'),
     []
   )
+  if (published) {
+    verse.publication.publish()
+  }
+  return verse
 }
 
 export function createVerseImage(verseId: VerseId, theme='default'): VerseImage {
