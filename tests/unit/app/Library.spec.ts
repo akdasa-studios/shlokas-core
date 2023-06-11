@@ -98,12 +98,21 @@ describe('Library', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('findByContent', () => {
-    it('should return a failure if the verse is unpublished', async () => {
+    it('should return published verses only', async () => {
+      const verse1 = createVerse('BG 1.1', english.code, true)
+      const verse2 = createVerse('BG 1.2', english.code, false)
+      await library.addVerse(verse1)
+      await library.addVerse(verse2)
+      const result = await library.findByContent('BG')
+
+      expect(result).toEqual([verse1])
+    })
+    it('should retrun unpublished verses if asked', async () => {
       const verse = createVerse('BG 1.1', english.code, false)
       await library.addVerse(verse)
-      const result = await library.findByContent('BG 1.1')
+      const result = await library.findByContent('BG 1.1', { unpublished: true })
 
-      expect(result).toEqual([])
+      expect(result).toEqual([verse])
     })
   })
 
